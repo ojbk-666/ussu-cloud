@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.ussu.common.security.aspect.PermCheckAspect,\
+  cn.ussu.common.security.handler.GlobalExceptionHandler,\
+  cn.ussu.common.security.service.TokenService
