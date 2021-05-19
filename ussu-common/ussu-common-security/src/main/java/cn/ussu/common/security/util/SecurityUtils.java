@@ -1,8 +1,13 @@
 package cn.ussu.common.security.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.CacheConstants;
+import cn.ussu.common.core.util.HttpContext;
+import cn.ussu.common.core.util.SpringContextHolder;
+import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.common.security.entity.LoginUser;
+import cn.ussu.common.security.entity.SysUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,28 +18,56 @@ public class SecurityUtils {
      * 获取用户名
      */
     public static String getUsername() {
-        return null;
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) {
+            return null;
+        }
+        return loginUser.getSysUser().getName();
     }
 
     /**
      * 获取用户id
      */
     public static String getUserId() {
-        return null;
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) {
+            return null;
+        }
+        return loginUser.getSysUser().getId();
     }
 
     /**
      * 获取用户账号
      */
     public static String getUserAccount() {
-        return null;
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) {
+            return null;
+        }
+        return loginUser.getSysUser().getAccount();
     }
 
     /**
      * 获取用户信息
      */
     public static LoginUser getLoginUser() {
-        return null;
+        RedisService redisService = SpringContextHolder.getBean(RedisService.class);
+        Object obj = redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + getRequestToken());
+        if (obj == null) {
+            return null;
+        }
+        return BeanUtil.toBean(obj, LoginUser.class);
+    }
+
+    /**
+     * 获取登录用户信息
+     */
+    public static SysUser getLoginUserSysUser() {
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) {
+            return null;
+        }
+        return loginUser.getSysUser();
     }
 
     /**
@@ -46,6 +79,13 @@ public class SecurityUtils {
             requestToken = requestToken.replaceFirst(CacheConstants.TOKEN_PREFIX, StrUtil.EMPTY);
         }
         return requestToken;
+    }
+
+    /**
+     * 获取请求token（当前请求上下文）
+     */
+    public static String getRequestToken() {
+       return getRequestToken(HttpContext.getRequest());
     }
 
     /**
@@ -73,12 +113,14 @@ public class SecurityUtils {
 
     /**
      * 当前用户是否为超管
-     *
-     * @return 结果
      */
     public static boolean isSuperAdmin() {
         // return SpringContextHolder.getBean(UssuProperties.class).getSuperAdmin().equals(getLoginUser().getUser().getId());
-        return true;
+        return isSuperAdmin(getUserId());
+    }
+
+    public static boolean isSuperAdmin(String userId) {
+        return "super".equals(userId);
     }
 
 }

@@ -2,6 +2,7 @@ package cn.ussu.common.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
  * @date 2020-05-05 15:39
  */
 @Data
+@Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginUser implements Serializable {
 
@@ -62,11 +64,6 @@ public class LoginUser implements Serializable {
     /**
      * 用户信息
      */
-    // private SysUser user;
-
-    /**
-     * 角色
-     */
-    // private List<SysRole> roleList;
+    private SysUser sysUser;
 
 }

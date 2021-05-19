@@ -14,10 +14,10 @@ public class JsonResult extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final int SUCCESS_CODE = StrConstants.SUCCESS;
-    private static final int ERROR_CODE = StrConstants.ERROR;
-    public static final String SUCCESS_MSG = StrConstants.okMsg;
-    private static final String ERROR_MSG = StrConstants.errorMsg;
+    public static final int SUCCESS_CODE = StrConstants.SUCCESS_CODE;
+    private static final int ERROR_CODE = StrConstants.ERROR_CODE;
+    public static final String SUCCESS_MSG = StrConstants.ok;
+    private static final String ERROR_MSG = StrConstants.error;
 
     private JsonResult() {
     }
@@ -141,6 +141,11 @@ public class JsonResult extends HashMap<String, Object> {
     public JsonResult data(Object data) {
         put(StrConstants.data, data);
         return this;
+    }
+
+    public <T> T getData() {
+        Object o = get(StrConstants.data);
+        return ((T) o);
     }
 
     /**

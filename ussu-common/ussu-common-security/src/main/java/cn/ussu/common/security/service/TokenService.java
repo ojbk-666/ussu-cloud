@@ -29,6 +29,7 @@ public class TokenService {
         loginUser.setToken(token);
         long now = new Date().getTime();
         loginUser.setLoginTime(now);
+        loginUser.setExpireTime(now + (MILLIS_MINUTE * 5));
         refreshToken(loginUser);
         return token;
     }

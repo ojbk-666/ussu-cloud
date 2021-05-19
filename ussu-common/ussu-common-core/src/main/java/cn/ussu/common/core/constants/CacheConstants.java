@@ -3,7 +3,7 @@ package cn.ussu.common.core.constants;
 /**
  * 缓存中的所有key
  */
-public interface CacheConstants {
+public interface CacheConstants extends RedisConstants {
 
     String TOKEN_IN_REQUEST_KEY = "token";
     String TOKEN_PREFIX = "Bearer ";

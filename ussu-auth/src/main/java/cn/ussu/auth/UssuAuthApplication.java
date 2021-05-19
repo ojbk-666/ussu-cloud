@@ -7,7 +7,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 /**
  * 认证服务
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "cn.ussu.auth")
+// @SpringBootApplication
 @EnableFeignClients
 public class UssuAuthApplication {
 

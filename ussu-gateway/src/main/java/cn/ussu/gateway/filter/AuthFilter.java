@@ -2,6 +2,7 @@ package cn.ussu.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.CacheConstants;
+import cn.ussu.common.core.constants.ErrorCodeConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.gateway.properties.IgnoreWhiteProperties;
@@ -26,7 +27,6 @@ import reactor.core.publisher.Mono;
  * 网关鉴权
  */
 @Component
-// @Order(-200)
 public class AuthFilter implements GlobalFilter, Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
@@ -48,12 +48,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
         // 没有token
         String token = getRequestToken(serverHttpRequest);
         if (StrUtil.isBlank(token)) {
-            return setUnauthorizedResponse(exchange, "缺少登录凭证");
+            return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"缺少登录凭证");
         }
-        String str = (String) redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + token);
+        Object object = redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + token);
         // token过期
-        if (StrUtil.isBlank(str)) {
-            return setUnauthorizedResponse(exchange, "凭证过期,请重新登录");
+        if (object == null) {
+            return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"凭证过期,请重新登录");
         }
         // token篡改
 
@@ -82,14 +82,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * @param msg
      * @return
      */
-    private Mono<Void> setUnauthorizedResponse(ServerWebExchange exchange, String msg) {
+    private Mono<Void> setUnauthorizedResponse(ServerWebExchange exchange, Integer errorCode, String msg) {
         ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         response.setStatusCode(HttpStatus.OK);
         log.error("[鉴权异常处理]请求路径:{}", exchange.getRequest().getPath());
         return response.writeWith(Mono.fromSupplier(() -> {
             DataBufferFactory bufferFactory = response.bufferFactory();
-            return bufferFactory.wrap(JSON.toJSONBytes(JsonResult.error(msg)));
+            return bufferFactory.wrap(JSON.toJSONBytes(JsonResult.error(errorCode, msg)));
         }));
     }
 
