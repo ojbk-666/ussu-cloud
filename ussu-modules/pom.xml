@@ -46,12 +46,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <!--common依赖-->
-        <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
 
 </project>
