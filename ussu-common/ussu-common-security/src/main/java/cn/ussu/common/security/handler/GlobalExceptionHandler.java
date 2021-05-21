@@ -29,4 +29,13 @@ public class GlobalExceptionHandler {
         return JsonResult.error(usernamePasswordInvalidException.getErrorMessage());
     }
 
+    /**
+     * 其他运行时异常
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public JsonResult handleRuntimeException(RuntimeException runtimeException) {
+        runtimeException.printStackTrace();
+        return JsonResult.error(runtimeException.getMessage()).put("exception", runtimeException.getStackTrace().toString());
+    }
+
 }
