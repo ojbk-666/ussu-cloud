@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.ussu.common.core.util.SpringContextHolder,\
-  cn.ussu.common.core.converter.LocalDateTimeHttpMessageConverter
