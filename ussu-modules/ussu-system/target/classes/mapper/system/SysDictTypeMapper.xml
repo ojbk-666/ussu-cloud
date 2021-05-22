@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.system.mapper.SysDictTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.system.entity.SysDictType">
+        <id column="id" property="id" />
+        <result column="type_name" property="typeName" />
+        <result column="type_code" property="typeCode" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+    </resultMap>
+    <!--result包装-->
+    <resultMap id="ModelResultMap" type="cn.ussu.modules.system.model.result.SysDictTypeResult">
+        <id column="id" property="id" />
+        <result column="type_name" property="typeName" />
+        <result column="type_code" property="typeCode" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <collection property="sysDictList" column="id"
+                    select="cn.ussu.modules.system.mapper.SysDictMapper.findByTypeId"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, type_name, type_code, remark, status, del_flag, version
+    </sql>
+    <select id="listAllSysDictTypeResult" resultMap="ModelResultMap">
+        select <include refid="Base_Column_List"/>
+        from sys_dict_type where del_flag = 0
+    </select>
+
+</mapper>

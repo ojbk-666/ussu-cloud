@@ -1,0 +1,3 @@
+cn\ussu\common\redis\config\RedisConfig.class
+cn\ussu\common\redis\service\RedisService.class
+cn\ussu\common\redis\config\FastJson2JsonRedisSerializer.class
