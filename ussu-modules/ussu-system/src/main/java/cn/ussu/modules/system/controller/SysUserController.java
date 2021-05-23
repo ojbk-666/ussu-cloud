@@ -151,19 +151,33 @@ public class SysUserController extends BaseAdminController {
         return JsonResult.ok();
     }
 
+    @PostMapping("/profile")
+    public Object updateUserProfile(@RequestBody SysUser sysUser) {
+        new SysUser().setId(SecurityUtils.getUserId())
+                .setNickName(sysUser.getNickName())
+                .setPhone(sysUser.getPhone())
+                .setEmail(sysUser.getEmail())
+                .updateById();
+        return JsonResult.ok();
+    }
+
     /**
      * 修改当前用户密码
      */
     @ApiOperation(value = "修改当前登录用户的密码")
-    // @PostMapping("/resetPwd")
-    public Object resetPwd(String oldPsw, String newPsw, String rePsw) {
+    @PostMapping("/updatePwd")
+    public Object updatePwd(@RequestBody SysUserParam sysUserParam) {
+        checkReqParamThrowException(sysUserParam.getOldPassword());
+        checkReqParamThrowException(sysUserParam.getNewPassword());
         // 验证旧密码
-        if (StrUtil.isBlank(oldPsw) || StrUtil.isBlank(newPsw) || StrUtil.isBlank(rePsw))
-            throw new RequestEmptyException();
-        if (!StrUtil.equals(newPsw, rePsw)) return JsonResult.error("两次输入的密码不相同");
         SysUser user = new SysUser().setId(SecurityUtils.getUserId()).selectById();
-        if (!SecurityUtils.matchesPassword(oldPsw, user.getPassword())) return JsonResult.error("密码错误");
-        boolean b = new SysUser().setId(user.getId()).setPassword(SecurityUtils.encryptPassword(newPsw)).updateById();
+        if (!SecurityUtils.matchesPassword(MD5.create().digestHex(sysUserParam.getOldPassword()), user.getPassword())) {
+            return JsonResult.error("密码错误");
+        }
+        boolean b = new SysUser()
+                .setId(user.getId())
+                .setPassword(SecurityUtils.encryptPassword(MD5.create().digestHex(sysUserParam.getNewPassword())))
+                .updateById();
         if (b) return JsonResult.ok();
         else return JsonResult.error();
     }

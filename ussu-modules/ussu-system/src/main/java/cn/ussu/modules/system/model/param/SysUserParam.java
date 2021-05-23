@@ -15,4 +15,7 @@ public class SysUserParam extends SysUser {
     private LocalDateTime createTimeStart;
     private LocalDateTime createTimeEnd;
 
+    private String oldPassword;
+    private String newPassword;
+
 }
