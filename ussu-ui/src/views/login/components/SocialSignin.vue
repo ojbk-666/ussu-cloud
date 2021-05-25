@@ -8,11 +8,16 @@
       <span class="qq-svg-container"><svg-icon icon-class="qq" class="icon" /></span>
       QQ
     </div>
+    <div class="sign-btn" @click="alipayHandleClick('alipay')">
+      <span class="qq-svg-container alipay-svg-container"><svg-icon icon-class="alipay" class="icon" /></span>
+      支付宝
+    </div>
   </div>
 </template>
 
 <script>
-// import openWindow from '@/utils/open-window'
+import openWindow from '@/utils/open-window'
+const config = require('../../../../vue.config.js')
 
 export default {
   name: 'SocialSignin',
@@ -32,6 +37,15 @@ export default {
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')
       // const url = 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirect_uri
       // openWindow(url, thirdpart, 540, 540)
+    },
+    alipayHandleClick(thirdpart) {
+      // this.$store.commit('SET_AUTH_TYPE', thirdpart)
+      // const client_id = 'xxxxx'
+      // const redirect_uri = encodeURIComponent(window.location.origin + process.env.VUE_APP_BASE_API + '/login/third/alipay')
+      const redirect_uri = encodeURIComponent('https://cloud.seasmall.top/login/third/alipay')
+      const url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021001106654547'+''+'&scope=auth_user&redirect_uri='+redirect_uri+'&state=init'
+      window.open(url, '_self');
+      // openWindow(url, thirdpart, 540, 540);
     }
   }
 }
@@ -66,6 +80,10 @@ export default {
     }
     .qq-svg-container {
       background-color: #6BA2D6;
+      margin-left: 50px;
+    }
+    .alipay-svg-container {
+      background-color: #027AFF;
       margin-left: 50px;
     }
   }

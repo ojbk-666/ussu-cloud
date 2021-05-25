@@ -56,6 +56,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/login/third/alipay',
+    component: () => import('@/views/login/third/alipay'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true

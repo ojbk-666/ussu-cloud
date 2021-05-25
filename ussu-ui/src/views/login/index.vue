@@ -74,16 +74,16 @@
         {{ $t('login.logIn') }}
       </el-button>
 
-      <div style="position:relative;display: none;">
+      <div style="position:relative;">
         <div class="tips">
-          <span>{{ $t('login.username') }} : admin</span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
+          <span></span>
+          <span></span>
         </div>
         <div class="tips">
           <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
+
           </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
+          <span></span>
         </div>
 
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
@@ -93,7 +93,6 @@
     </el-form>
 
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
       <br>
       <br>
       <br>
@@ -170,6 +169,7 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    // window.addEventListener('storage', this.afterThirdLoginAlipay)
     this.getLoiginCaptcha();
   },
   mounted() {
@@ -181,6 +181,7 @@ export default {
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
+    // window.removeEventListener('storage', this.afterThirdLoginAlipay)
   },
   methods: {
     // 获取验证码
@@ -238,6 +239,26 @@ export default {
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
+    //     const codeMap = {
+    //       wechat: 'code',
+    //       tencent: 'code'
+    //     }
+    //     const type = codeMap[this.auth_type]
+    //     const codeName = code[type]
+    //     if (codeName) {
+    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
+    //         this.$router.push({ path: this.redirect || '/' })
+    //       })
+    //     } else {
+    //       alert('第三方登录失败')
+    //     }
+    //   }
+    // }
+    // afterThirdLoginAlipay(e) {
+    //   if (e.key === 'login-third-alipay-token') {
+    //     console.log(e);
+    //     // const code = getQueryObject(e.newValue)
+    //     const code = e
     //     const codeMap = {
     //       wechat: 'code',
     //       tencent: 'code'

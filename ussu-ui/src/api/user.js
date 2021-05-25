@@ -33,3 +33,11 @@ export function getCaptcha(uuid) {
     params: { uuid }
   })
 }
+
+export function loginThirdAlipay(data) {
+  return request({
+    url: '/auth/login/third/alipay',
+    method: 'post',
+    data
+  })
+}

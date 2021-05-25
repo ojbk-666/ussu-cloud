@@ -51,6 +51,15 @@ const actions = {
     })
   },
 
+  // third login
+  loginThirdSetToken({ commit }, tokenValue) {
+    return new Promise((resolve, reject) => {
+      commit('SET_TOKEN', tokenValue)
+      setToken(tokenValue)
+      resolve()
+    })
+  },
+
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
