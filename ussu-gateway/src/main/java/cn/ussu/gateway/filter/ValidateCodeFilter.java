@@ -40,7 +40,7 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object> {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             // 非登录请求，不处理
-            if (!StrUtil.containsIgnoreCase(request.getURI().getPath(), LOGIN_URL)) {
+            if (!StrUtil.equalsIgnoreCase(request.getURI().getPath(), LOGIN_URL)) {
                 return chain.filter(exchange);
             }
             try {
