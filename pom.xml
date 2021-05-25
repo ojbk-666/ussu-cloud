@@ -46,6 +46,8 @@
         <mybatis-puls.version>3.4.2</mybatis-puls.version>
         <mysql-connector.version>8.0.22</mysql-connector.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
+        <alipay-sdk.version>4.13.50.ALL</alipay-sdk.version>
+        <alipay-easysdk.version>2.2.0</alipay-easysdk.version>
     </properties>
 
     <dependencyManagement>
@@ -117,6 +119,18 @@
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy-captcha.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${alipay-sdk.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-easysdk</artifactId>
+                <version>${alipay-easysdk.version}</version>
+            </dependency>
+
             <!--swagger-->
             <dependency>
                 <groupId>io.springfox</groupId>
