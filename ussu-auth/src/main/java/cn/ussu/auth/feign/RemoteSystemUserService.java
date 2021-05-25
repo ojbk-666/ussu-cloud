@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 /**
  * 远程调用用户服务模块
  */
@@ -18,5 +20,8 @@ public interface RemoteSystemUserService {
 
     @PostMapping("/abc")
     void updateUserLastLoginInfo();
+
+    @PostMapping("/sys-user/insertOrUpdateByThirdAlipay")
+    JsonResult insertOrUpdateByThirdAlipay(@RequestParam Map param);
 
 }
