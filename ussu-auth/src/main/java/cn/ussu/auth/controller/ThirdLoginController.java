@@ -10,6 +10,11 @@ import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.entity.SysUser;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipaySystemOauthTokenRequest;
+import com.alipay.api.request.AlipayUserInfoShareRequest;
+import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.AlipayUserInfoShareResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +43,7 @@ public class ThirdLoginController extends BaseController {
      */
     @PostMapping("/alipay")
     public Object alipayLogin(@RequestBody AlipayThirdLoginParam alipayThirdLoginParam) throws Exception {
-        /*String auth_code = alipayThirdLoginParam.getAuth_code();
+        String auth_code = alipayThirdLoginParam.getAuth_code();
         String app_id = alipayThirdLoginParam.getApp_id();
         checkReqParamThrowException(auth_code);
         if (!thirdLoginAlipayProperties.getAppid().equals(app_id)) {
@@ -67,14 +72,7 @@ public class ThirdLoginController extends BaseController {
         if (!alipayUserInfoShareResponse.isSuccess()) {
             System.out.println(alipayUserInfoShareResponse.getSubMsg());
             throw new RuntimeException(alipayUserInfoShareResponse.getSubMsg());
-        }*/
-        AlipayUserInfoShareResponse alipayUserInfoShareResponse = new AlipayUserInfoShareResponse();
-        alipayUserInfoShareResponse.setUserId("2088612739711827");
-        alipayUserInfoShareResponse.setNickName("zzz");
-        alipayUserInfoShareResponse.setAvatar("https://tfs.alipayobjects.com/images/partner/TB1XLr.bKxFDuNjm2EuXXaJ6pXa");
-        alipayUserInfoShareResponse.setGender("m");
-        alipayUserInfoShareResponse.setProvince("山东");
-        alipayUserInfoShareResponse.setCity("济南");
+        }
         // 写入用户信息
         Map<String, Object> param = getNewHashMap();
         param.put("userId", alipayUserInfoShareResponse.getUserId());
