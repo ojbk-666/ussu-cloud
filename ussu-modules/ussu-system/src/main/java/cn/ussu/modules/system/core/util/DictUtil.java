@@ -33,7 +33,7 @@ public class DictUtil {
         // 清理旧数据，缓存新数据
         ISysDictService service = SpringContextHolder.getBean(ISysDictService.class);
         QueryWrapper<SysDict> qw = new QueryWrapper<>();
-        qw.eq("stop_flag", 0);
+        qw.eq("status", 1);
         List<SysDict> list = service.list(qw);
         list.forEach(item -> redisUtil.deleteObject(RedisConstants.SYS_DICT_ + item.getTypeCode()));
         for (SysDict sysDict : list) {
@@ -103,7 +103,7 @@ public class DictUtil {
     public static void addDictType(String dictTypeCode) {
         ISysDictService dictService = SpringContextHolder.getBean(ISysDictService.class);
         QueryWrapper<SysDict> qw = new QueryWrapper<>();
-        qw.eq("type_code", dictTypeCode).eq("stop_flag", 0);
+        qw.eq("type_code", dictTypeCode).eq("status", 1);
         List<SysDict> sysDictList = dictService.list(qw);
         if (sysDictList == null || sysDictList.size() == 0) {
             return;

@@ -11,13 +11,13 @@
         <result column="type_code" property="typeCode" />
         <result column="dict_desc" property="dictDesc" />
         <result column="dict_sort" property="dictSort" />
-        <result column="stop_flag" property="stopFlag" />
+        <result column="status" property="status" />
         <result column="del_flag" property="delFlag" />
         <result column="version" property="version" />
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, dict_value, dict_label, type_id, type_code, dict_desc, dict_sort, stop_flag, del_flag, version
+        id, dict_value, dict_label, type_id, type_code, dict_desc, dict_sort, status, del_flag, version
     </sql>
 
     <select id="findByTypeId" resultMap="BaseResultMap">

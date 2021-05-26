@@ -124,7 +124,7 @@ public class SysUserController extends BaseAdminController {
      * 根据用户名获取用户信息
      */
     @GetMapping("/account")
-    public Object getSysUserByUsername(@RequestParam String username) {
+    public JsonResult getSysUserByUsername(@RequestParam String username) {
         if (StrUtil.isBlank(username)) throw new RequestEmptyException();
         SysUser sysUser = sysUserService.findByAccount(username);
         if (sysUser != null) {
@@ -237,16 +237,18 @@ public class SysUserController extends BaseAdminController {
         if (existUser == null) {
             new SysUser().setId(thirdLoginFormAlipayVo.getUserId())
                     .setAccount(thirdLoginFormAlipayVo.getUserId())
+                    .setPassword(SecurityUtils.encryptPassword("admin"))
                     .setStatus(1).setDeptId("1000")
                     .setNickName(thirdLoginFormAlipayVo.getNickName())
                     .setAvatar(thirdLoginFormAlipayVo.getAvatar())
                     .setSex("m".equals(thirdLoginFormAlipayVo.getGender()) ? 1 : 2)
+                    .setSource(5)
                     .insert();
             new SysUserRole().setUserId(thirdLoginFormAlipayVo.getUserId())
                     .setRoleId("1000")
                     .insert();
         }
-        return JsonResult.ok().data(getSysUserByUsername(thirdLoginFormAlipayVo.getUserId()));
+        return getSysUserByUsername(thirdLoginFormAlipayVo.getUserId());
     }
 
     /*@GetMapping("/export")

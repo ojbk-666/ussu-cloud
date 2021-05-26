@@ -50,9 +50,10 @@ export default {
         let tokenStr = res.data.token;
         if (!tokenStr || tokenStr === '') {
           this.msgError('登录失败请重试');
+          this.$router.replace({path: '/'})
         } else {
           this.$store.dispatch('user/loginThirdSetToken', tokenStr).then(() => {
-            this.$router.push({path: '/'})
+            this.$router.replace({path: '/'})
           }).catch(() => {
           })
         }
