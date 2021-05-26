@@ -3,9 +3,12 @@ package cn.ussu.auth.controller;
 import cn.ussu.auth.feign.RemoteSystemUserService;
 import cn.ussu.auth.model.param.login.third.AlipayThirdLoginParam;
 import cn.ussu.auth.properties.ThirdLoginAlipayProperties;
+import cn.ussu.auth.service.SysLoginService;
 import cn.ussu.common.core.base.BaseController;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.security.entity.LoginUser;
+import cn.ussu.common.security.entity.SysUser;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
@@ -31,6 +34,8 @@ public class ThirdLoginController extends BaseController {
     private ThirdLoginAlipayProperties thirdLoginAlipayProperties;
     @Autowired
     private RemoteSystemUserService remoteSystemUserService;
+    @Autowired
+    private SysLoginService sysLoginService;
 
     /**
      * 支付宝登录
@@ -76,9 +81,15 @@ public class ThirdLoginController extends BaseController {
         param.put("province", alipayUserInfoShareResponse.getProvince());
         param.put("city", alipayUserInfoShareResponse.getCity());
         JsonResult jsonResult = remoteSystemUserService.insertOrUpdateByThirdAlipay(param);
-        // todo 返回生成的token
+        SysUser newUser = jsonResult.getData();
+        // 返回生成的token
         Map<String, Object> data = getNewHashMap();
-        data.put(CacheConstants.TOKEN_IN_REQUEST_KEY, "");
+        String tokenStr = null;
+        if (newUser != null) {
+            LoginUser loginUser = sysLoginService.convertToLoginUser(newUser);
+            tokenStr = loginUser.getToken();
+        }
+        data.put(CacheConstants.TOKEN_IN_REQUEST_KEY, tokenStr);
         return JsonResult.ok().data(data);
     }
 

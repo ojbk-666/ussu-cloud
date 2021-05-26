@@ -15,6 +15,7 @@ import cn.ussu.modules.system.entity.SysRole;
 import cn.ussu.modules.system.entity.SysUser;
 import cn.ussu.modules.system.entity.SysUserRole;
 import cn.ussu.modules.system.model.param.SysUserParam;
+import cn.ussu.modules.system.model.vo.ThirdLoginFormAlipayVo;
 import cn.ussu.modules.system.service.ISysDeptService;
 import cn.ussu.modules.system.service.ISysRoleService;
 import cn.ussu.modules.system.service.ISysUserRoleService;
@@ -220,6 +221,32 @@ public class SysUserController extends BaseAdminController {
         }
         sysUserService.updateBatchById(list);
         return JsonResult.ok();
+    }
+
+    /**
+     * 写入用户-alipay
+     */
+    @PostMapping("/insertOrUpdateByThirdAlipay")
+    public JsonResult insertOrUpdateByThirdAlipay(ThirdLoginFormAlipayVo thirdLoginFormAlipayVo) {
+        if (thirdLoginFormAlipayVo == null) {
+            throw new RequestEmptyException();
+        }
+        checkReqParamThrowException(thirdLoginFormAlipayVo.getUserId());
+        SysUser existUser = new SysUser().setId(thirdLoginFormAlipayVo.getUserId()).selectById();
+        // 不存在用户则创建并返回
+        if (existUser == null) {
+            new SysUser().setId(thirdLoginFormAlipayVo.getUserId())
+                    .setAccount(thirdLoginFormAlipayVo.getUserId())
+                    .setStatus(1).setDeptId("1000")
+                    .setNickName(thirdLoginFormAlipayVo.getNickName())
+                    .setAvatar(thirdLoginFormAlipayVo.getAvatar())
+                    .setSex("m".equals(thirdLoginFormAlipayVo.getGender()) ? 1 : 2)
+                    .insert();
+            new SysUserRole().setUserId(thirdLoginFormAlipayVo.getUserId())
+                    .setRoleId("1000")
+                    .insert();
+        }
+        return JsonResult.ok().data(getSysUserByUsername(thirdLoginFormAlipayVo.getUserId()));
     }
 
     /*@GetMapping("/export")

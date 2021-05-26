@@ -40,19 +40,22 @@ export default {
   },
   methods: {
     getThirdLoginToken() {
+      this.loading = true
       // 获取token
       loginThirdAlipay(this.thirdLoginParam).then(res => {
         // window.localStorage.setItem('login-third-alipay-token', res.data.token)
         // window.close()
+        this.loading = false
         // 缓存token 刷新页面
-        this.$store.dispatch('user/loginThirdSetToken', res.data.token).then(() => {
-          this.$router.push({path: '/'})
-          this.loading = false
-        }).catch(() => {
-          this.loading = false
-        }).finally(() => {
-          this.loading = false
-        })
+        let tokenStr = res.data.token;
+        if (!tokenStr || tokenStr === '') {
+          this.msgError('登录失败请重试');
+        } else {
+          this.$store.dispatch('user/loginThirdSetToken', tokenStr).then(() => {
+            this.$router.push({path: '/'})
+          }).catch(() => {
+          })
+        }
       })
     }
   }

@@ -19,6 +19,7 @@
         <result column="login_ip" property="loginIp" />
         <result column="last_login_time" property="lastLoginTime" />
         <result column="status" property="status" />
+        <result column="source" property="source" />
         <result column="remark" property="remark" />
         <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
@@ -29,10 +30,10 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, dept_id, account, password, name, nick_name, sex, email, phone, user_type, sort, avatar, login_ip, last_login_time, status, remark, create_by, create_time, update_by, update_time, del_flag, version
+        id, dept_id, account, password, name, nick_name, sex, email, phone, user_type, sort, avatar, login_ip, last_login_time, status, source, remark, create_by, create_time, update_by, update_time, del_flag, version
     </sql>
     <sql id="Base_Column_List_A">
-        a.id, a.dept_id, a.account, a.password, a.name, a.nick_name, a.sex, a.email, a.phone, a.user_type, a.sort, a.avatar, a.login_ip, a.last_login_time, a.status, a.remark, a.create_by, a.create_time, a.update_by, a.update_time, a.del_flag, a.version
+        a.id, a.dept_id, a.account, a.password, a.name, a.nick_name, a.sex, a.email, a.phone, a.user_type, a.sort, a.avatar, a.login_ip, a.last_login_time, a.status, a.source, a.remark, a.create_by, a.create_time, a.update_by, a.update_time, a.del_flag, a.version
     </sql>
     <!--分页查询-->
     <select id="findPage" resultMap="BaseResultMap">

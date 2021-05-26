@@ -46,6 +46,16 @@ public class SysLoginService {
         if (!SecurityUtils.matchesPassword(password, sysUser.getPassword())) {
             throw new UsernamePasswordInvalidException();
         }
+        LoginUser loginUser = convertToLoginUser(sysUser);
+        // 更新登录信息
+        // remoteSystemUserService.updateUserLastLoginInfo();
+        return loginUser;
+    }
+
+    /**
+     * 转换请求结果并生成token
+     */
+    public LoginUser convertToLoginUser(SysUser sysUser) {
         LoginUser loginUser = new LoginUser();
         List<SysRole> roleList = sysUser.getRoleList();
         Set<String> perms = new LinkedHashSet<>();
@@ -59,8 +69,6 @@ public class SysLoginService {
         loginUser.setPerms(perms);
         loginUser.setSysUser(sysUser.setPassword(null));
         String token = tokenService.createToken(loginUser);
-        // 更新登录信息
-        // remoteSystemUserService.updateUserLastLoginInfo();
         return loginUser;
     }
 
