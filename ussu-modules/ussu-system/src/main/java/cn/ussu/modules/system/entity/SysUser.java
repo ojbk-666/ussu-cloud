@@ -84,6 +84,9 @@ public class SysUser extends Model<SysUser> {
     @ApiModelProperty(value = "账号状态：1 0")
     private Integer status;
 
+    // 来源
+    private Integer source;
+
     @ApiModelProperty(value = "备注")
     private String remark;
 
