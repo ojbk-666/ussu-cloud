@@ -149,13 +149,16 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         List<SysRole> list = null;
         // 如果是超级管理员
         if (SecurityUtils.isSuperAdmin(userId)) {
-            list = super.list();
+            // list = super.list();
+            list = new ArrayList<>();
+            List<String> allPerm = sysMenuService.list().stream().map(item -> item.getPerm()).filter(StrUtil::isNotBlank).collect(Collectors.toList());
+            list.add(new SysRole().setRoleName("超级管理员").setPerms(allPerm));
         } else {
             list = this.sysRoleMapper.findByUserId(userId);
-        }
-        for (SysRole sysRole : list) {
-            List<SysMenu> menuList = sysMenuService.findByRoleId(sysRole.getId());
-            sysRole.setPerms(menuList.stream().map(SysMenu::getPerm).collect(Collectors.toList()));
+            for (SysRole sysRole : list) {
+                List<SysMenu> menuList = sysMenuService.findByRoleId(sysRole.getId());
+                sysRole.setPerms(menuList.stream().map(SysMenu::getPerm).collect(Collectors.toList()));
+            }
         }
         return list;
     }

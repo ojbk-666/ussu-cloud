@@ -5,6 +5,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysAttach;
 import cn.ussu.modules.system.service.ISysAttachService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,7 +13,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class SysAttachController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.add)
     @PutMapping
-    @PreAuthorize("@pc.check('sys-attach:edit')")
+    @PermCheck("system:attach:select")
     public Object add(@ApiParam SysAttach obj) {
         obj.insert();
         return JsonResult.ok();
@@ -64,7 +64,7 @@ public class SysAttachController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.edit)
     @PostMapping
-    @PreAuthorize("@pc.check('sys-attach:edit')")
+    @PermCheck("system:attach:edit")
     public Object edit(@ApiParam SysAttach obj) {
         if (StrUtil.isBlank(obj.getId())) throw new RequestEmptyException();
         obj.updateById();
@@ -76,7 +76,7 @@ public class SysAttachController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.deleteBatch)
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-attach:delete')")
+    @PermCheck("system:attach:delete")
     public Object delete(@PathVariable("id") @ApiParam(name = "id",required = true,type = SwaggerConstants.paramType_path) String id) {
         List<String> idList = splitCommaList(id, true);
         service.removeByIds(idList);
@@ -84,7 +84,7 @@ public class SysAttachController extends BaseAdminController {
     }
 
     @ApiOperation(value = SwaggerConstants.deleteBatch)
-    @PreAuthorize("@pc.check('sys-attach:delete')")
+    @PermCheck("system:attach:delete")
     @DeleteMapping("/delete")
     public Object deleteUnRest(@ApiParam(name = "id",value = SwaggerConstants.paramDesc_delete) String id,@ApiParam(name = "attachPath",value = "附件路径") String attachPath,@ApiParam(name = "deleteFile",value = "是否同时删除文件") boolean deleteFile) {
         if (StrUtil.isNotBlank(id)) service.removeById(id);
@@ -99,7 +99,7 @@ public class SysAttachController extends BaseAdminController {
      * 获取文件列表
      */
     /*@ApiOperation(value = "获取文件列表")
-    @PreAuthorize("@pc.check('sys-attach:select')")
+    @PermCheck("system:attach:select")
     @GetMapping("/fileChoose")
     public Map files(@ApiParam(name = "基础路径") String basePath, @RequestParam("dir") @ApiParam(name = "子文件夹") String subPath) {
         List<Object> list = service.diskFilesList(basePath, subPath);
@@ -110,7 +110,7 @@ public class SysAttachController extends BaseAdminController {
      * 创建新文件夹
      */
     @ApiOperation(value = "创建新文件夹")
-    @PreAuthorize("@pc.check('sys-attach:edit')")
+    @PermCheck("system:attach:edit")
     @PostMapping("/newDir")
     public Map newDir(String dirName, String dir) {
         if (StrUtil.isBlank(dirName) || StrUtil.isBlank(dir)) {

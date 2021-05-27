@@ -5,6 +5,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysDict;
 import cn.ussu.modules.system.entity.SysDictType;
 import cn.ussu.modules.system.model.param.SysDictTypeParam;
@@ -17,7 +18,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -44,7 +44,7 @@ public class SysDictTypeController extends BaseAdminController {
             , @ApiImplicitParam(name = "limit", value = "分页大小", required = true, dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
             , @ApiImplicitParam(value = "查询参数", dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
     })
-    @PreAuthorize("@pc.check('sys-dict:select')")
+    @PermCheck("system:dicttype:select")
     @GetMapping
     public Object list(SysDictTypeParam param) {
         return JsonResult.ok().data(sysDictTypeService.findPage(param));
@@ -54,6 +54,7 @@ public class SysDictTypeController extends BaseAdminController {
      * 获取所有
      */
     @GetMapping("/all")
+    @PermCheck("system:dicttype:select")
     public Object all() {
         return JsonResult.ok().data(sysDictTypeService.list());
     }
@@ -62,6 +63,7 @@ public class SysDictTypeController extends BaseAdminController {
      * 获取单个详情
      */
     @GetMapping("/{id}")
+    @PermCheck("system:dicttype:select")
     public Object getOne(@PathVariable String id) {
         return JsonResult.ok().data(new SysDictType().setId(id).selectById());
     }
@@ -71,7 +73,7 @@ public class SysDictTypeController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.add)
     @PutMapping
-    @PreAuthorize("@pc.check('sys-dict:add')")
+    @PermCheck("system:dicttype:edit")
     public Object add(@ApiParam @RequestBody SysDictType obj) {
         LambdaQueryWrapper<SysDictType> qw = new LambdaQueryWrapper<>();
         if (StrUtil.isBlank(obj.getTypeCode())) {
@@ -91,8 +93,8 @@ public class SysDictTypeController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @PermCheck("system:dicttype:edit")
     @PostMapping
-    @PreAuthorize("@pc.check('sys-dict:edit')")
     public Object edit(@ApiParam @RequestBody SysDictType obj) {
         checkReqParamThrowException(obj.getId());
         if (StrUtil.isBlank(obj.getTypeCode())) {
@@ -119,8 +121,8 @@ public class SysDictTypeController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @PermCheck("system:dicttype:delete")
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-dict:delete')")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {
         sysDictTypeService.deleteDictTypeAndData(id);
         return JsonResult.ok();

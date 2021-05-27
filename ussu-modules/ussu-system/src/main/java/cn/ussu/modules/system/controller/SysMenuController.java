@@ -10,6 +10,7 @@ import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.core.util.DictUtil;
 import cn.ussu.modules.system.entity.SysMenu;
@@ -24,7 +25,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public class SysMenuController extends BaseAdminController {
      * 获取所有菜单，不分页
      */
     @ApiOperation(value = SwaggerConstants.all)
+    @PermCheck("system:menu:select")
     @GetMapping(StrConstants.all)
-    @PreAuthorize("@pc.check('sys-menu:select')")
     public Object listAll(SysMenuParam param) {
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
         qw.like(StrUtil.isNotBlank(param.getName()), SysMenu::getName, param.getName())
@@ -69,6 +69,7 @@ public class SysMenuController extends BaseAdminController {
      * 获取用户菜单树
      */
     @ApiOperation(value = "获取用户菜单树")
+    @PermCheck("system:menu:select")
     @GetMapping
     public Object listAllByUserId() {
         String userId = SecurityUtils.getUserId();
@@ -93,6 +94,7 @@ public class SysMenuController extends BaseAdminController {
      * 获取用户菜单树-多系统
      */
     @ApiOperation(value = "获取用户菜单树")
+    @PermCheck("system:menu:select")
     @GetMapping("/multi")
     public Object listAllByUserId2() {
         String userId = SecurityUtils.getUserId();
@@ -129,6 +131,7 @@ public class SysMenuController extends BaseAdminController {
     /**
      * 获取菜单数
      */
+    @PermCheck("system:menu:select")
     @GetMapping("/treeselect")
     public Object treeselect() {
         List<SysMenu> list = sysMenuService.list();
@@ -139,6 +142,7 @@ public class SysMenuController extends BaseAdminController {
     /**
      * 获取角色已有菜单的id及菜单树
      */
+    @PermCheck("system:menu:select")
     @GetMapping("/roleMenuTreeselect/{roleId}")
     public Object roleTreeselect(@PathVariable String roleId) {
         Map<String, Object> m = getNewHashMap();
@@ -154,8 +158,8 @@ public class SysMenuController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
+    @PermCheck("system:menu:edit")
     @PutMapping
-    @PreAuthorize("@pc.check('sys-menu:edit')")
     public Object add(@ApiParam @RequestBody SysMenu obj) {
         // 未选择上级则未顶级菜单
         if (StrUtil.isBlank(obj.getParentId())) obj.setParentId("0");
@@ -167,8 +171,8 @@ public class SysMenuController extends BaseAdminController {
      * 编辑
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @PermCheck("system:menu:edit")
     @PostMapping
-    @PreAuthorize("@pc.check('sys-menu:edit')")
     public Object edit(@ApiParam @RequestBody SysMenu obj) {
         if (StrUtil.isBlank(obj.getId())) throw new RequestEmptyException();
         if (StrUtil.isBlank(obj.getParentId()) && StrUtil.isNotBlank(obj.getName())) {
@@ -182,8 +186,8 @@ public class SysMenuController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @PermCheck("system:menu:delete")
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-menu:delete')")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {
         if (StrUtil.isBlank(id)) throw new RequestEmptyException();
         this.sysMenuService.deleteMenuAndRef(id);

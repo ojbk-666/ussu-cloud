@@ -10,6 +10,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysDept;
 import cn.ussu.modules.system.entity.SysMenu;
 import cn.ussu.modules.system.entity.SysRole;
@@ -23,7 +24,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class SysRoleController extends BaseAdminController {
             , @ApiImplicitParam(name = "limit", value = "分页大小", required = true, dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
             , @ApiImplicitParam(value = "查询参数", dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
     })
-    @PreAuthorize("@pc.check('sys-role:select')")
+    @PermCheck("system:role:select")
     @GetMapping
     public Object list(SysRoleParam param) {
         return JsonResult.ok().data(sysRoleService.findPage(param));
@@ -80,8 +80,8 @@ public class SysRoleController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
+    @PermCheck("system:role:add")
     @PutMapping
-    @PreAuthorize("@pc.check('sys-role:edit')")
     public Object add(@ApiParam(name = "obj", value = "将请求的参数封装为一个 SysRole 对象") @RequestBody SysRole obj) {
         sysRoleService.addOne(obj);
         return JsonResult.ok();
@@ -91,8 +91,8 @@ public class SysRoleController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @PermCheck("system:role:edit")
     @PostMapping
-    @PreAuthorize("@pc.check('sys-role:edit')")
     public Object edit(@ApiParam @RequestBody SysRole obj) {
         checkReqParamThrowException(obj.getId());
         sysRoleService.updateOne(obj);
@@ -102,6 +102,7 @@ public class SysRoleController extends BaseAdminController {
     /**
      * 修改状态
      */
+    @PermCheck("system:role:edit")
     @PostMapping("/changeStatus")
     public Object changeStatus(@RequestBody SysRole sysRole) {
         checkReqParamThrowException(sysRole.getId());
@@ -114,8 +115,8 @@ public class SysRoleController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete, notes = "删除角色")
+    @PermCheck("system:role:delete")
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-role:delete')")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true) String id) {
         List<String> idList = splitCommaList(id, true);
         sysRoleService.removeByIds(idList);
@@ -125,8 +126,8 @@ public class SysRoleController extends BaseAdminController {
     /**
      * 校验角色code是否重复
      */
+    @PermCheck("system:role:select")
     @PostMapping("/checkRoleCode")
-    @PreAuthorize("@pc.check('sys-role:edit')")
     public Object chechRepeatRoleCode(SysRole role) {
         QueryWrapper<SysRole> qw = new QueryWrapper<>();
         qw.eq("role_code", role.getRoleCode()).ne(StrUtil.isNotBlank(role.getId()), "id", role.getId());
@@ -138,6 +139,7 @@ public class SysRoleController extends BaseAdminController {
     /**
      * 获取指定角色的权限
      */
+    @PermCheck("system:role:select")
     @ApiOperation(value = "根据角色获取该角色的权限")
     @GetMapping("/perms/{id}")
     public Object listPermsByRoleId(@PathVariable("id") @ApiParam(name = "id", value = "角色id", type = SwaggerConstants.paramType_path, required = true) String roleId) {
@@ -161,8 +163,8 @@ public class SysRoleController extends BaseAdminController {
     /**
      * 保存角色权限
      */
+    @PermCheck("system:role:edit")
     @ApiOperation(value = "保存角色权限")
-    @PreAuthorize("@pc.check('sys-role:perms')")
     @PostMapping("/perms/{id}")
     public Object savePerms(@PathVariable("id") @ApiParam(name = "id", value = "角色id", required = true) String roleId,
                             @RequestParam(value = "menus", required = false) @ApiParam(name = "menus", value = "以逗号分隔的权限id", allowEmptyValue = true) String menus) {
@@ -175,7 +177,7 @@ public class SysRoleController extends BaseAdminController {
      * 获取指定角色的数据权限
      */
     @ApiOperation(value = "根据角色获取该角色的自定义数据权限")
-    @PreAuthorize("@pc.check('sys-role:select')")
+    @PermCheck("system:role:select")
     @GetMapping("/datascope/{id}")
     public Object listCustomDataScopeByRoleId(@PathVariable("id") @ApiParam(name = "id", value = "角色id", type = SwaggerConstants.paramType_path, required = true) String roleId) {
         checkReqParamThrowException(roleId);
@@ -193,7 +195,6 @@ public class SysRoleController extends BaseAdminController {
      * 保存角色数据权限
      */
     @ApiOperation(value = "保存角色数据权限")
-    @PreAuthorize("@pc.check('sys-role:datascope')")
     @PostMapping("/datascope")
     public Object savePerms(SysRole sysRole, @RequestParam(value = "depts", required = false) @ApiParam(name = "depts", value = "以逗号分隔的权限id", allowEmptyValue = true) String depts) {
         checkReqParamThrowException(sysRole.getId());
@@ -214,6 +215,7 @@ public class SysRoleController extends BaseAdminController {
     /**
      * 获取用户已有角色
      */
+    @PermCheck("system:role:select")
     @GetMapping("/getRoleIdsByUserId")
     public Object getRoleIdsByUserId(String userId) {
         checkReqParamThrowException(userId);

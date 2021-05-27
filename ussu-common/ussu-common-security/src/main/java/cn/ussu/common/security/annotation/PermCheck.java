@@ -18,9 +18,18 @@ public @interface PermCheck {
     String[] value() default {};
 
     /**
+     * 检查类型 且：满足所有 或：满足任意一个
+     */
+    PermCheckType type() default PermCheckType.AND;
+
+    /**
      * 检查角色，暂不使用
      */
     @Deprecated
     String[] roles() default {};
+
+    enum PermCheckType {
+        AND,OR
+    }
 
 }

@@ -5,6 +5,7 @@ import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.exception.PermCheckException;
 import cn.ussu.common.security.service.TokenService;
+import cn.ussu.common.security.util.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -51,7 +52,7 @@ public class PermCheckAspect {
         String[] value = permCheckAnnotation.value();
         // 如果需要检查则检查所有权限
         if (value != null && value.length != 0) {
-            if (!hasPerm(value)) {
+            if (!hasPerm(permCheckAnnotation.type(), value)) {
                 throw new PermCheckException();
             }
         }
@@ -63,11 +64,20 @@ public class PermCheckAspect {
     /**
      * 检查权限
      */
-    private boolean hasPerm(String[] perm) {
+    private boolean hasPerm(PermCheck.PermCheckType permCheckType, String[] perm) {
         // 获取权限
         LoginUser loginUser = tokenService.getLoginUser();
+        if (SecurityUtils.isSuperAdmin()) {
+            return true;
+        }
         Set<String> perms = loginUser.getPerms();
-        return CollectionUtil.containsAll(perms, new ArrayList<>(Arrays.asList(perm)));
+        if (PermCheck.PermCheckType.AND.equals(permCheckType)) {
+            // every
+            return CollectionUtil.containsAll(perms, new ArrayList<>(Arrays.asList(perm)));
+        } else {
+            // any
+            return CollectionUtil.containsAny(perms, Arrays.asList(perm));
+        }
     }
 
     /**

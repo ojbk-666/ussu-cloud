@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.core.util.DictUtil;
 import cn.ussu.modules.system.entity.SysDict;
 import cn.ussu.modules.system.entity.SysDictType;
@@ -17,7 +18,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -49,7 +49,7 @@ public class SysDictController extends BaseAdminController {
             , @ApiImplicitParam(name = "limit", value = "分页大小", required = true, dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
             , @ApiImplicitParam(value = "查询参数", dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
     })
-    @PreAuthorize("@pc.check('sys-dict:select')")
+    @PermCheck("system:dict:select")
     @GetMapping
     public Object list(SysDictParam param) {
         return JsonResult.ok().data(service.findPage(param));
@@ -58,6 +58,7 @@ public class SysDictController extends BaseAdminController {
     /**
      * 根据类型代码获取字典列表
      */
+    @PermCheck("system:dict:select")
     @GetMapping("/typecode/{typeCode}")
     public Object getListByTypeCode(@PathVariable String typeCode) {
         LambdaQueryWrapper<SysDict> qw = new LambdaQueryWrapper<>();
@@ -80,8 +81,8 @@ public class SysDictController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
+    @PermCheck("system:dict:eidt")
     @PutMapping
-    @PreAuthorize("@pc.check('sys-dict:add')")
     public Object add(@ApiParam @RequestBody SysDict obj) {
         checkReqParamThrowException(obj.getTypeCode());
         // 重复检查
@@ -103,8 +104,8 @@ public class SysDictController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @PermCheck("system:dict:edit")
     @PostMapping
-    @PreAuthorize("@pc.check('sys-dict:edit')")
     public Object edit(@ApiParam @RequestBody SysDict obj) {
         checkReqParamThrowException(obj.getId());
         // 重复检查
@@ -126,8 +127,8 @@ public class SysDictController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @PermCheck("system:dict:delete")
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-dict:delete')")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {
         List<String> idList = splitCommaList(id, true);
         Collection<SysDict> oldList = service.listByIds(idList);

@@ -9,6 +9,7 @@ import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.entity.SysDept;
 import cn.ussu.modules.system.entity.SysRole;
@@ -26,9 +27,9 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class SysUserController extends BaseAdminController {
             , @ApiImplicitParam(name = "limit", value = "分页大小", required = true, dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
             , @ApiImplicitParam(value = "查询参数", dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
     })
-    @PreAuthorize("@pc.check('sys-user:select')")
+    @PermCheck("system:user:select")
     @GetMapping
     public Object list(SysUserParam sysUserParam) {
         return JsonResult.ok().data(sysUserService.findPage(sysUserParam));
@@ -70,6 +71,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 获取用户详情
      */
+    @PermCheck("system:user:select")
     @GetMapping("/{userId}")
     public Object detail(@PathVariable String userId) {
         SysUser userInfo = sysUserService.getById(userId);
@@ -91,7 +93,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 添加用户
      */
-    @PreAuthorize("@pc.check('sys-user:add')")
+    @PermCheck("system:user:edit")
     @PutMapping
     public Object addOne(@RequestBody SysUser sysUser) {
         this.sysUserService.addOne(sysUser);
@@ -101,7 +103,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 编辑用户
      */
-    @PreAuthorize("@pc.check('sys-user:edit')")
+    @PermCheck("system:user:edit")
     @PostMapping
     public Object updateOne(@RequestBody SysUser sysUser) {
         sysUserService.updateOne(sysUser);
@@ -112,7 +114,7 @@ public class SysUserController extends BaseAdminController {
      * 删除用户
      */
     @ApiOperation(value = SwaggerConstants.delete, notes = "删除用户")
-    @PreAuthorize("@pc.check('sys-user:delete')")
+    @PermCheck("system:user:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true) String id) {
         List<String> idList = splitCommaList(id, true);
@@ -141,6 +143,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 改变用户状态
      */
+    @PermCheck("system:user:edit")
     @PostMapping("/changeStatus")
     public Object changeStatus(@RequestBody SysUser sysUser) {
         checkReqParamThrowException(sysUser.getId());
@@ -187,8 +190,8 @@ public class SysUserController extends BaseAdminController {
      * 重置指定用户密码
      */
     @ApiOperation(value = "重置指定用户密码")
+    @PermCheck("system:user:resetpwd")
     @PostMapping("/resetUserPwd")
-    @PreAuthorize("@pc.check('sys-user:resetpwd')")
     public Object resetPwdUser(@RequestBody SysUser sysUser) {
         if (StrUtil.isAllBlank(sysUser.getId(), sysUser.getPassword())) {
             throw new RequestEmptyException();
@@ -209,7 +212,7 @@ public class SysUserController extends BaseAdminController {
      * @param ids
      * @return
      */
-    @PreAuthorize("@pc.check('sys-user:edit')")
+    @PermCheck("system:user:edit")
     @PostMapping("/updateBatch")
     public Object updateBatch(SysUser sysUser, String ids) {
         checkReqParamThrowException(ids);
@@ -239,10 +242,12 @@ public class SysUserController extends BaseAdminController {
                     .setAccount(thirdLoginFormAlipayVo.getUserId())
                     .setPassword(SecurityUtils.encryptPassword("admin"))
                     .setStatus(1).setDeptId("1000")
+                    .setName(thirdLoginFormAlipayVo.getNickName())
                     .setNickName(thirdLoginFormAlipayVo.getNickName())
                     .setAvatar(thirdLoginFormAlipayVo.getAvatar())
                     .setSex("m".equals(thirdLoginFormAlipayVo.getGender()) ? 1 : 2)
                     .setSource(5)
+                    .setLastLoginTime(LocalDateTime.now())
                     .insert();
             new SysUserRole().setUserId(thirdLoginFormAlipayVo.getUserId())
                     .setRoleId("1000")

@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysDept;
 import cn.ussu.modules.system.model.param.SysDeptParam;
 import cn.ussu.modules.system.parser.SysDeptTreeSelectParser;
@@ -16,7 +17,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class SysDeptController extends BaseAdminController {
      * 获取所有，不构造树结构
      */
     @ApiOperation(value = "获取所有部门，不构造树结构")
-    @PreAuthorize("@pc.check('sys-dept:select')")
+    @PermCheck("system:dept:select")
     @GetMapping("/all")
     public Object listAll(String name) {
         LambdaQueryWrapper<SysDept> qw = new LambdaQueryWrapper<>();
@@ -55,6 +55,7 @@ public class SysDeptController extends BaseAdminController {
     /**
      * 获取所有 不包含指定
      */
+    @PermCheck("system:dept:select")
     @GetMapping("/all/exclude")
     public Object listAllExclude(String ids) {
         if (ids == null) {
@@ -74,6 +75,7 @@ public class SysDeptController extends BaseAdminController {
     /**
      * treeselect
      */
+    @PermCheck("system:dept:select")
     @GetMapping("/treeselect")
     public Object treeselect() {
         List<SysDept> list = service.list();
@@ -88,13 +90,14 @@ public class SysDeptController extends BaseAdminController {
      * @return
      */
     @ApiOperation(value = "获取某个部门的直接子部门")
+    @PermCheck("system:dept:select")
     @GetMapping("/sub/{pid}")
     public Object getSubDeptByPId(@PathVariable("pid") @ApiParam(name = "pid", value = "上级id", required = true, type = SwaggerConstants.paramType_path) String pid) {
         List<Map> list = service.findSubDeptByParentId(pid);
         return JsonResult.ok().data(list);
     }
 
-    @PreAuthorize("@pc.check('sys-dept:select')")
+    @PermCheck("system:dept:select")
     @GetMapping("/sub")
     public Object getSubDept(String parentId) {
         // if (StrUtil.isBlank(parentId)) parentId = StrConstants.NUM_0;
@@ -115,7 +118,7 @@ public class SysDeptController extends BaseAdminController {
             , @ApiImplicitParam(name = "limit", value = "分页大小", required = true, dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
             , @ApiImplicitParam(value = "查询参数", dataTypeClass = String.class, paramType = SwaggerConstants.paramType_form)
     })
-    @PreAuthorize("@pc.check('sys-dept:select')")
+    @PermCheck("system:dept:select")
     @GetMapping
     public Object list(SysDeptParam param) {
         return JsonResult.ok().data(service.findPage(param));
@@ -126,7 +129,7 @@ public class SysDeptController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.add)
     @PutMapping
-    @PreAuthorize("@pc.check('sys-dept:edit')")
+    @PermCheck("system:dept:edit")
     public Object add(@ApiParam @RequestBody SysDept obj) {
         service.addOne(obj);
         return JsonResult.ok();
@@ -137,7 +140,7 @@ public class SysDeptController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.edit)
     @PostMapping
-    @PreAuthorize("@pc.check('sys-dept:edit')")
+    @PermCheck("system:dept:edit")
     public Object edit(@ApiParam @RequestBody SysDept obj) {
         checkReqParamThrowException(obj.getId());
         this.service.updateOne(obj);
@@ -149,7 +152,7 @@ public class SysDeptController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.delete)
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pc.check('sys-dept:delete')")
+    @PermCheck("system:dept:delete")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {
         List<String> idList = splitCommaList(id, true);
         int deleted = service.deleteMany(idList);
