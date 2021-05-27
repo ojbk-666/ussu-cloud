@@ -1,10 +1,10 @@
 <template>
   <div class="social-signup-container">
-    <div class="sign-btn" @click="wechatHandleClick('wechat')">
+    <div class="sign-btn" @click="wechatHandleClick('wechat')" v-show="false">
       <span class="wx-svg-container"><svg-icon icon-class="wechat" class="icon" /></span>
       WeChat
     </div>
-    <div class="sign-btn" @click="tencentHandleClick('tencent')">
+    <div class="sign-btn" @click="tencentHandleClick('tencent')" v-show="false">
       <span class="qq-svg-container"><svg-icon icon-class="qq" class="icon" /></span>
       QQ
     </div>
@@ -23,7 +23,7 @@ export default {
   name: 'SocialSignin',
   methods: {
     wechatHandleClick(thirdpart) {
-      alert('ok')
+      alert('未接入')
       // this.$store.commit('SET_AUTH_TYPE', thirdpart)
       // const appid = 'xxxxx'
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')
@@ -31,7 +31,7 @@ export default {
       // openWindow(url, thirdpart, 540, 540)
     },
     tencentHandleClick(thirdpart) {
-      alert('ok')
+      alert('未接入')
       // this.$store.commit('SET_AUTH_TYPE', thirdpart)
       // const client_id = 'xxxxx'
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')

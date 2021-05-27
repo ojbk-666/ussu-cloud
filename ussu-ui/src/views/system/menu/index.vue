@@ -49,7 +49,7 @@
       <el-table-column prop="name" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" />
+          <svg-icon :icon-class="scope.row.icon?scope.row.icon:''" />
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" width="60"></el-table-column>
@@ -164,7 +164,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.type != 10" label="权限标识">
-              <el-input v-model="form.perms" placeholder="请权限标识" maxlength="50" />
+              <el-input v-model="form.perm" placeholder="请权限标识" maxlength="50" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
