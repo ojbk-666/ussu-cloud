@@ -1,5 +1,6 @@
 package cn.ussu.modules.system.controller;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -22,6 +23,7 @@ import cn.ussu.modules.system.service.ISysRoleService;
 import cn.ussu.modules.system.service.ISysUserRoleService;
 import cn.ussu.modules.system.service.ISysUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -254,6 +256,37 @@ public class SysUserController extends BaseAdminController {
                     .insert();
         }
         return getSysUserByUsername(thirdLoginFormAlipayVo.getUserId());
+    }
+
+    /**
+     * 第三方登录写入或更新用户信息
+     */
+    @PostMapping("/insertOrUpdateByThird")
+    public SysUser insertOrUpdateByThird(@RequestBody SysUser param) {
+        Assert.notNull(param);
+        checkReqParamThrowException(param.getAccount());
+        LambdaQueryWrapper<SysUser> qw = new LambdaQueryWrapper<>();
+        qw.eq(SysUser::getAccount, param.getAccount());
+        SysUser existUser = sysUserService.getOne(qw);
+        // 不存在用户则创建并返回
+        if (existUser == null) {
+            SysUser insertUser = new SysUser().setId(IdWorker.getIdStr())
+                    .setAccount(param.getAccount())
+                    .setPassword(SecurityUtils.encryptPassword("admin"))
+                    .setStatus(1).setDeptId("1000")
+                    .setName(param.getName())
+                    .setNickName(param.getNickName())
+                    .setAvatar(param.getAvatar())
+                    .setSex(param.getSex())
+                    .setEmail(param.getEmail())
+                    .setSource(param.getSource())
+                    .setLastLoginTime(LocalDateTime.now());
+            insertUser.insert();
+            new SysUserRole().setUserId(insertUser.getId())
+                    .setRoleId("1000")
+                    .insert();
+        }
+        return getSysUserByUsername(existUser.getAccount()).getData();
     }
 
     /*@GetMapping("/export")

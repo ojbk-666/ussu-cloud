@@ -41,3 +41,11 @@ export function loginThirdAlipay(data) {
     data
   })
 }
+
+export function loginThirdGitee(data) {
+  return request({
+    url: '/auth/login/third/gitee',
+    method: 'post',
+    data
+  })
+}

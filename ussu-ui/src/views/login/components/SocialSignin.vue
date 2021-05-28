@@ -12,6 +12,10 @@
       <span class="qq-svg-container alipay-svg-container"><svg-icon icon-class="alipay" class="icon" /></span>
       支付宝
     </div>
+    <div class="sign-btn" @click="giteeHandleClick">
+      <span class="qq-svg-container gitee-svg-container"><svg-icon icon-class="gitee" class="icon" /></span>
+      Gitee
+    </div>
   </div>
 </template>
 
@@ -46,6 +50,11 @@ export default {
       const url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021001106654547'+''+'&scope=auth_user&redirect_uri='+redirect_uri+'&state=init'
       window.open(url, '_self');
       // openWindow(url, thirdpart, 540, 540);
+    },
+    giteeHandleClick() {
+      const redirect_uri = encodeURIComponent('https://cloud.seasmall.top/login/third/gitee')
+      const url = 'https://gitee.com/oauth/authorize?client_id=84da4281e5f081f8e7b081f82d9459ead0015eab7fa378cf373d13f939947a18'+''+'&redirect_uri='+redirect_uri+'&response_type=code'
+      window.open(url, '_self');
     }
   }
 }
@@ -84,6 +93,10 @@ export default {
     }
     .alipay-svg-container {
       background-color: #027AFF;
+      margin-left: 50px;
+    }
+    .gitee-svg-container {
+      background-color: #C71D23;
       margin-left: 50px;
     }
   }
