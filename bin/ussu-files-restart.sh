@@ -2,8 +2,8 @@
 this_path=$(cd `dirname $0`;pwd)
 cd $this_path
 
-sh ussu-modules-system-stop.sh
+sh ussu-files-stop.sh
 
 sleep 1
 
-sh ussu-modules-system-start.sh
+sh ussu-files-start.sh
