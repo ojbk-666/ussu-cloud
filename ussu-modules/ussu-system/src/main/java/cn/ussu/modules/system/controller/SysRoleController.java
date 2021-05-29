@@ -10,6 +10,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysDept;
 import cn.ussu.modules.system.entity.SysMenu;
@@ -41,7 +42,6 @@ import java.util.stream.Collectors;
 @Api(value = "角色管理")
 @RestController
 @RequestMapping("/sys-role")
-// @InsertLog(code = "sys-role", name = "角色管理")
 public class SysRoleController extends BaseAdminController {
 
     @Autowired
@@ -80,6 +80,7 @@ public class SysRoleController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
+    @InsertLog("新增角色")
     @PermCheck("system:role:add")
     @PutMapping
     public Object add(@ApiParam(name = "obj", value = "将请求的参数封装为一个 SysRole 对象") @RequestBody SysRole obj) {
@@ -91,6 +92,7 @@ public class SysRoleController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @InsertLog("修改角色")
     @PermCheck("system:role:edit")
     @PostMapping
     public Object edit(@ApiParam @RequestBody SysRole obj) {
@@ -103,6 +105,7 @@ public class SysRoleController extends BaseAdminController {
      * 修改状态
      */
     @PermCheck("system:role:edit")
+    @InsertLog("修改角色状态")
     @PostMapping("/changeStatus")
     public Object changeStatus(@RequestBody SysRole sysRole) {
         checkReqParamThrowException(sysRole.getId());
@@ -115,6 +118,7 @@ public class SysRoleController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete, notes = "删除角色")
+    @InsertLog("删除角色")
     @PermCheck("system:role:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true) String id) {

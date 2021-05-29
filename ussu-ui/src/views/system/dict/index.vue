@@ -51,7 +51,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:dicttype:edit']"
+          v-perm="['system:dicttype:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -78,7 +78,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="typeList" :border="true" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典名称" align="center" prop="typeName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
@@ -88,7 +88,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="状态" align="center" width="80" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -102,6 +102,7 @@
           <el-button
             size="mini"
             type="text"
+            style="color: red"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:dicttype:delete']"
@@ -129,13 +130,11 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio :value="1" :label="1">正常</el-radio>
-            <el-radio :value="0" :label="0">停用</el-radio>
-            <!--<el-radio
+            <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>-->
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -143,8 +142,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" size="medium" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

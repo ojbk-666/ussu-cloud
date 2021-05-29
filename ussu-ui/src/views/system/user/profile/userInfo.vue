@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { updateUserProfile } from "@/api/system/user";
+import { updateUserProfile } from "@/api/profile";
 
 export default {
   props: {

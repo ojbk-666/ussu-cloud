@@ -10,6 +10,7 @@ import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.entity.SysDept;
@@ -17,7 +18,6 @@ import cn.ussu.modules.system.entity.SysRole;
 import cn.ussu.modules.system.entity.SysUser;
 import cn.ussu.modules.system.entity.SysUserRole;
 import cn.ussu.modules.system.model.param.SysUserParam;
-import cn.ussu.modules.system.model.vo.ThirdLoginFormAlipayVo;
 import cn.ussu.modules.system.service.ISysDeptService;
 import cn.ussu.modules.system.service.ISysRoleService;
 import cn.ussu.modules.system.service.ISysUserRoleService;
@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/sys-user")
-// @InsertLog(code = "sys-user", name = "用户管理")
 public class SysUserController extends BaseAdminController {
 
     @Autowired
@@ -95,7 +94,8 @@ public class SysUserController extends BaseAdminController {
     /**
      * 添加用户
      */
-    @PermCheck("system:user:edit")
+    @InsertLog("新增用户")
+    @PermCheck("system:user:add")
     @PutMapping
     public Object addOne(@RequestBody SysUser sysUser) {
         this.sysUserService.addOne(sysUser);
@@ -105,6 +105,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 编辑用户
      */
+    @InsertLog("修改用户")
     @PermCheck("system:user:edit")
     @PostMapping
     public Object updateOne(@RequestBody SysUser sysUser) {
@@ -116,6 +117,7 @@ public class SysUserController extends BaseAdminController {
      * 删除用户
      */
     @ApiOperation(value = SwaggerConstants.delete, notes = "删除用户")
+    @InsertLog("删除用户")
     @PermCheck("system:user:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true) String id) {
@@ -145,6 +147,7 @@ public class SysUserController extends BaseAdminController {
     /**
      * 改变用户状态
      */
+    @InsertLog("修改用户状态")
     @PermCheck("system:user:edit")
     @PostMapping("/changeStatus")
     public Object changeStatus(@RequestBody SysUser sysUser) {
@@ -157,41 +160,11 @@ public class SysUserController extends BaseAdminController {
         return JsonResult.ok();
     }
 
-    @PostMapping("/profile")
-    public Object updateUserProfile(@RequestBody SysUser sysUser) {
-        new SysUser().setId(SecurityUtils.getUserId())
-                .setNickName(sysUser.getNickName())
-                .setPhone(sysUser.getPhone())
-                .setEmail(sysUser.getEmail())
-                .updateById();
-        return JsonResult.ok();
-    }
-
-    /**
-     * 修改当前用户密码
-     */
-    @ApiOperation(value = "修改当前登录用户的密码")
-    @PostMapping("/updatePwd")
-    public Object updatePwd(@RequestBody SysUserParam sysUserParam) {
-        checkReqParamThrowException(sysUserParam.getOldPassword());
-        checkReqParamThrowException(sysUserParam.getNewPassword());
-        // 验证旧密码
-        SysUser user = new SysUser().setId(SecurityUtils.getUserId()).selectById();
-        if (!SecurityUtils.matchesPassword(MD5.create().digestHex(sysUserParam.getOldPassword()), user.getPassword())) {
-            return JsonResult.error("密码错误");
-        }
-        boolean b = new SysUser()
-                .setId(user.getId())
-                .setPassword(SecurityUtils.encryptPassword(MD5.create().digestHex(sysUserParam.getNewPassword())))
-                .updateById();
-        if (b) return JsonResult.ok();
-        else return JsonResult.error();
-    }
-
     /**
      * 重置指定用户密码
      */
     @ApiOperation(value = "重置指定用户密码")
+    @InsertLog("重置密码")
     @PermCheck("system:user:resetpwd")
     @PostMapping("/resetUserPwd")
     public Object resetPwdUser(@RequestBody SysUser sysUser) {
@@ -229,38 +202,9 @@ public class SysUserController extends BaseAdminController {
     }
 
     /**
-     * 写入用户-alipay
-     */
-    @PostMapping("/insertOrUpdateByThirdAlipay")
-    public JsonResult insertOrUpdateByThirdAlipay(ThirdLoginFormAlipayVo thirdLoginFormAlipayVo) {
-        if (thirdLoginFormAlipayVo == null) {
-            throw new RequestEmptyException();
-        }
-        checkReqParamThrowException(thirdLoginFormAlipayVo.getUserId());
-        SysUser existUser = new SysUser().setId(thirdLoginFormAlipayVo.getUserId()).selectById();
-        // 不存在用户则创建并返回
-        if (existUser == null) {
-            new SysUser().setId(thirdLoginFormAlipayVo.getUserId())
-                    .setAccount(thirdLoginFormAlipayVo.getUserId())
-                    .setPassword(SecurityUtils.encryptPassword("admin"))
-                    .setStatus(1).setDeptId("1000")
-                    .setName(thirdLoginFormAlipayVo.getNickName())
-                    .setNickName(thirdLoginFormAlipayVo.getNickName())
-                    .setAvatar(thirdLoginFormAlipayVo.getAvatar())
-                    .setSex("m".equals(thirdLoginFormAlipayVo.getGender()) ? 1 : 2)
-                    .setSource(5)
-                    .setLastLoginTime(LocalDateTime.now())
-                    .insert();
-            new SysUserRole().setUserId(thirdLoginFormAlipayVo.getUserId())
-                    .setRoleId("1000")
-                    .insert();
-        }
-        return getSysUserByUsername(thirdLoginFormAlipayVo.getUserId());
-    }
-
-    /**
      * 第三方登录写入或更新用户信息
      */
+    @InsertLog("第三方用户登录")
     @PostMapping("/insertOrUpdateByThird")
     public SysUser insertOrUpdateByThird(@RequestBody SysUser param) {
         Assert.notNull(param);

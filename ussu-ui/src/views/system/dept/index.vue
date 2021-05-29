@@ -24,7 +24,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:dept:edit']"
+          v-perm="['system:dept:add']"
         >新增</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -34,36 +34,41 @@
       v-loading="loading"
       :data="deptList"
       row-key="id"
+      :border="true"
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="name" label="部门名称" width="260"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="200"></el-table-column>
+      <el-table-column prop="name" label="部门名称"></el-table-column>
+      <el-table-column prop="fullName" label="部门全称"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="80" align="center"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-perm="['system:dept:edit']"
           >修改</el-button>
           <el-button
             size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
-            v-perm="['system:dept:edit']"
+            v-perm="['system:dept:add']"
           >新增</el-button>
           <el-button
             v-if="scope.row.parentId != 0"
             size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:dept:delete']"
@@ -109,8 +114,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" size="medium" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

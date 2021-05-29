@@ -1,6 +1,6 @@
 package cn.ussu.common.core.constants;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrPool;
 
 public interface StrConstants {
 
@@ -20,7 +20,7 @@ public interface StrConstants {
     String ParentView = "ParentView";
     String defaultSuccessCode = "";
 
-    String COMMA = StrUtil.COMMA;
+    String COMMA = StrPool.COMMA;
 
     String DEFAULT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
@@ -40,4 +40,8 @@ public interface StrConstants {
     String del_flag = "del_flag";
     String delFlag = "delFlag";
     String version = "version";
+
+    String SLASH_all = StrPool.SLASH + all;
+    String SLASH_remote = StrPool.SLASH + "remote";
+
 }

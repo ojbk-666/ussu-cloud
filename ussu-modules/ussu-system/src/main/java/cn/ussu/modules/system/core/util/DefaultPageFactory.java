@@ -1,10 +1,14 @@
 package cn.ussu.modules.system.core.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.ussu.common.core.entity.ReturnPageInfo;
 import cn.ussu.common.core.entity.UssuPageFactory;
 import cn.ussu.common.core.entity.UssuPageInfo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 默认的分页工具
@@ -24,17 +28,38 @@ public class DefaultPageFactory implements UssuPageFactory {
     }
 
     /**
-     * 创建分页返回对象
+     * 获取分页结果对象
      */
-    public static ReturnPageInfo createReturnPageInfo(IPage iPage) {
-        UssuPageInfo ussuPageInfo = new UssuPageInfo()
+    protected static UssuPageInfo getPageInfo(IPage iPage) {
+        return new UssuPageInfo()
                 .setCurrent(iPage.getCurrent())
                 .setSize(iPage.getSize())
                 .setPages(iPage.getPages())
                 .setTotal(iPage.getTotal());
+    }
+
+    /**
+     * 创建分页返回对象
+     */
+    public static ReturnPageInfo createReturnPageInfo(IPage iPage) {
         return new ReturnPageInfo()
                 .setRecords(iPage.getRecords())
-                .setPageInfo(ussuPageInfo);
+                .setPageInfo(getPageInfo(iPage));
+    }
+
+    /**
+     * 创建分页对象，替换list
+     */
+    public static ReturnPageInfo createReturnPageInfo(IPage iPage, List rewriteRecords) {
+        IPage t = iPage.setRecords(rewriteRecords);
+        return createReturnPageInfo(t);
+    }
+
+    /**
+     * 转换为result对象
+     */
+    public static <R> List<R> convertToResult(List<?> list, Class<R> r) {
+        return list.stream().map(item -> BeanUtil.toBean(item, r)).collect(Collectors.toList());
     }
 
 }

@@ -64,7 +64,7 @@ public class SysAttachController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.edit)
     @PostMapping
-    @PermCheck("system:attach:edit")
+    @PermCheck("system:attach:add")
     public Object edit(@ApiParam SysAttach obj) {
         if (StrUtil.isBlank(obj.getId())) throw new RequestEmptyException();
         obj.updateById();

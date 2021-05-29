@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysDept;
 import cn.ussu.modules.system.model.param.SysDeptParam;
@@ -32,7 +33,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys-dept")
-// @InsertLog(code = "sys-dept", name = "部门")
 public class SysDeptController extends BaseAdminController {
 
     @Autowired
@@ -128,8 +128,9 @@ public class SysDeptController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
+    @InsertLog("新增部门")
     @PutMapping
-    @PermCheck("system:dept:edit")
+    @PermCheck("system:dept:add")
     public Object add(@ApiParam @RequestBody SysDept obj) {
         service.addOne(obj);
         return JsonResult.ok();
@@ -139,6 +140,7 @@ public class SysDeptController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @InsertLog("修改部门")
     @PostMapping
     @PermCheck("system:dept:edit")
     public Object edit(@ApiParam @RequestBody SysDept obj) {
@@ -151,6 +153,7 @@ public class SysDeptController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @InsertLog("删除部门")
     @DeleteMapping("/{id}")
     @PermCheck("system:dept:delete")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {

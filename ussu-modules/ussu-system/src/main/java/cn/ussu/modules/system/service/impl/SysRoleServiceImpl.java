@@ -152,6 +152,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             // list = super.list();
             list = new ArrayList<>();
             List<String> allPerm = sysMenuService.list().stream().map(item -> item.getPerm()).filter(StrUtil::isNotBlank).collect(Collectors.toList());
+            allPerm.add("*:*:*");
             list.add(new SysRole().setRoleName("超级管理员").setPerms(allPerm));
         } else {
             list = this.sysRoleMapper.findByUserId(userId);

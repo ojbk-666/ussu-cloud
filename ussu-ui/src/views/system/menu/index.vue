@@ -34,7 +34,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:menu:edit']"
+          v-perm="['system:menu:add']"
         >新增</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -44,19 +44,20 @@
       v-loading="loading"
       :data="menuList"
       row-key="id"
+      :border="true"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="name" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
-      <el-table-column prop="icon" label="图标" align="center" width="100">
+      <el-table-column prop="name" label="菜单名称" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon?scope.row.icon:''" />
+          &nbsp;<svg-icon :icon-class="scope.row.icon?scope.row.icon:''" />
+          &nbsp;{{scope.row.name}}
         </template>
       </el-table-column>
-      <el-table-column prop="sort" label="排序" width="60"></el-table-column>
-      <el-table-column prop="perm" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="80" align="center"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"></el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column prop="perm" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80" align="center"></el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini"
             type="text"
@@ -69,11 +70,12 @@
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
-            v-perm="['system:menu:edit']"
+            v-perm="['system:menu:add']"
           >新增</el-button>
           <el-button
             size="mini"
             type="text"
+            style="color: red"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:menu:delete']"
@@ -204,8 +206,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" size="medium" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

@@ -10,13 +10,13 @@ import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.core.util.DictUtil;
 import cn.ussu.modules.system.entity.SysMenu;
 import cn.ussu.modules.system.entity.SysRoleMenu;
 import cn.ussu.modules.system.model.param.SysMenuParam;
-import cn.ussu.modules.system.model.vo.RouterVo;
 import cn.ussu.modules.system.parser.SysMenuNodeParser;
 import cn.ussu.modules.system.parser.SysMenuTreeSelectParser;
 import cn.ussu.modules.system.service.ISysMenuService;
@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/sys-menu")
-// @InsertLog(code = "sys-menu", name = "权限管理")
 public class SysMenuController extends BaseAdminController {
 
     @Autowired
@@ -78,16 +77,6 @@ public class SysMenuController extends BaseAdminController {
         TreeNodeConfig tnc = TreeNodeConfig.DEFAULT_CONFIG.setChildrenKey("subMenus");
         List<Tree<String>> t = TreeUtil.build(list, "0", tnc, parser);
         return JsonResult.ok().data(t);
-    }
-
-    /**
-     * 获取用户路由信息
-     */
-    @GetMapping("/routers")
-    public Object getRouters() {
-        List<SysMenu> menuList = sysMenuService.findMenuTreeByUserId(SecurityUtils.getUserId());
-        List<RouterVo> routerVoList = sysMenuService.buildMenus(menuList);
-        return JsonResult.ok().data(routerVoList);
     }
 
     /**
@@ -158,7 +147,8 @@ public class SysMenuController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
-    @PermCheck("system:menu:edit")
+    @InsertLog("新增菜单")
+    @PermCheck("system:menu:add")
     @PutMapping
     public Object add(@ApiParam @RequestBody SysMenu obj) {
         // 未选择上级则未顶级菜单
@@ -171,6 +161,7 @@ public class SysMenuController extends BaseAdminController {
      * 编辑
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @InsertLog("修改菜单")
     @PermCheck("system:menu:edit")
     @PostMapping
     public Object edit(@ApiParam @RequestBody SysMenu obj) {
@@ -186,6 +177,7 @@ public class SysMenuController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @InsertLog("删除菜单")
     @PermCheck("system:menu:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {

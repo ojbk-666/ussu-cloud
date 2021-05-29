@@ -63,7 +63,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:role:edit']"
+          v-perm="['system:role:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,11 +90,11 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="roleList" :border="true" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="200" />
-      <el-table-column label="权限字符" prop="roleCode" :show-overflow-tooltip="true" width="200" />
-      <el-table-column label="显示顺序" prop="roleSort" width="100" />
+      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" />
+      <el-table-column label="权限字符" prop="roleCode" :show-overflow-tooltip="true" />
+      <el-table-column label="排序" prop="roleSort" width="80" align="center"/>
       <el-table-column label="角色备注" prop="roleDesc" :show-overflow-tooltip="true" width="250" />
       <el-table-column label="状态" align="center" width="80">
         <template slot-scope="scope">
@@ -118,6 +118,7 @@
           <el-button
             size="mini"
             type="text"
+            style="color: red"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:role:delete']"
@@ -175,8 +176,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button size="medium" type="primary" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

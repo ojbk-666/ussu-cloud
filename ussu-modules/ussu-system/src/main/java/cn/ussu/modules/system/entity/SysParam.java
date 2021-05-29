@@ -67,7 +67,7 @@ public class SysParam extends Model<SysParam> {
     @ApiModelProperty(value = "是否删除：0未删除 1已删除")
     @TableField(fill = FieldFill.INSERT)
     @TableLogic
-    private Integer delFlag;
+    private Boolean delFlag;
 
     @ApiModelProperty(value = "乐观锁")
     @TableField(fill = FieldFill.INSERT)

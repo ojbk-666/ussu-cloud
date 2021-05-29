@@ -58,7 +58,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:param:edit']"
+          v-perm="['system:param:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -85,14 +85,14 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="configList" :border="true" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="参数主键" align="center" prop="id" />-->
-      <el-table-column label="参数名称" align="center" prop="paramName" :show-overflow-tooltip="true" />
-      <el-table-column label="参数键名" align="center" prop="paramKey" :show-overflow-tooltip="true" />
-      <el-table-column label="参数键值" align="center" prop="paramValue" />
-      <el-table-column label="系统内置" align="center" prop="module" :formatter="moduleFormat" />
-      <el-table-column label="备注" align="center" prop="paramDesc" :show-overflow-tooltip="true" />
+      <el-table-column label="参数名称" prop="paramName" :show-overflow-tooltip="true" />
+      <el-table-column label="参数键名" prop="paramKey" :show-overflow-tooltip="true" />
+      <el-table-column label="参数键值" prop="paramValue" />
+      <el-table-column label="模块" align="center" width="100" prop="module" :formatter="moduleFormat" />
+      <el-table-column label="备注" prop="paramDesc" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
@@ -102,14 +102,16 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-perm="['system:param:edit']"
           >修改</el-button>
           <el-button
             size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:param:delete']"
@@ -152,8 +154,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" size="medium" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

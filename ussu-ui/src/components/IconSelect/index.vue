@@ -54,7 +54,8 @@ export default {
         line-height: 30px;
         margin-bottom: -5px;
         cursor: pointer;
-        width: 33%;
+        //width: 33%;
+        width: 50%;
         float: left;
       }
       span {

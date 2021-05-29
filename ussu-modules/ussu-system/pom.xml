@@ -33,6 +33,11 @@
             <artifactId>ussu-common-security</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>cn.ussu</groupId>
+            <artifactId>ussu-common-log</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!-- SpringBoot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

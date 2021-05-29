@@ -101,7 +101,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-perm="['system:user:edit']"
+              v-perm="['system:user:add']"
             >新增</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -138,7 +138,7 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="userList" :border="true" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="用户账号" align="center" key="account" prop="account" v-if="columns[0].visible" />
           <el-table-column label="用户名称" align="center" key="name" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" />
@@ -185,6 +185,7 @@
               <el-button
                 size="mini"
                 type="text"
+                style="color: red"
                 icon="el-icon-key"
                 @click="handleResetPwd(scope.row)"
                 v-perm="['system:user:edit']"
@@ -322,8 +323,8 @@
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
+        <el-button size="medium" type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button size="medium" @click="upload.open = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>

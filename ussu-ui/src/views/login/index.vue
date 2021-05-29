@@ -24,7 +24,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" content="大写锁定已打开" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -66,7 +66,7 @@
           </el-form-item>
         </div>
         <div style="display: inline-block;margin-left: 10px;position: absolute;">
-          <img :src="captchaimg" @click="getLoiginCaptcha" />
+          <img :src="captchaimg" @click="getLoginCaptcha" />
         </div>
       </div>
 
@@ -170,7 +170,7 @@ export default {
   created() {
     // window.addEventListener('storage', this.afterQRScan)
     // window.addEventListener('storage', this.afterThirdLoginAlipay)
-    this.getLoiginCaptcha();
+    this.getLoginCaptcha();
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     // 获取验证码
-    getLoiginCaptcha() {
+    getLoginCaptcha() {
       getCaptcha(this.loginForm.uuid).then(res => {
         this.loginForm.uuid = res.data.uuid;
         this.captchaimg = res.data.img
@@ -214,16 +214,14 @@ export default {
           this.$store.dispatch('user/login', loginParam)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
             })
             .catch(() => {
               this.loading = false
+              this.getLoginCaptcha();
             })
             .finally(() => {
-              this.loading = false
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

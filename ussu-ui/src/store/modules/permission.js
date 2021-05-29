@@ -1,7 +1,7 @@
 import { constantRoutes } from '@/router'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
-import { getRouters } from '@/api/menu'
+import { getRouters } from '@/api/profile'
 
 /**
  * Use meta.role to determine if the current user has permission

@@ -105,7 +105,7 @@ public class SysAreaController extends BaseAdminController {
      */
     @ApiOperation(value = SwaggerConstants.add)
     @PutMapping
-    @PermCheck("system:area:edit")
+    @PermCheck("system:area:add")
     public Object add(@ApiParam SysArea obj) {
         obj.insert();
         return JsonResult.ok();

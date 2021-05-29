@@ -49,26 +49,10 @@ export function resetUserPwd(data) {
   })
 }
 
-// 删除参数配置
+// 删除
 export function delUser(configId) {
   return request({
     url: '/system/sys-user/' + configId,
     method: 'delete'
-  })
-}
-
-export function updateUserProfile(data) {
-  return request({
-    url: '/system/sys-user/profile',
-    method: 'post',
-    data
-  })
-}
-
-export function updateUserPwd(data) {
-  return request({
-    url: '/system/sys-user/updatePwd',
-    method: 'post',
-    data
   })
 }

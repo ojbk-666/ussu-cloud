@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.core.util.DictUtil;
 import cn.ussu.modules.system.entity.SysDict;
@@ -35,7 +36,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys-dict")
-// @InsertLog(code = "sys-dict", name = "数据字典")
 public class SysDictController extends BaseAdminController {
 
     @Autowired
@@ -81,7 +81,8 @@ public class SysDictController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
-    @PermCheck("system:dict:eidt")
+    @InsertLog("新增字典数据")
+    @PermCheck("system:dict:add")
     @PutMapping
     public Object add(@ApiParam @RequestBody SysDict obj) {
         checkReqParamThrowException(obj.getTypeCode());
@@ -104,6 +105,7 @@ public class SysDictController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @InsertLog("修改字典数据")
     @PermCheck("system:dict:edit")
     @PostMapping
     public Object edit(@ApiParam @RequestBody SysDict obj) {
@@ -127,6 +129,7 @@ public class SysDictController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @InsertLog("删除字典数据")
     @PermCheck("system:dict:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {

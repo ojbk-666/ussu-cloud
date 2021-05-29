@@ -44,7 +44,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-perm="['system:dict:edit']"
+          v-perm="['system:dict:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,13 +71,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="dataList" :border="true" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" align="center" width="50"/>
       <el-table-column label="类型编码" align="center" prop="typeCode" />
       <el-table-column label="字典标签" align="center" prop="dictLabel" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
-      <el-table-column label="字典排序" align="center" prop="dictSort" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="排序" align="center" prop="dictSort" width="80"/>
+      <el-table-column label="状态" align="center" prop="status" width="80" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="dictDesc" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -91,6 +91,7 @@
           <el-button
             size="mini"
             type="text"
+            style="color: red"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-perm="['system:dict:delete']"
@@ -138,8 +139,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" size="medium" @click="submitForm">确 定</el-button>
+        <el-button size="medium" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>

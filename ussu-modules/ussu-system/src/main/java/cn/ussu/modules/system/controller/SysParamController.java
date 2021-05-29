@@ -5,6 +5,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.SwaggerConstants;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysParam;
 import cn.ussu.modules.system.model.param.SysParamParam;
@@ -28,7 +29,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys-param")
-// @InsertLog(code = "sys-param", name = "系统参数")
 public class SysParamController extends BaseAdminController {
 
     @Autowired
@@ -53,7 +53,8 @@ public class SysParamController extends BaseAdminController {
      * 新增
      */
     @ApiOperation(value = SwaggerConstants.add)
-    @PermCheck("system:param:edit")
+    @InsertLog("新增系统参数")
+    @PermCheck("system:param:add")
     @PutMapping
     public Object add(@ApiParam @RequestBody SysParam sysParam) {
         sysParam.insert();
@@ -64,6 +65,7 @@ public class SysParamController extends BaseAdminController {
      * 修改
      */
     @ApiOperation(value = SwaggerConstants.edit)
+    @InsertLog("修改系统参数")
     @PermCheck("system:param:edit")
     @PostMapping
     public Object edit(@ApiParam @RequestBody SysParam sysParam) {
@@ -76,6 +78,7 @@ public class SysParamController extends BaseAdminController {
      * 删除
      */
     @ApiOperation(value = SwaggerConstants.delete)
+    @InsertLog("删除系统参数")
     @PermCheck("system:param:delete")
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") @ApiParam(name = "id", value = SwaggerConstants.paramDesc_delete, required = true, type = SwaggerConstants.paramType_path) String id) {

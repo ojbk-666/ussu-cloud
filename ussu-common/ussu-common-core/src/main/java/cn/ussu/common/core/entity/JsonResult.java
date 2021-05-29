@@ -121,6 +121,13 @@ public class JsonResult extends HashMap<String, Object> {
     }
 
     /**
+     * 获取消息
+     */
+    public String getMsg() {
+        return ((String) get(StrConstants.msg));
+    }
+
+    /**
      * 放入指定的返回值
      *
      * @param key   key
