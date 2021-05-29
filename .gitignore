@@ -1,6 +1,1 @@
-/ussu-auth/target/
-/ussu-common/ussu-common-core/target/
-/ussu-common/ussu-common-redis/target/
-/ussu-common/ussu-common-security/target/
-/ussu-modules/ussu-system/target/
-/ussu-modules/ussu-dczx/target/
+/**/target/
