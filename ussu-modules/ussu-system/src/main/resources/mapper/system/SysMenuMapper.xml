@@ -54,7 +54,7 @@
                 and a.type != 30 and a.status = 1
             </if>
         </where>
-        order by a.sort asc
+        order by a.type asc, a.sort asc, a.name
     </select>
     <!--根据角色获取菜单-->
     <select id="findByRoleId" resultMap="BaseResultMap">

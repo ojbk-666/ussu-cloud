@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function listMenu() {
+export function listMenu(data) {
   return request({
     url: '/system/sys-menu/all',
-    method: 'get'
+    method: 'get',
+    params: data
   })
 }
 

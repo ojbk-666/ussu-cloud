@@ -59,7 +59,8 @@ public class SysMenuController extends BaseAdminController {
     public Object listAll(SysMenuParam param) {
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
         qw.like(StrUtil.isNotBlank(param.getName()), SysMenu::getName, param.getName())
-                ;
+                .eq(param.getStatus() != null, SysMenu::getStatus, param.getStatus())
+                .orderByAsc(SysMenu::getType, SysMenu::getSort, SysMenu::getName);
         List<SysMenu> list = sysMenuService.list(qw);
         return JsonResult.ok().data(list);
     }
