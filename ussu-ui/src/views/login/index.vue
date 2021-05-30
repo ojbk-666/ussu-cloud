@@ -189,6 +189,9 @@ export default {
       getCaptcha(this.loginForm.uuid).then(res => {
         this.loginForm.uuid = res.data.uuid;
         this.captchaimg = res.data.img
+        if (res.data.r) {
+          this.loginForm.code = res.data.r
+        }
       }).then(() => {})
     },
     checkCapslock(e) {

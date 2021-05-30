@@ -85,8 +85,7 @@ export function handleTree(data, id, parentId, children, rootId) {
   return treeData != '' ? treeData : data;
 }
 
-
-
+// 获取字典名称
 export function selectDictLabel(arr, i) {
   for (const item of arr) {
     if (item.dictValue === i) {
@@ -94,4 +93,30 @@ export function selectDictLabel(arr, i) {
     }
   }
   return undefined;
+}
+
+// 通过文件后缀获取对应的svg图标名称
+const imageArr = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'psd'];
+const wordArr = ['dox', 'docx'];
+const excelArr = ['xls', 'xlsx'];
+const pptArr = ['ppt', 'pptx'];
+const audioArr = ['acc', 'mp3', 'amr'];
+const videoArr = ['wmv', 'mp4', 'rmv', 'rmvb', 'flv', 'avi'];
+export function getSvgByFileExt(fileName) {
+  let ext = fileName.substr(fileName.lastIndexOf(".") + 1);
+  if (imageArr.indexOf(ext) !== -1) {
+    return 'image';
+  } else if (wordArr.indexOf(ext) !== -1) {
+    return 'word';
+  } else if (excelArr.indexOf(ext) !== -1) {
+    return 'excel';
+  } else if (pptArr.indexOf(ext) !== -1) {
+    return 'ppt';
+  } else if (audioArr.indexOf(ext) !== -1) {
+    return 'audio';
+  } else if (videoArr.indexOf(ext) !== -1) {
+    return 'video';
+  } else {
+    return ext;
+  }
 }

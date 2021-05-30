@@ -47,16 +47,25 @@
       :border="true"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
+      <el-table-column type="index" label="" align="center" width="50"></el-table-column>
       <el-table-column prop="name" label="菜单名称" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           &nbsp;<svg-icon :icon-class="scope.row.icon?scope.row.icon:''" />
           &nbsp;{{scope.row.name}}
         </template>
       </el-table-column>
-      <el-table-column prop="sort" label="排序" width="80" align="center"></el-table-column>
+      <el-table-column prop="path" label="路由地址" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="perm" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="60" align="center"></el-table-column>
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80" align="center"></el-table-column>
+      <el-table-column prop="name" label="类型" width="60">
+        <template slot-scope="scope">
+          <el-tag size="mini" type="success" v-if="scope.row.type === 10">目录</el-tag>
+          <el-tag size="mini" v-else-if="scope.row.type === 20">菜单</el-tag>
+          <el-tag size="mini" type="info" v-else-if="scope.row.type === 30">按钮</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini"

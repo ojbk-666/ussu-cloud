@@ -44,16 +44,17 @@
     </el-row>
 
     <el-table v-loading="loading" :data="roleList" :border="true">
-      <el-table-column label="日志名称" prop="logName"/>
-      <el-table-column label="请求方法" prop="requestMethod" width="80" align="center"/>
-      <el-table-column label="请求时间" prop="requestTime" :show-overflow-tooltip="true" width="160"/>
+      <el-table-column label="" type="index" align="center" width="50"/>
+      <el-table-column label="日志名称" prop="logName" :show-overflow-tooltip="true"/>
+      <el-table-column label="请求方法" prop="requestMethod" width="80"/>
+      <el-table-column label="请求时间" prop="requestTime" :show-overflow-tooltip="true"/>
       <el-table-column label="请求路径" prop="requestUri" :show-overflow-tooltip="true"/>
-      <el-table-column label="请求IP" prop="remoteIp" width="140"/>
-      <el-table-column label="位置" prop="locationStr"/>
+      <el-table-column label="请求IP" prop="remoteIp" width="130" :show-overflow-tooltip="true"/>
+      <el-table-column label="位置" prop="locationStr" :show-overflow-tooltip="true"/>
       <el-table-column label="请求用户" prop="createBy" width="80" :show-overflow-tooltip="true"/>
       <el-table-column label="浏览器" prop="browserType" width="100"/>
       <el-table-column label="响应结果" prop="resultCode" width="80"/>
-      <el-table-column label="响应时间" prop="executeTimeStr" width="110"/>
+      <el-table-column label="响应时间" prop="executeTimeStr" width="100" :show-overflow-tooltip="true"/>
     </el-table>
     <pagination
         v-show="total>0"
