@@ -4,9 +4,14 @@ import cn.ussu.common.core.entity.LocalFileVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface SysFileService {
 
-    LocalFileVo uploadFile(MultipartFile file) throws IOException;
+    LocalFileVo uploadFile(MultipartFile file, String parentPath) throws IOException;
+
+    default List<LocalFileVo> listFile(String path) {
+        return null;
+    }
 
 }

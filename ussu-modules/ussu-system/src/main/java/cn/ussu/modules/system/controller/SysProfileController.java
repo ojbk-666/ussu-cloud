@@ -87,7 +87,7 @@ public class SysProfileController extends BaseAdminController {
     @PostMapping("/avatar")
     public JsonResult uploadAvatar(@RequestParam("file") MultipartFile file) {
         Assert.isTrue(!file.isEmpty());
-        LocalFileVo localFileVo = remoteFileService.upload(file);
+        LocalFileVo localFileVo = remoteFileService.upload(file, null);
         if (localFileVo == null) {
             return JsonResult.error();
         }

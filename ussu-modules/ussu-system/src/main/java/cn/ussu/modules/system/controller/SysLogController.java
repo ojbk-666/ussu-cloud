@@ -1,5 +1,6 @@
 package cn.ussu.modules.system.controller;
 
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.StrConstants;
@@ -10,6 +11,8 @@ import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.entity.SysLog;
 import cn.ussu.modules.system.model.param.SysLogParam;
 import cn.ussu.modules.system.service.ISysLogService;
+import cn.ussu.modules.system.third.amap.GaodeIpLocationResponse;
+import cn.ussu.modules.system.third.amap.GaodeIpLocationService;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,6 +35,8 @@ public class SysLogController extends BaseAdminController {
 
     @Autowired
     private ISysLogService sysLogService;
+    @Autowired
+    private GaodeIpLocationService gaodeIpLocationService;
 
     @ApiOperation(value = SwaggerConstants.list)
     @ApiImplicitParams(value = {
@@ -52,6 +57,13 @@ public class SysLogController extends BaseAdminController {
     public JsonResult recordLog(@RequestBody SysLog sysLog) {
         if (StrUtil.isBlank(sysLog.getId())) {
             sysLog.setId(IdWorker.getIdStr());
+        }
+        if (StrUtil.isNotBlank(sysLog.getRemoteIp()) && NetUtil.isInnerIP(sysLog.getRemoteIp())) {
+            GaodeIpLocationResponse gaodeIpLocationResponse = gaodeIpLocationService.getLocation(sysLog.getRemoteIp());
+            if (gaodeIpLocationResponse.success() && !"[]".equals(gaodeIpLocationResponse.getAdcode())) {
+                sysLog.setLocationAdcode(gaodeIpLocationResponse.getAdcode())
+                        .setLocationStr(gaodeIpLocationResponse.getProvince() + gaodeIpLocationResponse.getCity());
+            }
         }
         sysLog.insert();
         return JsonResult.ok();

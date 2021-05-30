@@ -5,6 +5,7 @@ import cn.ussu.auth.service.SysLoginService;
 import cn.ussu.common.core.base.BaseController;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.util.SecurityUtils;
@@ -25,6 +26,7 @@ public class TokenController extends BaseController {
     @Autowired
     private RedisService redisService;
 
+    @InsertLog("用户登录")
     @PostMapping("/login")
     public JsonResult login(@RequestBody LoginParam loginParam) {
         LoginUser loginUser = sysLoginService.login(loginParam);
@@ -33,6 +35,7 @@ public class TokenController extends BaseController {
         return JsonResult.ok().data(data);
     }
 
+    @InsertLog("用户退出登录")
     @RequestMapping("/logout")
     public JsonResult logout() {
         redisService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY_ + SecurityUtils.getRequestToken());

@@ -38,7 +38,8 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         qw.like(StrUtil.isNotBlank(param.getLogName()), SysLog::getLogName, param.getLogName())
                 .eq(StrUtil.isNotBlank(param.getRemoteIp()), SysLog::getRemoteIp, param.getRemoteIp())
                 .le(param.getCreateTimeEnd() != null, SysLog::getRequestTime, param.getCreateTimeEnd())
-                .ge(param.getCreateTimeStart() != null, SysLog::getRequestTime, param.getCreateTimeStart());
+                .ge(param.getCreateTimeStart() != null, SysLog::getRequestTime, param.getCreateTimeStart())
+                .orderByDesc(SysLog::getRequestTime);
         Page page = mapper.selectPage(DefaultPageFactory.getPage(), qw);
         List<SysLogResult> records = page.getRecords();
         List<SysLogResult> list = DefaultPageFactory.convertToResult(records, SysLogResult.class);

@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
+@Deprecated
 public class ThirdLoginFormAlipayVo implements Serializable {
 
     private static final long serialVersionUID = -5860092173691464825L;

@@ -1,5 +1,6 @@
 package cn.ussu.common.core.entity;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -23,11 +24,15 @@ public class LocalFileVo implements Serializable {
     /**
      * 文件访问的 domain + path
      */
-    private String url = domain + StrPool.SLASH + path;
+    private String url;
     /**
      * 文件大小
      */
     private Long size;
+    /**
+     * 文件大小显示名称
+     */
+    private String sizeStr;
     /**
      * 文件名
      */
@@ -41,4 +46,38 @@ public class LocalFileVo implements Serializable {
      */
     private Long timestamp;
 
+    /**
+     * 类型 目录folder
+     */
+    private String type;
+
+    public LocalFileVo setTypeFolder() {
+        this.type = "folder";
+        return this;
+    }
+
+    public LocalFileVo setTypeFile(String typeFile) {
+        this.type = typeFile;
+        return this;
+    }
+
+    public LocalFileVo setSize(Long size) {
+        this.size = size;
+        if (size != null) {
+            this.sizeStr = FileUtil.readableFileSize(size);
+        }
+        return this;
+    }
+
+    public LocalFileVo setDomain(String domain) {
+        this.domain = domain;
+        this.url = domain + StrPool.SLASH + getPath();
+        return this;
+    }
+
+    public LocalFileVo setPath(String path) {
+        this.path = path;
+        this.url = getDomain() + StrPool.SLASH + path;
+        return this;
+    }
 }

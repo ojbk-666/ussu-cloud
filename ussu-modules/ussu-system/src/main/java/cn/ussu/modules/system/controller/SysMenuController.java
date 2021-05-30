@@ -123,8 +123,11 @@ public class SysMenuController extends BaseAdminController {
      */
     @PermCheck("system:menu:select")
     @GetMapping("/treeselect")
-    public Object treeselect() {
-        List<SysMenu> list = sysMenuService.list();
+    public Object treeselect(SysMenuParam param) {
+        LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
+        qw.eq(param.getStatus() != null, SysMenu::getStatus, param.getStatus())
+                .orderByAsc(SysMenu::getType, SysMenu::getSort, SysMenu::getName);
+        List<SysMenu> list = sysMenuService.list(qw);
         List<Tree<String>> tree = TreeUtil.build(list, "0", new SysMenuTreeSelectParser());
         return JsonResult.ok().data(tree);
     }

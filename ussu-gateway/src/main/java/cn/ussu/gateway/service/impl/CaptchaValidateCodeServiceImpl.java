@@ -1,6 +1,7 @@
 package cn.ussu.gateway.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.RedisConstants;
@@ -11,6 +12,7 @@ import cn.ussu.gateway.service.ValidateCodeService;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -24,6 +26,8 @@ public class CaptchaValidateCodeServiceImpl implements ValidateCodeService {
 
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private Environment environment;
 
     @Override
     public JsonResult create(String uuid) {
@@ -37,6 +41,9 @@ public class CaptchaValidateCodeServiceImpl implements ValidateCodeService {
         Map<String, Object> r = new HashMap<>(2);
         r.put("uuid", uuid);
         r.put("img", base64Img);
+        if (ArrayUtil.contains(environment.getActiveProfiles(), "dev")) {
+            r.put("r", text);
+        }
         return JsonResult.ok().data(r);
     }
 
