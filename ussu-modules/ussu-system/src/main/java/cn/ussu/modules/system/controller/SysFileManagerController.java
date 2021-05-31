@@ -38,4 +38,40 @@ public class SysFileManagerController extends BaseAdminController {
         return JsonResult.ok().data(vo);
     }
 
+    /**
+     * 创建新文件夹
+     */
+    @PutMapping
+    public JsonResult mkdir(@RequestBody LocalFileVo param) {
+        checkReqParamThrowException(param);
+        if (remoteFileService.mkdir(param.getPath(), param.getName())) {
+            return JsonResult.ok();
+        }
+        return JsonResult.error();
+    }
+
+    /**
+     * 删除文件
+     */
+    @DeleteMapping
+    public JsonResult delete(@RequestParam LocalFileVo param) {
+        checkReqParamThrowException(param);
+        if (remoteFileService.delete(param.getPath())) {
+            return JsonResult.ok();
+        }
+        return JsonResult.error();
+    }
+
+    /**
+     * 重命名
+     */
+    @PostMapping
+    public JsonResult rename(@RequestBody LocalFileVo param) {
+        checkReqParamThrowException(param);
+        if (remoteFileService.rename(param.getPath(), param.getName())) {
+            return JsonResult.ok();
+        }
+        return JsonResult.error();
+    }
+
 }

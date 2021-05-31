@@ -1,16 +1,19 @@
 package cn.ussu.modules.files.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseController;
 import cn.ussu.common.core.entity.LocalFileVo;
+import cn.ussu.modules.files.properties.LocalUploadProperties;
 import cn.ussu.modules.files.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,8 @@ public class SysFileController extends BaseController {
 
     @Autowired
     private SysFileService sysFileService;
+    @Autowired
+    private LocalUploadProperties localUploadProperties;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public LocalFileVo upload(@RequestParam("file") MultipartFile multipartFile
@@ -39,6 +44,53 @@ public class SysFileController extends BaseController {
     @GetMapping("/list")
     public List<LocalFileVo> list(String path) {
         return sysFileService.listFile(path);
+    }
+
+    /**
+     * 创建文件夹
+     */
+    @PutMapping
+    public boolean mkdir(@RequestParam(value = "path", required = false) String path
+            , @RequestParam("name") String dir) {
+        // /a/
+        path = StrUtil.nullToEmpty(path);
+        path = StrUtil.addPrefixIfNot(path, StrPool.SLASH);
+        path = StrUtil.addSuffixIfNot(path, StrPool.SLASH);
+        // b
+        dir = StrUtil.removePrefix(dir, StrPool.SLASH);
+        dir = StrUtil.removeSuffix(dir, StrPool.SLASH);
+        String rootPath = localUploadProperties.getLocalFilePath();
+        // /local/a/b
+        FileUtil.mkdir(rootPath + path + dir);
+        return true;
+    }
+
+    /**
+     * 删除文件
+     */
+    @DeleteMapping
+    public boolean rm(@RequestParam("path") String relativePath) {
+        Assert.notBlank(relativePath, "文件不存在");
+        // 文件夹检查
+        relativePath = StrUtil.addPrefixIfNot(relativePath, StrPool.SLASH);
+        String absolutePath = localUploadProperties.getLocalFilePath() + relativePath;
+        Assert.isFalse(FileUtil.isDirectory(absolutePath), "不能删除文件夹");
+        return FileUtil.del(absolutePath);
+    }
+
+    /**
+     * 重命名文件或文件夹名称
+     *
+     * @param path 相对路径
+     * @param name 新文件或文件夹名称
+     * @return
+     */
+    @PostMapping
+    public boolean rename(@RequestParam("path") String path, @RequestParam("name") String name) {
+        checkReqParamThrowException(path);
+        path = StrUtil.addPrefixIfNot(path, StrPool.SLASH);
+        FileUtil.rename(new File(localUploadProperties.getLocalFilePath() + path), name, false);
+        return true;
     }
 
 }

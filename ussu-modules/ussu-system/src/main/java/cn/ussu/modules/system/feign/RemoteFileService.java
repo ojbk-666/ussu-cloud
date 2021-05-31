@@ -5,10 +5,7 @@ import cn.ussu.common.core.entity.LocalFileVo;
 import cn.ussu.modules.system.core.config.MultipartSupportConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,5 +18,14 @@ public interface RemoteFileService {
 
     @GetMapping("/list")
     List<LocalFileVo> list(@RequestParam("path") String path);
+
+    @PutMapping
+    boolean mkdir(@RequestParam(value = "path", required = false) String path, @RequestParam("name") String name);
+
+    @DeleteMapping
+    boolean delete(@RequestParam("path") String path);
+
+    @PostMapping
+    public boolean rename(@RequestParam("path") String path, @RequestParam("name") String name);
 
 }
