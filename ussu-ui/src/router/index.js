@@ -165,19 +165,6 @@ export const constantRoutes = [
         meta: { title: 'theme', icon: 'theme' }
       }
     ]
-  },
-
-  {
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard' }
-      }
-    ]
   }
 
 ]

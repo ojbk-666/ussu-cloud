@@ -5,9 +5,9 @@
       <i slot="suffix" class="el-icon-search el-input__icon" />
     </el-input>
     <div class="icon-list">
-      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
-        <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
-        <span>{{ item }}</span>
+      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)" class="icon-list-item" :title="item">
+        <svg-icon :icon-class="item" style="width: 24px;height: 24px;" />
+        <!--<span>{{ item }}</span>-->
       </div>
     </div>
   </div>
@@ -47,9 +47,10 @@ export default {
     width: 100%;
     padding: 10px;
     .icon-list {
+      margin-top: 10px;
       height: 200px;
       overflow-y: scroll;
-      div {
+      /*div {
         height: 30px;
         line-height: 30px;
         margin-bottom: -5px;
@@ -57,6 +58,15 @@ export default {
         //width: 33%;
         width: 50%;
         float: left;
+      }*/
+      .icon-list-item{
+        cursor: pointer;
+        float: left;
+        display: grid;
+        margin: 4px;
+        padding: 6px;
+        border: 1px solid #DCDFE6;
+        border-radius: 4px;
       }
       span {
         display: inline-block;

@@ -243,13 +243,18 @@ export default {
   }
 
   .icon-item {
-    margin: 10px;
+    margin: 5px;
+    padding: 5px;
     text-align: center;
     width: 110px;
     float: left;
     //font-size: 30px;
     color: #24292e;
     cursor: pointer;
+    border-radius: 4px;
+  }
+  .icon-item:hover {
+    background-color: #ffa50015;
   }
 
   span {

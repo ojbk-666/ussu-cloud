@@ -19,12 +19,6 @@ const componentsRouter = {
       meta: { title: 'tinymce' }
     },
     {
-      path: 'dropzone',
-      component: () => import('@/views/components-demo/dropzone'),
-      name: 'DropzoneDemo',
-      meta: { title: 'dropzone' }
-    },
-    {
       path: 'sticky',
       component: () => import('@/views/components-demo/sticky'),
       name: 'StickyDemo',
@@ -53,12 +47,6 @@ const componentsRouter = {
       component: () => import('@/views/components-demo/drag-dialog'),
       name: 'DragDialogDemo',
       meta: { title: 'dragDialog' }
-    },
-    {
-      path: 'drag-select',
-      component: () => import('@/views/components-demo/drag-select'),
-      name: 'DragSelectDemo',
-      meta: { title: 'dragSelect' }
     },
     {
       path: 'dnd-list',
