@@ -126,11 +126,13 @@ export default {
         // formData.append("avatarFile", data);
         formData.append("file", data);
         uploadAvatar(formData).then(response => {
-          this.open = false;
-          this.options.img = response.data.url;
-          store.commit('SET_AVATAR', this.options.img);
-          this.msgSuccess("修改成功");
-          this.visible = false;
+          store.dispatch('user/setAvatar', response.data.url).then(res => {
+            this.open = false;
+            this.options.img = response.data.url;
+            // store.commit('SET_AVATAR', this.options.img);
+            this.msgSuccess("修改成功");
+            this.visible = false;
+          })
         });
       });
     },
