@@ -58,7 +58,7 @@ public class SysLogController extends BaseAdminController {
         if (StrUtil.isBlank(sysLog.getId())) {
             sysLog.setId(IdWorker.getIdStr());
         }
-        if (StrUtil.isNotBlank(sysLog.getRemoteIp()) && NetUtil.isInnerIP(sysLog.getRemoteIp())) {
+        if (StrUtil.isNotBlank(sysLog.getRemoteIp()) && !NetUtil.isInnerIP(sysLog.getRemoteIp())) {
             GaodeIpLocationResponse gaodeIpLocationResponse = gaodeIpLocationService.getLocation(sysLog.getRemoteIp());
             if (gaodeIpLocationResponse.success() && !"[]".equals(gaodeIpLocationResponse.getAdcode())) {
                 sysLog.setLocationAdcode(gaodeIpLocationResponse.getAdcode())

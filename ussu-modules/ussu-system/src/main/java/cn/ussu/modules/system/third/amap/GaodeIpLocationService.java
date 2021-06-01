@@ -17,13 +17,13 @@ public class GaodeIpLocationService {
 
     @Value(("${amap.iplocation.key}"))
     private String key;
-    private final String URL_HTTPS = "https://restapi.amap.com/v3/ip?ip={}&output=JSON&key=" + key;
+    private String URL_HTTPS = "https://restapi.amap.com/v3/ip?ip={}&output=JSON&key=";
 
     /**
      * 获取位置
      */
     public GaodeIpLocationResponse getLocation(String ipAddr) {
-        String realUrl = StrUtil.format(URL_HTTPS, ipAddr);
+        String realUrl = StrUtil.format(URL_HTTPS + key, ipAddr);
         String repStr = HttpUtil.get(realUrl, 3 * 1000);
         GaodeIpLocationResponse gaodeIpLocationResponse = JSON.parseObject(repStr, GaodeIpLocationResponse.class);
         if (gaodeIpLocationResponse.success()) {
