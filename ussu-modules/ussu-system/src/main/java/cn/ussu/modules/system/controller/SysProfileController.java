@@ -6,6 +6,8 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.entity.LocalFileVo;
 import cn.ussu.common.log.annotation.InsertLog;
+import cn.ussu.common.security.entity.LoginUser;
+import cn.ussu.common.security.service.TokenService;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.entity.SysMenu;
 import cn.ussu.modules.system.entity.SysUser;
@@ -30,6 +32,8 @@ public class SysProfileController extends BaseAdminController {
     private ISysMenuService sysMenuService;
     @Autowired
     private RemoteFileService remoteFileService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 获取当前用户信息
@@ -56,6 +60,12 @@ public class SysProfileController extends BaseAdminController {
                 .setPhone(sysUser.getPhone())
                 .setEmail(sysUser.getEmail())
                 .updateById();
+        // 更新缓存
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        cn.ussu.common.security.entity.SysUser u = loginUser.getSysUser();
+        u.setNickName(sysUser.getNickName()).setPhone(sysUser.getPhone()).setEmail(sysUser.getEmail());
+        loginUser.setSysUser(u);
+        tokenService.refreshToken(loginUser);
         return JsonResult.ok();
     }
 
@@ -94,6 +104,12 @@ public class SysProfileController extends BaseAdminController {
         new SysUser().setId(SecurityUtils.getUserId())
                 .setAvatar(localFileVo.getUrl())
                 .updateById();
+        // 更新缓存
+        LoginUser loginUser = tokenService.getLoginUser();
+        cn.ussu.common.security.entity.SysUser sysUser = loginUser.getSysUser();
+        sysUser.setAvatar(localFileVo.getUrl());
+        loginUser.setSysUser(sysUser);
+        tokenService.refreshToken(loginUser);
         return JsonResult.ok().data(localFileVo);
     }
 

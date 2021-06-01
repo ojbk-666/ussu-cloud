@@ -39,3 +39,12 @@ spring:
             groupId: DEFAULT_GROUP
             data-type: json
             rule-type: flow
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 120MB
+
+# https://blog.csdn.net/songjinbin/article/details/103537581
+feign:
+  httpclient:
+    connectionTimeout: 5000
