@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseController;
+import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.entity.LocalFileVo;
 import cn.ussu.modules.files.properties.LocalUploadProperties;
 import cn.ussu.modules.files.service.SysFileService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 @RestController
@@ -50,7 +52,7 @@ public class SysFileController extends BaseController {
      * 创建文件夹
      */
     @PutMapping
-    public boolean mkdir(@RequestParam(value = "path", required = false) String path
+    public JsonResult mkdir(@RequestParam(value = "path", required = false) String path
             , @RequestParam("name") String dir) {
         // /a/
         path = StrUtil.nullToEmpty(path);
@@ -62,20 +64,21 @@ public class SysFileController extends BaseController {
         String rootPath = localUploadProperties.getLocalFilePath();
         // /local/a/b
         FileUtil.mkdir(rootPath + path + dir);
-        return true;
+        return JsonResult.ok();
     }
 
     /**
      * 删除文件
      */
     @DeleteMapping
-    public boolean rm(@RequestParam("path") String relativePath) {
+    public JsonResult rm(@RequestParam("path") String relativePath) {
         Assert.notBlank(relativePath, "文件不存在");
         // 文件夹检查
         relativePath = StrUtil.addPrefixIfNot(relativePath, StrPool.SLASH);
         String absolutePath = localUploadProperties.getLocalFilePath() + relativePath;
-        Assert.isFalse(FileUtil.isDirectory(absolutePath), "不能删除文件夹");
-        return FileUtil.del(absolutePath);
+        // Assert.isFalse(FileUtil.isDirectory(absolutePath), "不能删除文件夹");
+        boolean b = FileUtil.del(absolutePath);
+        return b ? JsonResult.ok() : JsonResult.error();
     }
 
     /**
@@ -86,11 +89,19 @@ public class SysFileController extends BaseController {
      * @return
      */
     @PostMapping
-    public boolean rename(@RequestParam("path") String path, @RequestParam("name") String name) {
+    public JsonResult rename(@RequestParam("path") String path, @RequestParam("name") String name) {
         checkReqParamThrowException(path);
         path = StrUtil.addPrefixIfNot(path, StrPool.SLASH);
-        FileUtil.rename(new File(localUploadProperties.getLocalFilePath() + path), name, false);
-        return true;
+        try {
+            FileUtil.rename(new File(localUploadProperties.getLocalFilePath() + path), name, false);
+        } catch (Exception e) {
+            if (e instanceof FileAlreadyExistsException) {
+                return JsonResult.error("文件/夹[{" + name + "}]已存在");
+            } else {
+                return JsonResult.error(e.getMessage());
+            }
+        }
+        return JsonResult.ok();
     }
 
 }

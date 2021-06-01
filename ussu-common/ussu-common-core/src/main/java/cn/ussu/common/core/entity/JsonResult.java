@@ -173,4 +173,7 @@ public class JsonResult extends HashMap<String, Object> {
         return ((Integer) this.get(StrConstants.code));
     }
 
+    public boolean isSuccess() {
+        return SUCCESS_CODE == this.getCode();
+    }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.entity.LocalFileVo;
+import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.feign.RemoteFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,34 +45,27 @@ public class SysFileManagerController extends BaseAdminController {
     @PutMapping
     public JsonResult mkdir(@RequestBody LocalFileVo param) {
         checkReqParamThrowException(param);
-        if (remoteFileService.mkdir(param.getPath(), param.getName())) {
-            return JsonResult.ok();
-        }
-        return JsonResult.error();
+        return remoteFileService.mkdir(param.getPath(), param.getName());
     }
 
     /**
      * 删除文件
      */
+    @PermCheck("system:files:delete")
     @DeleteMapping
-    public JsonResult delete(@RequestParam LocalFileVo param) {
+    public JsonResult delete(@RequestBody LocalFileVo param) {
         checkReqParamThrowException(param);
-        if (remoteFileService.delete(param.getPath())) {
-            return JsonResult.ok();
-        }
-        return JsonResult.error();
+        return remoteFileService.delete(param.getPath());
     }
 
     /**
      * 重命名
      */
+    @PermCheck("system:files:rename")
     @PostMapping
     public JsonResult rename(@RequestBody LocalFileVo param) {
         checkReqParamThrowException(param);
-        if (remoteFileService.rename(param.getPath(), param.getName())) {
-            return JsonResult.ok();
-        }
-        return JsonResult.error();
+        return remoteFileService.rename(param.getPath(), param.getName());
     }
 
 }

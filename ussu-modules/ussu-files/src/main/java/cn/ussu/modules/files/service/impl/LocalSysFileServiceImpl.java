@@ -77,6 +77,7 @@ public class LocalSysFileServiceImpl implements SysFileService {
         if (!path.startsWith(StrPool.SLASH)) {
             path = StrPool.SLASH + path;
         }
+        // List<File> fileList = FileUtil.loopFiles(new File(localUploadProperties.getLocalFilePath() + path), 1, null);
         File[] fileList = FileUtil.ls(localUploadProperties.getLocalFilePath() + path);
         return Arrays.stream(fileList).sorted(sort()).map(item -> {
             boolean isFile = FileUtil.isFile(item);

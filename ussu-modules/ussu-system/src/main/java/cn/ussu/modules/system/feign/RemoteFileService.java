@@ -1,6 +1,7 @@
 package cn.ussu.modules.system.feign;
 
 import cn.ussu.common.core.constants.ServiceConstants;
+import cn.ussu.common.core.entity.JsonResult;
 import cn.ussu.common.core.entity.LocalFileVo;
 import cn.ussu.modules.system.core.config.MultipartSupportConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,12 +21,12 @@ public interface RemoteFileService {
     List<LocalFileVo> list(@RequestParam("path") String path);
 
     @PutMapping
-    boolean mkdir(@RequestParam(value = "path", required = false) String path, @RequestParam("name") String name);
+    JsonResult mkdir(@RequestParam(value = "path", required = false) String path, @RequestParam("name") String name);
 
     @DeleteMapping
-    boolean delete(@RequestParam("path") String path);
+    JsonResult delete(@RequestParam("path") String path);
 
     @PostMapping
-    public boolean rename(@RequestParam("path") String path, @RequestParam("name") String name);
+    JsonResult rename(@RequestParam("path") String path, @RequestParam("name") String name);
 
 }
