@@ -60,6 +60,14 @@ const actions = {
     })
   },
 
+  // 设置头像
+  setAvatar({ commit }, avatarUrl) {
+    return new Promise((resolve, reject) => {
+      commit('SET_AVATAR', avatarUrl)
+      resolve()
+    })
+  },
+
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
