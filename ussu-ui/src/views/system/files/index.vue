@@ -1,92 +1,99 @@
 <template>
   <div class="files-container">
-    <div class="operate">
-      <div class="operate-top">
-        <div class="operate-top-left">
-          <el-upload
-              :action="uploadOption.action"
-              :show-file-list="false"
-              :headers="uploadOption.headers"
-              :data="uploadOption.data"
-              :on-success="uploadSuccess"
-              class="mr10"
-              style="display: inline-block;">
-            <el-button :size="buttonSize">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-          </el-upload>
-          <el-button :size="buttonSize">新建文件夹</el-button>
-          <el-button :size="buttonSize">预览</el-button>
-          <el-button :size="buttonSize">删除</el-button>
-          <el-button :size="buttonSize" @click="getList">刷新</el-button>
+    <el-card class="box-card">
+      <div slot="header">
+        <el-upload
+            :action="uploadOption.action"
+            :show-file-list="false"
+            :headers="uploadOption.headers"
+            :data="uploadOption.data"
+            :on-success="uploadSuccess"
+            class="mr10"
+            style="display: inline-block;">
+          <el-button :size="buttonSize">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+        </el-upload>
+        <el-button :size="buttonSize" icon="el-icon-folder-add" @click="mkdir">新建文件夹</el-button>
+        <el-button :size="buttonSize" icon="el-icon-refresh" @click="getList">刷新</el-button>
+        <div style="display: inline-block;line-height: 36px;float: right;" @click="changeShowMode(showModeGrid)">
+          <i class="el-icon-menu" v-if="showModeGrid" title="宫格显示"/>
+          <svg-icon icon-class="list1" v-else-if="showModeList" title="列表显示"/>
         </div>
-        <div class="operate-top-right">
-          <div style="display: inline-block;" @click="changeShowMode(showModeGrid)">
-            <i class="el-icon-menu" v-if="showModeGrid" title="宫格显示"/>
-            <svg-icon icon-class="list1" v-else-if="showModeList" title="列表显示"/>
+        <div style="margin: 10px;">
+          <el-link @click="backFloder">返回上一级</el-link>
+          |
+          <el-link @click="folderPathList = []">全部文件</el-link>
+          <el-link
+              v-for="(path, index) in folderPathList"
+              :key="path"
+              @click="toPath(index)">&nbsp;&gt;&nbsp;{{ path }}
+          </el-link>
+        </div>
+      </div>
+      <!--内容-->
+      <div>
+        <div class="grid" v-loading="loading" v-if="showModeGrid">
+          <!--grid item-->
+          <div v-for="(item, index) of fileList" :key="item.url" @click="fileClick(item, $event, index)">
+            <div class="icon-item">
+              <svg-icon
+                  icon-class="folder"
+                  v-if="isFolder(item.type)"
+                  class-name="file-item-content grid-svg"/>
+              <svg-icon
+                  :icon-class="svgName(item.name)"
+                  v-else-if="!isFolder(item.type) && !isImg(item.type)"
+                  class-name="file-item-content grid-svg"/>
+              <el-image
+                  v-else-if="isImg(item.type)"
+                  :src="item.url"
+                  fit="cover"
+                  class="file-item-content"
+                  :preview-src-list="imagePreviewList"
+              ></el-image>
+              <el-dropdown
+                  trigger="click"
+                  size="small"
+                  placement="top-end"
+                  @command="handleItemOperate">
+                <el-tooltip effect="light" :content="item.name">
+                  <span class="file-name" @click.stop="handleNameClick(item, $event)">{{ item.name }}</span>
+                </el-tooltip>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="o" :divided="false" icon="el-icon-download">打开</el-dropdown-item>
+                  <el-dropdown-item command="r" :divided="true" icon="el-icon-edit" v-perm="['system:files:rename']">重命名</el-dropdown-item>
+                  <el-dropdown-item command="d" :divided="true" icon="el-icon-delete" v-perm="['system:files:delete']">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="operate-bottom">
-        <el-link @click="backFloder">返回上一级</el-link>
-        |
-        <el-link @click="folderPathList = []">全部文件</el-link>
-        <el-link
-            v-for="(path, index) in folderPathList"
-            :key="path"
-            @click="toPath(index)">&nbsp;&gt;&nbsp;{{ path }}
-        </el-link>
-      </div>
-    </div>
-    <div class="grid" v-loading="loading" v-if="showModeGrid">
-      <!--grid item-->
-      <div v-for="item of fileList" :key="item.url" @click="fileClick(item, $event)">
-        <div class="icon-item">
-          <svg-icon
-              icon-class="folder"
-              v-if="isFolder(item.type)"
-              class-name="file-item-content grid-svg"/>
-          <svg-icon
-              :icon-class="svgName(item.name)"
-              v-else-if="!isFolder(item.type) && !isImg(item.type)"
-              class-name="file-item-content grid-svg"/>
-          <el-image
-              v-else-if="isImg(item.type)"
-              :src="item.url"
-              fit="cover"
-              class="file-item-content"
-              :preview-src-list="imagePreviewList"
-          ></el-image>
-          <el-tooltip effect="light" :content="item.name">
-            <span class="file-name">{{ item.name }}</span>
-          </el-tooltip>
-        </div>
-      </div>
-    </div>
-    <!--listMode-->
-    <el-table :data="fileList" v-loading="loading" v-if="showModeList">
-      <el-table-column type="selection" label="" prop="name" width="50"/>
-      <el-table-column label="文件名" prop="name" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
+        <el-table :data="fileList" v-loading="loading" v-if="showModeList">
+          <el-table-column type="selection" label="" prop="name" width="50"/>
+          <el-table-column label="文件名" prop="name" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
           <span @click="fileClick(scope.row, $event)">
             <svg-icon icon-class="folder" v-if="isFolder(scope.row.type)" class-name="list-item-icon"/>
             <svg-icon :icon-class="svgName(scope.row.name)" v-else-if="!isFolder(scope.row.type)"
                       class-name="list-item-icon"/>
             &nbsp;{{ scope.row.name }}
           </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="大小" prop="sizeStr" width="110"/>
-      <el-table-column label="修改日期" prop="sizeStr" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.timestamp) }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column label="大小" prop="sizeStr" width="110"/>
+          <el-table-column label="修改日期" prop="sizeStr" width="180">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.timestamp) }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 import clipboard from '@/utils/clipboard'
-import {list, upload} from '@/api/system/files'
+import {list, upload, mkdir, rename, del} from '@/api/system/files'
 import store from "@/store";
 import {getSvgByFileExt} from "@/utils/ussu";
 
@@ -96,6 +103,7 @@ export default {
     return {
       loading: false,
       buttonSize: 'medium',
+      cacheOperateFile: undefined,
       showMode: 'grid',
       fileList: undefined,
       imagePreviewList: undefined,
@@ -185,12 +193,65 @@ export default {
         this.folderPathList = this.folderPathList.slice(0, len);
       }
     },
-    fileClick(file, e) {
+    mkdir() {
+      this.$prompt('请输入文件夹名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+        inputErrorMessage: '请输入文件夹名称'
+      }).then(({value}) => {
+        mkdir({path: '/' + this.folderPathList.join('/'), name: value}).then(res => {
+          this.msgSuccess('创建成功');
+          this.getList();
+        })
+      }).catch(() => {
+      });
+    },
+    handleItemOperate(command) {
+      let item = this.cacheOperateFile;
+      if (item) {
+        if (command === 'o') {
+          // 打开
+          if (item.type === 'folder') {
+            this.folderPathList.push(item.name);
+          }
+        } else if (command === 'r') {
+          // 重命名
+          this.$prompt('重命名', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputValue: item.name,
+            inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+            inputErrorMessage: '请输入名称'
+          }).then(({value}) => {
+            rename({path: item.path, name: value}).then(res => {
+              this.msgSuccess('操作成功')
+              this.getList();
+            })
+          }).catch(() => {
+          });
+        } else if (command === 'd') {
+          // 删除
+          del({path: item.path}).then(res => {
+            this.msgSuccess('已删除')
+            this.getList();
+          });
+        }
+      }
+    },
+    handleNameClick(item, e) {
+      this.cacheOperateFile = item;
+      if (this.isFolder(item)) {
+        e.stopPropagation();
+      }
+    },
+    fileClick(file, e, index) {
+      this.cacheOperateFile = file;
       console.log(file);
       if (file.type === 'folder') {
         this.folderPathList.push(file.name);
       } else if (this.isImg(file.type)) {
-        clipboard(file.url, e, '访问链接已复制')
+        // clipboard(file.url, e, '访问链接已复制')
         return;
       }
     }
@@ -253,6 +314,7 @@ export default {
     cursor: pointer;
     border-radius: 4px;
   }
+
   .icon-item:hover {
     background-color: #ffa50015;
   }

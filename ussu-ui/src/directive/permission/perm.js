@@ -9,7 +9,7 @@ function checkPerm(el, binding) {
       const permArr = value
 
       const hasPerm = perms.some(perm => {
-        return permArr.includes(perm) || permArr.includes("*:*:*")
+        return permArr.includes(perm) || perms.includes("*:*:*")
       })
 
       if (!hasPerm) {
