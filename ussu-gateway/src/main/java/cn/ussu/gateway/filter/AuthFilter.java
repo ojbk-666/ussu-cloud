@@ -20,8 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * 网关鉴权
@@ -41,7 +44,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         ServerHttpRequest serverHttpRequest = exchange.getRequest();
         String path = serverHttpRequest.getURI().getPath();
         // 不需要验证token的访问路径
-        if (ignoreWhiteProperties.getWhites().contains(path)) {
+        if (matchUrl(ignoreWhiteProperties.getWhites(), path)) {
             return chain.filter(exchange);
         }
 
@@ -91,6 +94,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
             DataBufferFactory bufferFactory = response.bufferFactory();
             return bufferFactory.wrap(JSON.toJSONBytes(JsonResult.error(errorCode, msg)));
         }));
+    }
+
+    /**
+     * 判断路径是否匹配
+     */
+    public boolean matchUrl(List<String> patterns, String path) {
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        return patterns.stream().anyMatch(item -> antPathMatcher.match(item, path));
     }
 
     @Override
