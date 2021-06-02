@@ -136,8 +136,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'super',
-        password: 'admin',
+        username: process.env.NODE_ENV === 'development'?'super':'',
+        password: process.env.NODE_ENV === 'development'?'admin':'',
         uuid: '',
         code: ''
       },
