@@ -1,6 +1,8 @@
 package cn.ussu.modules.dczx.service;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
+import cn.ussu.modules.dczx.model.param.DcInterfaceLogParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,7 +18,7 @@ public interface IDcInterfaceLogService extends IService<DcInterfaceLog> {
     /**
      * 分页查询
      */
-    // LayuiPageInfo findPage(Map param);
+    ReturnPageInfo<DcInterfaceLog> findPage(DcInterfaceLogParam param);
 
     /**
      * 新增

@@ -1,8 +1,13 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
 import cn.ussu.modules.dczx.mapper.DcInterfaceLogMapper;
+import cn.ussu.modules.dczx.model.param.DcInterfaceLogParam;
 import cn.ussu.modules.dczx.service.IDcInterfaceLogService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,23 +26,14 @@ public class DcInterfaceLogServiceImpl extends ServiceImpl<DcInterfaceLogMapper,
     @Autowired
     private DcInterfaceLogMapper mapper;
 
-    /**
-     * 分页查询
-     */
-    /*@Override
-    public LayuiPageInfo findPage(Map param) {
-        QueryWrapper<DcInterfaceLog> qw = new QueryWrapper<>();
-        qw.orderByDesc(StrConstants.DB_create_time);
-        // 搜索条件
-        String query7 = (String) param.get("query_result");
-        qw.like(StrUtil.isNotBlank(query7), "result", query7);
-        String query9 = (String) param.get("query_create_time");
-        qw.like(StrUtil.isNotBlank(query9), "create_time", query9);
-        String query10 = (String) param.get("query_create_by");
-        qw.like(StrUtil.isNotBlank(query10), "create_by", query10);
-        IPage iPage = this.mapper.selectPage(LayuiPageFactory.defaultPage(), qw);
-        return LayuiPageFactory.createPageInfo(iPage);
-    }*/
+    @Override
+    public ReturnPageInfo<DcInterfaceLog> findPage(DcInterfaceLogParam param) {
+        LambdaQueryWrapper<DcInterfaceLog> qw = new LambdaQueryWrapper<>();
+        qw.orderByDesc(DcInterfaceLog::getCreateTime)
+                .eq(param.getResult() != null, DcInterfaceLog::getResult, param.getResult());
+        IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
+        return DefaultPageFactory.createReturnPageInfo(iPage);
+    }
 
     /*@Override
     @Transactional

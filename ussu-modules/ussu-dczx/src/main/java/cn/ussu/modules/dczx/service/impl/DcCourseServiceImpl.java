@@ -1,8 +1,14 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.dczx.entity.DcCourse;
 import cn.ussu.modules.dczx.mapper.DcCourseMapper;
+import cn.ussu.modules.dczx.model.param.DcCourseParam;
 import cn.ussu.modules.dczx.service.IDcCourseService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,18 +30,15 @@ public class DcCourseServiceImpl extends ServiceImpl<DcCourseMapper, DcCourse> i
     /**
      * 分页查询
      */
-    /*@Override
-    public LayuiPageInfo findPage(Map param) {
-        QueryWrapper<DcCourse> qw = new QueryWrapper<>();
-        qw.orderByDesc(StrConstants.DB_create_time);
-        // 搜索条件
-        String query2 = (String) param.get("query_course_id");
-        qw.like(StrUtil.isNotBlank(query2), "course_id", query2);
-        String query4 = (String) param.get("query_course_name");
-        qw.like(StrUtil.isNotBlank(query4), "course_name", query4);
-        IPage iPage = this.mapper.selectPage(LayuiPageFactory.defaultPage(), qw);
-        return LayuiPageFactory.createPageInfo(iPage);
-    }*/
+    @Override
+    public ReturnPageInfo<DcCourse> findPage(DcCourseParam param) {
+        LambdaQueryWrapper<DcCourse> qw = new LambdaQueryWrapper<>();
+        qw.orderByDesc(DcCourse::getCreateTime)
+                .like(StrUtil.isNotBlank(param.getCourseId()), DcCourse::getCourseId, param.getCourseId())
+                .like(StrUtil.isNotBlank(param.getCourseName()), DcCourse::getCourseName, param.getCourseName());
+        IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
+        return DefaultPageFactory.createReturnPageInfo(iPage);
+    }
 
     /*@Override
     @Transactional

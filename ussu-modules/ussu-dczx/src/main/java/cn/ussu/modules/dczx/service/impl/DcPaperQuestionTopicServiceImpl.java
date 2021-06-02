@@ -1,9 +1,14 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.modules.dczx.entity.DcPaperQuestionTopic;
 import cn.ussu.modules.dczx.mapper.DcPaperQuestionTopicMapper;
+import cn.ussu.modules.dczx.model.param.DcPaperQuestionTopicParam;
 import cn.ussu.modules.dczx.service.IDcPaperQuestionTopicService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +36,12 @@ public class DcPaperQuestionTopicServiceImpl extends ServiceImpl<DcPaperQuestion
     /**
      * 分页查询
      */
-    /*@Override
-    public LayuiPageInfo findPage(Map param) {
-        QueryWrapper<DcPaperQuestionTopic> qw = new QueryWrapper<>();
-        qw.orderByDesc(StrConstants.DB_create_time);
-        // 搜索条件
-        IPage iPage = this.mapper.selectPage(LayuiPageFactory.defaultPage(), qw);
-        return LayuiPageFactory.createPageInfo(iPage);
-    }*/
+    @Override
+    public ReturnPageInfo<DcPaperQuestionTopic> findPage(DcPaperQuestionTopicParam param) {
+        LambdaQueryWrapper<DcPaperQuestionTopic> qw = new LambdaQueryWrapper<>();
+        IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
+        return DefaultPageFactory.createReturnPageInfo(iPage);
+    }
 
     /**
      * 通过topic_type_id查询，会缓存

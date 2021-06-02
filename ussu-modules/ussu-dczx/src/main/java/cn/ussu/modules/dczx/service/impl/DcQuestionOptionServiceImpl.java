@@ -1,8 +1,13 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.dczx.entity.DcQuestionOption;
 import cn.ussu.modules.dczx.mapper.DcQuestionOptionMapper;
+import cn.ussu.modules.dczx.model.param.DcQuestionOptionParam;
 import cn.ussu.modules.dczx.service.IDcQuestionOptionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +29,13 @@ public class DcQuestionOptionServiceImpl extends ServiceImpl<DcQuestionOptionMap
     /**
      * 分页查询
      */
-    /*@Override
-    public LayuiPageInfo findPage(Map param) {
-        QueryWrapper<DcQuestionOption> qw = new QueryWrapper<>();
-        qw.orderByDesc(StrConstants.DB_create_time);
-        // 搜索条件
-        IPage iPage = this.mapper.selectPage(LayuiPageFactory.defaultPage(), qw);
-        return LayuiPageFactory.createPageInfo(iPage);
-    }*/
+    @Override
+    public ReturnPageInfo<DcQuestionOption> findPage(DcQuestionOptionParam param) {
+        LambdaQueryWrapper<DcQuestionOption> qw = new LambdaQueryWrapper<>();
+        qw.orderByDesc(DcQuestionOption::getCreateTime);
+        IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
+        return DefaultPageFactory.createReturnPageInfo(iPage);
+    }
 
     /*@Override
     @Transactional

@@ -1,6 +1,8 @@
 package cn.ussu.modules.dczx.service;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
 import cn.ussu.modules.dczx.entity.DcPaperQuestion;
+import cn.ussu.modules.dczx.model.param.DcPaperQuestionParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public interface IDcPaperQuestionService extends IService<DcPaperQuestion> {
     /**
      * 分页查询
      */
-    // LayuiPageInfo findPage(Map param);
+    ReturnPageInfo<DcPaperQuestion> findPage(DcPaperQuestionParam param);
 
     /**
      * 通过question_id查询

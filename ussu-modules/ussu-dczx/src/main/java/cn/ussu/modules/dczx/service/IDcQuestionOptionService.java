@@ -1,6 +1,8 @@
 package cn.ussu.modules.dczx.service;
 
+import cn.ussu.common.core.entity.ReturnPageInfo;
 import cn.ussu.modules.dczx.entity.DcQuestionOption;
+import cn.ussu.modules.dczx.model.param.DcQuestionOptionParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,7 +18,7 @@ public interface IDcQuestionOptionService extends IService<DcQuestionOption> {
     /**
      * 分页查询
      */
-    // LayuiPageInfo findPage(Map param);
+    ReturnPageInfo<DcQuestionOption> findPage(DcQuestionOptionParam param);
 
     /**
      * 新增
