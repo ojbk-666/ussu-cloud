@@ -16,6 +16,7 @@
         <module>ussu-common-redis</module>
         <module>ussu-common-security</module>
         <module>ussu-common-log</module>
+        <module>ussu-common-datasource</module>
     </modules>
 
     <properties>
