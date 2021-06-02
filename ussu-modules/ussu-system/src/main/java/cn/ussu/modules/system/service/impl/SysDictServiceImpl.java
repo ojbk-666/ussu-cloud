@@ -1,7 +1,7 @@
 package cn.ussu.modules.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.modules.system.core.util.DefaultPageFactory;
 import cn.ussu.modules.system.entity.SysDict;
 import cn.ussu.modules.system.mapper.SysDictMapper;

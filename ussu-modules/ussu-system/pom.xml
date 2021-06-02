@@ -18,9 +18,14 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>cn.ussu</groupId>
             <artifactId>ussu-common-core</artifactId>
+            <version>1.0</version>
+        </dependency>-->
+        <dependency>
+            <groupId>cn.ussu</groupId>
+            <artifactId>ussu-common-datasource</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

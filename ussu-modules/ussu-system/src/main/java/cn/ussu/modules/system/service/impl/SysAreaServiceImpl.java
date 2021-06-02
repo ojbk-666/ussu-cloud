@@ -2,7 +2,7 @@ package cn.ussu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.ussu.common.core.constants.RedisConstants;
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.core.exception.RequestEmptyException;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.modules.system.core.util.DefaultPageFactory;

@@ -2,7 +2,7 @@ package cn.ussu.modules.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.core.exception.RequestEmptyException;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.system.core.util.DefaultPageFactory;

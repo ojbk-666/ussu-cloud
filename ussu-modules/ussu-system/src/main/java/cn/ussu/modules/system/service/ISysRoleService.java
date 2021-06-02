@@ -1,6 +1,6 @@
 package cn.ussu.modules.system.service;
 
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.modules.system.entity.SysMenu;
 import cn.ussu.modules.system.entity.SysRole;
 import cn.ussu.modules.system.model.param.SysRoleParam;

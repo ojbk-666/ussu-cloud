@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 默认的分页工具
  */
+@Deprecated
 public class DefaultPageFactory implements UssuPageFactory {
 
     @Override

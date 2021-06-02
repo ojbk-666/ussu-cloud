@@ -5,7 +5,6 @@ import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.util.SecurityUtils;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
  * @author liming
  * @date 2019-09-13 09:32
  */
-@Component
+// @Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     // private String dataScopeName = StrUtil.toCamelCase(DataScope.scopeName);
