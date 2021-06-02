@@ -13,6 +13,7 @@
         <module>ussu-auth</module>
         <module>ussu-gateway</module>
         <module>ussu-modules</module>
+        <!--<module>ussu-api</module>-->
     </modules>
 
     <properties>
@@ -113,6 +114,11 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
+            </dependency>
+            <!--https://blog.csdn.net/zdyueguanyun/article/details/88740902-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
             </dependency>
             <dependency>
                 <groupId>com.github.whvcse</groupId>
