@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
+@Deprecated
 public class ReturnPageInfo<T>  implements Serializable {
 
     private static final long serialVersionUID = 3200139621708338009L;

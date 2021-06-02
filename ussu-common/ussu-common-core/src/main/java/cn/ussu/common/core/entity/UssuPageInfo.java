@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Deprecated
 public class UssuPageInfo implements Serializable {
 
     private static final long serialVersionUID = -7115452556870193734L;

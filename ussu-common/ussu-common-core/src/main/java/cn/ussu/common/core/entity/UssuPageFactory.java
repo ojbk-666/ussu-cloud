@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * 获取开始页
  */
+@Deprecated
 public interface UssuPageFactory {
 
     /**
