@@ -1,9 +1,9 @@
 package cn.ussu.common.datasource.util;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.ussu.common.core.entity.ReturnPageInfo;
-import cn.ussu.common.core.entity.UssuPageFactory;
-import cn.ussu.common.core.entity.UssuPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.UssuPageFactory;
+import cn.ussu.common.datasource.model.vo.UssuPageInfo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
