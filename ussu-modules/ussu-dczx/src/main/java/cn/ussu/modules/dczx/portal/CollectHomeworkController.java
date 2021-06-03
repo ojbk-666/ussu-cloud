@@ -2,7 +2,7 @@ package cn.ussu.modules.dczx.portal;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseController;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
 import cn.ussu.modules.dczx.thread.SaveDczxCourseThread;
 import cn.ussu.modules.dczx.thread.SaveHomeWorkListThread;

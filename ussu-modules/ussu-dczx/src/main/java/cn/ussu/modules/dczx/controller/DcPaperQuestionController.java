@@ -1,7 +1,7 @@
 package cn.ussu.modules.dczx.controller;
 
 import cn.ussu.common.core.base.BaseAdminController;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
 import cn.ussu.modules.dczx.entity.DcPaperQuestion;
 import cn.ussu.modules.dczx.entity.DcQuestionOption;

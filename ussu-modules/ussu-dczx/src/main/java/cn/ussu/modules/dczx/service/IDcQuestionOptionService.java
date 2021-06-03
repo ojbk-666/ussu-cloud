@@ -1,6 +1,6 @@
 package cn.ussu.modules.dczx.service;
 
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.modules.dczx.entity.DcQuestionOption;
 import cn.ussu.modules.dczx.model.param.DcQuestionOptionParam;
 import com.baomidou.mybatisplus.extension.service.IService;

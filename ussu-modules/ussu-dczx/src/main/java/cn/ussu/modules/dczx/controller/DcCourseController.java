@@ -1,12 +1,13 @@
 package cn.ussu.modules.dczx.controller;
 
 import cn.ussu.common.core.base.BaseAdminController;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.dczx.entity.DcCourse;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
 import cn.ussu.modules.dczx.model.param.DcCourseParam;
 import cn.ussu.modules.dczx.service.IDcCourseService;
+import cn.ussu.modules.dczx.thread.SaveDczxCourseThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class DcCourseController extends BaseAdminController {
      */
     @PutMapping("/addi")
     public JsonResult addByInterface(DcInterfaceLog dcInterfaceLog) {
-        // todo new SaveDczxCourseThread(dcInterfaceLog).start();
+        new SaveDczxCourseThread(dcInterfaceLog).start();
         return JsonResult.ok();
     }
 

@@ -1,6 +1,6 @@
 package cn.ussu.modules.dczx.util;
 
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.util.HttpContext;
 import com.alibaba.fastjson.JSON;
 

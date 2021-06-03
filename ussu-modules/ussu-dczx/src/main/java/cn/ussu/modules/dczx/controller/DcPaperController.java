@@ -1,7 +1,7 @@
 package cn.ussu.modules.dczx.controller;
 
 import cn.ussu.common.core.base.BaseAdminController;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.dczx.entity.DcPaper;
 import cn.ussu.modules.dczx.model.param.DcPaperParam;
 import cn.ussu.modules.dczx.service.IDcPaperService;

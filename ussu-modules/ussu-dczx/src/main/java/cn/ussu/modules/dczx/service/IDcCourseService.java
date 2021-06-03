@@ -1,13 +1,13 @@
 package cn.ussu.modules.dczx.service;
 
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.modules.dczx.entity.DcCourse;
 import cn.ussu.modules.dczx.model.param.DcCourseParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author liming

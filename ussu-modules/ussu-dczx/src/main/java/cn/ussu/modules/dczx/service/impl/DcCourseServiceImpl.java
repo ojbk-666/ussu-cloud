@@ -1,7 +1,7 @@
 package cn.ussu.modules.dczx.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.dczx.entity.DcCourse;
 import cn.ussu.modules.dczx.mapper.DcCourseMapper;

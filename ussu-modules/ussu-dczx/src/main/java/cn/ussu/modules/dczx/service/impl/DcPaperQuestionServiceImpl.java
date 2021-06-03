@@ -1,7 +1,7 @@
 package cn.ussu.modules.dczx.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.entity.ReturnPageInfo;
+import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.modules.dczx.entity.DcPaperQuestion;
