@@ -3,7 +3,7 @@ package cn.ussu.gateway.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.constants.ErrorCodeConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.gateway.properties.IgnoreWhiteProperties;
 import com.alibaba.fastjson.JSON;

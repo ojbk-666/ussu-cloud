@@ -1,7 +1,7 @@
 package cn.ussu.gateway.handler;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.RequestPath;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;

@@ -2,8 +2,8 @@ package cn.ussu.modules.system.controller;
 
 import cn.hutool.core.lang.Assert;
 import cn.ussu.common.core.base.BaseAdminController;
-import cn.ussu.common.core.entity.JsonResult;
-import cn.ussu.common.core.entity.LocalFileVo;
+import cn.ussu.common.core.model.vo.LocalFileVo;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.annotation.PermCheck;
 import cn.ussu.modules.system.feign.RemoteFileService;
 import org.springframework.beans.factory.annotation.Autowired;

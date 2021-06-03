@@ -5,7 +5,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.util.HttpContext;
 import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.log.model.vo.LogVo;

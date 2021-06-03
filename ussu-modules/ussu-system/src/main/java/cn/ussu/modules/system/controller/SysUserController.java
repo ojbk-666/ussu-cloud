@@ -8,7 +8,7 @@ import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.constants.ErrorMsgConstants;
 import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.constants.SwaggerConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.exception.RequestEmptyException;
 import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.security.annotation.PermCheck;

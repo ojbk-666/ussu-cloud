@@ -14,7 +14,7 @@
     <version>1.0</version>
     <modules>
         <module>ussu-system</module>
-        <module>ussu-dczx</module>
+        <!--<module>ussu-dczx</module>-->
         <module>ussu-files</module>
     </modules>
 

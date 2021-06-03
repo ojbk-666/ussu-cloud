@@ -1,4 +1,4 @@
-package cn.ussu.common.core.entity;
+package cn.ussu.common.core.model.vo;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;

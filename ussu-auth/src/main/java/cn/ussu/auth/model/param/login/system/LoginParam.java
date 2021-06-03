@@ -1,4 +1,4 @@
-package cn.ussu.auth.entity.param;
+package cn.ussu.auth.model.param.login.system;
 
 import lombok.Data;
 

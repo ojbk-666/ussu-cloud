@@ -2,7 +2,7 @@ package cn.ussu.auth.feign;
 
 import cn.ussu.auth.model.param.login.ThirdLoginToSysUserParam;
 import cn.ussu.common.core.constants.ServiceConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

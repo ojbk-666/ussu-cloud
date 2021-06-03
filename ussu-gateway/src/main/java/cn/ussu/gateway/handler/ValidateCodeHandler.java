@@ -1,6 +1,6 @@
 package cn.ussu.gateway.handler;
 
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.exception.CaptchaException;
 import cn.ussu.gateway.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package cn.ussu.common.security.handler;
 
 import cn.ussu.common.core.constants.ErrorMsgConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.exception.UsernamePasswordInvalidException;
 import cn.ussu.common.security.exception.PermCheckException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

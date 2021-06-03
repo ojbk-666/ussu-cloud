@@ -13,7 +13,7 @@ import cn.ussu.auth.properties.ThirdLoginGiteeProperties;
 import cn.ussu.auth.service.SysLoginService;
 import cn.ussu.auth.service.ThirdLoginService;
 import cn.ussu.common.core.constants.CacheConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.entity.SysUser;
 import com.alibaba.fastjson.JSON;

@@ -1,10 +1,10 @@
 package cn.ussu.auth.controller;
 
-import cn.ussu.auth.entity.param.LoginParam;
+import cn.ussu.auth.model.param.login.system.LoginParam;
 import cn.ussu.auth.service.SysLoginService;
 import cn.ussu.common.core.base.BaseController;
 import cn.ussu.common.core.constants.CacheConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.log.annotation.InsertLog;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.common.security.entity.LoginUser;

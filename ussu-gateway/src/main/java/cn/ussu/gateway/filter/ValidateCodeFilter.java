@@ -2,7 +2,7 @@ package cn.ussu.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.StrConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.gateway.service.ValidateCodeService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

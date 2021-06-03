@@ -1,4 +1,4 @@
-package cn.ussu.common.core.entity;
+package cn.ussu.common.core.model.vo;
 
 import cn.ussu.common.core.constants.StrConstants;
 

@@ -5,7 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.RedisConstants;
-import cn.ussu.common.core.entity.JsonResult;
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.exception.CaptchaException;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.gateway.service.ValidateCodeService;

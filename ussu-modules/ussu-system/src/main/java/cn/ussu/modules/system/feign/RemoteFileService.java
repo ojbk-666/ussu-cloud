@@ -1,8 +1,8 @@
 package cn.ussu.modules.system.feign;
 
 import cn.ussu.common.core.constants.ServiceConstants;
-import cn.ussu.common.core.entity.JsonResult;
-import cn.ussu.common.core.entity.LocalFileVo;
+import cn.ussu.common.core.model.vo.JsonResult;
+import cn.ussu.common.core.model.vo.LocalFileVo;
 import cn.ussu.modules.system.core.config.MultipartSupportConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

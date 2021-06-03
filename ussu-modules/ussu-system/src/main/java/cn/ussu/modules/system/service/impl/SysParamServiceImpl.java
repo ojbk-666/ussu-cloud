@@ -2,7 +2,7 @@ package cn.ussu.modules.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
-import cn.ussu.modules.system.core.util.DefaultPageFactory;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.system.entity.SysParam;
 import cn.ussu.modules.system.mapper.SysParamMapper;
 import cn.ussu.modules.system.model.param.SysParamParam;
