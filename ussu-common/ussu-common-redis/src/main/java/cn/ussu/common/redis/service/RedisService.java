@@ -219,6 +219,11 @@ public class RedisService {
         return redisTemplate.keys(pattern);
     }
 
-
+    /**
+     * setnx
+     */
+    public <T> boolean setNx(final String key, T t, long timeout) {
+        return redisTemplate.opsForValue().setIfAbsent(key, t, timeout, TimeUnit.SECONDS);
+    }
 
 }
