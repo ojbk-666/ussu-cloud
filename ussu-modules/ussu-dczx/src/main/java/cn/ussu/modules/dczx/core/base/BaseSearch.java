@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class BaseSearch<T> {
 
-    @Autowired
+    @Autowired(required = false)
     protected ElasticsearchTemplate elasticsearchTemplate;
 
     private String getTId(T t, String idFieldName) {

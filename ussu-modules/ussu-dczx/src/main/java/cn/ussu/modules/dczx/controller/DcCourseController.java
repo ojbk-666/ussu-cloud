@@ -22,7 +22,7 @@ import java.util.List;
  * @since 2020-07-07
  */
 @RestController
-@RequestMapping("/dc-course")
+@RequestMapping("/course")
 public class DcCourseController extends BaseAdminController {
 
     @Autowired

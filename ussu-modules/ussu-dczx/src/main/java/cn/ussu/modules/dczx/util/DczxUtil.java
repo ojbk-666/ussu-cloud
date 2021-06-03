@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.ussu.common.core.util.SpringContextHolder;
 import cn.ussu.modules.dczx.entity.*;
-import cn.ussu.modules.dczx.search.DcPaperQuestionSearch;
 import cn.ussu.modules.dczx.service.IDcPaperQuestionService;
 import cn.ussu.modules.dczx.service.IDcPaperQuestionTopicService;
 import cn.ussu.modules.dczx.service.IDcPaperService;
@@ -83,7 +82,7 @@ public class DczxUtil {
      * @throws Exception
      */
     public static void analyzeQuestionJson(DcInterfaceLog dcInterfaceLog, JSONObject jsonObject, String paperName) throws Exception {
-        DcPaperQuestionSearch questionSearch = SpringContextHolder.getBean(DcPaperQuestionSearch.class);
+        // DcPaperQuestionSearch questionSearch = SpringContextHolder.getBean(DcPaperQuestionSearch.class);
         LocalDateTime now = LocalDateTime.now();
         String paperIdStr = jsonObject.getString(PAPERID);
         // 写入paper
@@ -164,7 +163,7 @@ public class DczxUtil {
                 IDcQuestionOptionService questionOptionService = SpringContextHolder.getBean(IDcQuestionOptionService.class);
                 questionOptionService.saveBatch(questionOptionList);
                 // 写入es
-                questionSearch.insertByQuestionId(questionId);
+                // questionSearch.insertByQuestionId(questionId);
             }
         }
     }
