@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.dczx.mapper.DcCourseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.dczx.entity.DcCourse">
+        <id column="id" property="id" />
+        <result column="course_id" property="courseId" />
+        <result column="course_attr_id" property="courseAttrId" />
+        <result column="course_attr_name" property="courseAttrName" />
+        <result column="course_fee" property="courseFee" />
+        <result column="course_name" property="courseName" />
+        <result column="course_kind_id" property="courseKindId" />
+        <result column="course_kind_name" property="courseKindName" />
+        <result column="course_status" property="courseStatus" />
+        <result column="course_status_id" property="courseStatusId" />
+        <result column="course_term" property="courseTerm" />
+        <result column="course_type_id" property="courseTypeId" />
+        <result column="courseware_down_url" property="coursewareDownUrl" />
+        <result column="courseware_url" property="coursewareUrl" />
+        <result column="cx_num" property="cxNum" />
+        <result column="daoxue_flag" property="daoxueFlag" />
+        <result column="exam_method_group_name" property="examMethodGroupName" />
+        <result column="exam_num" property="examNum" />
+        <result column="mianxiu_id" property="mianxiuId" />
+        <result column="plan_status" property="planStatus" />
+        <result column="score_have_type" property="scoreHaveType" />
+        <result column="service_course_vers_id" property="serviceCourseVersId" />
+        <result column="stop_flag" property="stopFlag" />
+        <result column="study_credit" property="studyCredit" />
+        <result column="subject_course_id" property="subjectCourseId" />
+        <result column="interface_log_id" property="interfaceLogId" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, course_id,course_attr_id,course_attr_name, course_fee, course_name, course_kind_id, course_kind_name, course_status, course_status_id, course_term, course_type_id, courseware_down_url, courseware_url, cx_num, daoxue_flag, exam_method_group_name, exam_num, mianxiu_id, plan_status, score_have_type, service_course_vers_id, stop_flag, study_credit, subject_course_id, interface_log_id, del_flag
+    </sql>
+
+    <sql id="simple_column">
+        id,course_id,course_attr_id,course_attr_name,course_name
+    </sql>
+
+    <select id="findByCourseId" resultMap="BaseResultMap">
+        select <include refid="simple_column"/>
+        from dc_course where del_flag = 0 and course_id = #{courseId}
+    </select>
+
+</mapper>

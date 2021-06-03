@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.dczx.mapper.DcPaperQuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.dczx.entity.DcPaperQuestion">
+        <id column="id" property="id"/>
+        <result column="course_id_str" property="courseIdStr"/>
+        <result column="paper_id_long" property="paperIdLong"/>
+        <result column="paper_id_str" property="paperIdStr"/>
+        <result column="topic_id_long" property="topicIdLong"/>
+        <result column="topic_id_str" property="topicIdStr"/>
+        <result column="question_id" property="questionId"/>
+        <result column="question_title" property="questionTitle"/>
+        <result column="topictrunk_type" property="topictrunkType"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="interface_log_id" property="interfaceLogId"/>
+        <result column="del_flag" property="delFlag"/>
+        <association property="course" select="cn.useeseeu.platform.modules.dczx.mapper.DcCourseMapper.findByCourseId" column="course_id_str" />
+        <association property="topic"
+                     select="cn.useeseeu.platform.modules.dczx.mapper.DcPaperQuestionTopicMapper.findById"
+                     column="topic_id_long"/>
+        <collection property="options"
+                    select="cn.useeseeu.platform.modules.dczx.mapper.DcQuestionOptionMapper.findByQuestionIdLong"
+                    column="id"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,course_id_str,paper_id_long,paper_id_str,topic_id_long,topic_id_str, question_id, question_title, topictrunk_type, create_by, create_time, interface_log_id, del_flag
+    </sql>
+
+    <!--分页-->
+    <select id="findPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dc_paper_question
+        where del_flag = 0
+        <if test="param.query_courseIdStr != null and param.query_courseIdStr != ''">
+            and course_id_str = #{param.query_courseIdStr}
+        </if>
+        <if test="param.query_questionId != null and param.query_questionId != ''">
+            and question_id = #{param.query_questionId}
+        </if>
+        <if test="param.query_questionTitle != null and param.query_questionTitle != ''">
+            and question_title like concat('%',#{param.query_questionTitle},'%')
+        </if>
+        <if test="param.source != null and param.source != ''">
+            and source = #{param.source}
+        </if>
+        <if test="param.query_topictrunkType != null and param.query_topictrunkType != ''">
+            and topictrunk_type = #{param.query_topictrunkType}
+        </if>
+    </select>
+
+    <!--通过question_id查询 in -->
+    <select id="findByQuestionIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dc_paper_question
+        where del_flag =0
+        <if test="questionIds != null">
+            and question_id in
+            <foreach item="item" collection="questionIds" separator="," open="(" close=")" index="">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--最近一个月新增的题目数-->
+    <select id="countRecentCreates" resultType="map">
+        SELECT
+        count(1) AS times,
+        DATE(a.create_time) AS date
+        FROM
+        (SELECT id,create_time FROM dc_paper_question WHERE DATE_SUB( CURDATE( ), INTERVAL 30 DAY ) &lt;= create_time) a
+        GROUP BY
+        DATE(a.create_time)
+    </select>
+
+    <!--各课程的题目数量-->
+    <select id="countCourseNum" resultType="map">
+        select course_id_str,(select course_name from dc_course where course_id = course_id_str) as course_name,count(1) as num
+        from dc_paper_question where del_flag = 0 GROUP BY course_id_str
+    </select>
+</mapper>
