@@ -8,6 +8,7 @@ import cn.ussu.modules.dczx.entity.DcInterfaceLog;
 import cn.ussu.modules.dczx.model.param.DcCourseParam;
 import cn.ussu.modules.dczx.service.IDcCourseService;
 import cn.ussu.modules.dczx.thread.SaveDczxCourseThread;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,18 @@ public class DcCourseController extends BaseAdminController {
      * 分页查询
      */
     @GetMapping
-    public Object list(@RequestParam DcCourseParam param) {
-        return service.findPage(param);
+    public Object list(DcCourseParam param) {
+        return JsonResult.ok().data(service.findPage(param));
+    }
+
+    /**
+     * 获取所有
+     */
+    @GetMapping("/all")
+    public Object allIdTitle() {
+        LambdaQueryWrapper<DcCourse> qw = new LambdaQueryWrapper<>();
+        qw.select(DcCourse::getId, DcCourse::getCourseName, DcCourse::getCourseId);
+        return JsonResult.ok().data(service.list(qw));
     }
 
     /**

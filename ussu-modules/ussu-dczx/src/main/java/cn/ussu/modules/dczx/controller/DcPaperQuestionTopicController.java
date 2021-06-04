@@ -5,6 +5,7 @@ import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.dczx.entity.DcPaperQuestionTopic;
 import cn.ussu.modules.dczx.model.param.DcPaperQuestionTopicParam;
 import cn.ussu.modules.dczx.service.IDcPaperQuestionTopicService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,18 @@ public class DcPaperQuestionTopicController extends BaseAdminController {
      * 分页查询
      */
     @GetMapping
-    public Object list(@RequestParam DcPaperQuestionTopicParam param) {
-        return service.findPage(param);
+    public Object list(DcPaperQuestionTopicParam param) {
+        return JsonResult.ok().data(service.findPage(param));
+    }
+
+    /**
+     * 获取所有
+     */
+    @GetMapping("/all")
+    public Object all() {
+        LambdaQueryWrapper<DcPaperQuestionTopic> qw = new LambdaQueryWrapper<>();
+        qw.select(DcPaperQuestionTopic::getId, DcPaperQuestionTopic::getQuestionTypeNm, DcPaperQuestionTopic::getTopicId);
+        return JsonResult.ok().data(service.list(qw));
     }
 
     /**

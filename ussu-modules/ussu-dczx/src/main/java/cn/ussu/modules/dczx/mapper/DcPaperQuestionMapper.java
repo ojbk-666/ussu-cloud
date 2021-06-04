@@ -1,6 +1,7 @@
 package cn.ussu.modules.dczx.mapper;
 
 import cn.ussu.modules.dczx.entity.DcPaperQuestion;
+import cn.ussu.modules.dczx.model.param.DcPaperQuestionParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public interface DcPaperQuestionMapper extends BaseMapper<DcPaperQuestion> {
 
-    IPage<Map> findPage(Page page, @Param("param") Map param);
+    IPage<Map> findPage(Page page, @Param("p") DcPaperQuestionParam param);
 
     List<DcPaperQuestion> findByQuestionIds(@Param("questionIds") List questionIds);
 

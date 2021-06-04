@@ -15,7 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * <p>
@@ -82,16 +81,16 @@ public class DcPaperQuestion extends Model<DcPaperQuestion> {
     private Integer source;
 
     // 科目
-    @TableField(exist = false)
-    private DcCourse course;
+    // @TableField(exist = false)
+    // private DcCourse course;
 
     // 题型
     // @Field(index = false, ignoreFields = "topic")
-    @TableField(exist = false)
-    private DcPaperQuestionTopic topic;
+    // @TableField(exist = false)
+    // private DcPaperQuestionTopic topic;
 
     // 选项
-    @TableField(exist = false)
-    private List<DcQuestionOption> options;
+    // @TableField(exist = false)
+    // private List<DcQuestionOption> options;
 
 }

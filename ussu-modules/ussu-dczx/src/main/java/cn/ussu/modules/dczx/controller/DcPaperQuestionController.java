@@ -35,8 +35,8 @@ public class DcPaperQuestionController extends BaseAdminController {
      * 分页查询
      */
     @GetMapping
-    public Object list(@RequestParam DcPaperQuestionParam param) {
-        return service.findPage(param);
+    public Object list(DcPaperQuestionParam param) {
+        return JsonResult.ok().data(service.findPage(param));
     }
 
     /**

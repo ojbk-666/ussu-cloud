@@ -3,7 +3,7 @@
 <mapper namespace="cn.ussu.modules.dczx.mapper.DcPaperQuestionMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.dczx.entity.DcPaperQuestion">
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.dczx.model.result.DcPaperQuestionResult">
         <id column="id" property="id"/>
         <result column="course_id_str" property="courseIdStr"/>
         <result column="paper_id_long" property="paperIdLong"/>
@@ -17,12 +17,12 @@
         <result column="create_time" property="createTime"/>
         <result column="interface_log_id" property="interfaceLogId"/>
         <result column="del_flag" property="delFlag"/>
-        <association property="course" select="cn.useeseeu.platform.modules.dczx.mapper.DcCourseMapper.findByCourseId" column="course_id_str" />
+        <association property="course" select="cn.ussu.modules.dczx.mapper.DcCourseMapper.findByCourseId" column="course_id_str" />
         <association property="topic"
-                     select="cn.useeseeu.platform.modules.dczx.mapper.DcPaperQuestionTopicMapper.findById"
+                     select="cn.ussu.modules.dczx.mapper.DcPaperQuestionTopicMapper.findById"
                      column="topic_id_long"/>
         <collection property="options"
-                    select="cn.useeseeu.platform.modules.dczx.mapper.DcQuestionOptionMapper.findByQuestionIdLong"
+                    select="cn.ussu.modules.dczx.mapper.DcQuestionOptionMapper.findByQuestionIdLong"
                     column="id"/>
     </resultMap>
     <!-- 通用查询结果列 -->
@@ -36,20 +36,20 @@
         <include refid="Base_Column_List"/>
         from dc_paper_question
         where del_flag = 0
-        <if test="param.query_courseIdStr != null and param.query_courseIdStr != ''">
-            and course_id_str = #{param.query_courseIdStr}
+        <if test="p.courseIdStr != null and p.courseIdStr != ''">
+            and course_id_str = #{p.courseIdStr}
         </if>
-        <if test="param.query_questionId != null and param.query_questionId != ''">
-            and question_id = #{param.query_questionId}
+        <if test="p.questionTitle != null and p.questionTitle != ''">
+            and question_title like concat('%',#{p.questionTitle},'%')
         </if>
-        <if test="param.query_questionTitle != null and param.query_questionTitle != ''">
-            and question_title like concat('%',#{param.query_questionTitle},'%')
+        <if test="p.source != null and p.source != ''">
+            and source = #{p.source}
         </if>
-        <if test="param.source != null and param.source != ''">
-            and source = #{param.source}
+        <if test="p.topictrunkType != null and p.topictrunkType != ''">
+            and topictrunk_type = #{p.topictrunkType}
         </if>
-        <if test="param.query_topictrunkType != null and param.query_topictrunkType != ''">
-            and topictrunk_type = #{param.query_topictrunkType}
+        <if test="p.topicIdLong != null">
+            and topic_id_long = #{p.topicIdLong}
         </if>
     </select>
 

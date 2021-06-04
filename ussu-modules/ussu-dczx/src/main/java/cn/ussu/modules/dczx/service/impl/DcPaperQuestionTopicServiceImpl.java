@@ -1,5 +1,6 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.redis.service.RedisService;
@@ -39,6 +40,8 @@ public class DcPaperQuestionTopicServiceImpl extends ServiceImpl<DcPaperQuestion
     @Override
     public ReturnPageInfo<DcPaperQuestionTopic> findPage(DcPaperQuestionTopicParam param) {
         LambdaQueryWrapper<DcPaperQuestionTopic> qw = new LambdaQueryWrapper<>();
+        qw.orderByAsc(DcPaperQuestionTopic::getFullTopicTypeCd)
+                .like(StrUtil.isNotBlank(param.getQuestionTypeNm()), DcPaperQuestionTopic::getQuestionTypeNm, param.getQuestionTypeNm());
         IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
         return DefaultPageFactory.createReturnPageInfo(iPage);
     }

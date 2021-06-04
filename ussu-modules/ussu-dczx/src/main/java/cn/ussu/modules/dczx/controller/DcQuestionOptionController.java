@@ -29,8 +29,8 @@ public class DcQuestionOptionController extends BaseAdminController {
      * 分页查询
      */
     @GetMapping
-    public Object list(@RequestParam DcQuestionOptionParam param) {
-        return service.findPage(param);
+    public Object list(DcQuestionOptionParam param) {
+        return JsonResult.ok().data(service.findPage(param));
     }
 
     /**

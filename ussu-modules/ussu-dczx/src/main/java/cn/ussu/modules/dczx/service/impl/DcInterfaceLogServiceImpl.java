@@ -1,5 +1,6 @@
 package cn.ussu.modules.dczx.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.dczx.entity.DcInterfaceLog;
@@ -30,7 +31,11 @@ public class DcInterfaceLogServiceImpl extends ServiceImpl<DcInterfaceLogMapper,
     public ReturnPageInfo<DcInterfaceLog> findPage(DcInterfaceLogParam param) {
         LambdaQueryWrapper<DcInterfaceLog> qw = new LambdaQueryWrapper<>();
         qw.orderByDesc(DcInterfaceLog::getCreateTime)
-                .eq(param.getResult() != null, DcInterfaceLog::getResult, param.getResult());
+                .eq(StrUtil.isNotBlank(param.getUserid()), DcInterfaceLog::getUserid, param.getUserid())
+                .eq(param.getResult() != null, DcInterfaceLog::getResult, param.getResult())
+                .select(DcInterfaceLog::getId, DcInterfaceLog::getUrl,
+                        DcInterfaceLog::getRemarks, DcInterfaceLog::getCreateTime,
+                        DcInterfaceLog::getUserid);
         IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
         return DefaultPageFactory.createReturnPageInfo(iPage);
     }

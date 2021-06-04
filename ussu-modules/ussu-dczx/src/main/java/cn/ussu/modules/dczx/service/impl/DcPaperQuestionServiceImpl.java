@@ -1,16 +1,13 @@
 package cn.ussu.modules.dczx.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.datasource.model.vo.ReturnPageInfo;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.modules.dczx.entity.DcPaperQuestion;
-import cn.ussu.modules.dczx.entity.DcQuestionOption;
 import cn.ussu.modules.dczx.mapper.DcPaperQuestionMapper;
 import cn.ussu.modules.dczx.model.param.DcPaperQuestionParam;
 import cn.ussu.modules.dczx.service.IDcPaperQuestionService;
 import cn.ussu.modules.dczx.service.IDcQuestionOptionService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +41,11 @@ public class DcPaperQuestionServiceImpl extends ServiceImpl<DcPaperQuestionMappe
      */
     @Override
     public ReturnPageInfo<DcPaperQuestion> findPage(DcPaperQuestionParam param) {
-        LambdaQueryWrapper<DcPaperQuestion> qw = new LambdaQueryWrapper<>();
-        qw.orderByDesc(DcPaperQuestion::getCreateTime)
-                .eq(StrUtil.isNotBlank(param.getQuestionId()), DcPaperQuestion::getQuestionId, param.getQuestionId())
-                .like(StrUtil.isNotBlank(param.getQuestionTitle()), DcPaperQuestion::getQuestionTitle
-                        , StrUtil.removeSuffix(StrUtil.removePrefix(param.getQuestionTitle().replaceAll("\n", StrUtil.EMPTY)
-                                .replaceAll("\t\n", StrUtil.EMPTY)
-                                .replace("[【]\\d[】]", StrUtil.EMPTY)
-                                .trim(), "【"), "。"));
-        IPage iPage = this.mapper.selectPage(DefaultPageFactory.getPage(), qw);
+        // LambdaQueryWrapper<DcPaperQuestion> qw = new LambdaQueryWrapper<>();
+        // qw.orderByDesc(DcPaperQuestion::getCreateTime)
+        //         .eq(StrUtil.isNotBlank(param.getQuestionId()), DcPaperQuestion::getQuestionId, param.getQuestionId())
+        //         .like(StrUtil.isNotBlank(param.getQuestionTitle()), DcPaperQuestion::getQuestionTitle, param.getQuestionTitle());
+        IPage iPage = this.mapper.findPage(DefaultPageFactory.getPage(), param);
         return DefaultPageFactory.createReturnPageInfo(iPage);
     }
 
@@ -95,12 +88,13 @@ public class DcPaperQuestionServiceImpl extends ServiceImpl<DcPaperQuestionMappe
         question.setSource(20);
         int insert = this.mapper.insert(question);
         // 写入选项
-        List<DcQuestionOption> options = question.getOptions();
+        /*List<DcQuestionOption> options = question.getOptions();
         for (DcQuestionOption option : options) {
             option.setQuestionIdLong(question.getId());
-        }
-        boolean b = dcQuestionOptionService.saveBatch(options);
-        return insert > 0 && b;
+        }*/
+        // boolean b = dcQuestionOptionService.saveBatch(options);
+        // return insert > 0 && b;
+        return true;
     }
 
     /*@Override
