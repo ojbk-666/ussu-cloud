@@ -7,3 +7,10 @@ export function getList(param) {
     params: param
   })
 }
+
+export function allIdTitle() {
+  return request({
+    url: '/dczx/paper-question-topic/all',
+    method: 'get'
+  })
+}

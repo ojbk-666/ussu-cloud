@@ -17,7 +17,8 @@
         <result column="create_time" property="createTime"/>
         <result column="interface_log_id" property="interfaceLogId"/>
         <result column="del_flag" property="delFlag"/>
-        <association property="course" select="cn.ussu.modules.dczx.mapper.DcCourseMapper.findByCourseId" column="course_id_str" />
+        <association property="course" select="cn.ussu.modules.dczx.mapper.DcCourseMapper.findByCourseId"
+                     column="course_id_str"/>
         <association property="topic"
                      select="cn.ussu.modules.dczx.mapper.DcPaperQuestionTopicMapper.findById"
                      column="topic_id_long"/>
@@ -27,7 +28,8 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id,course_id_str,paper_id_long,paper_id_str,topic_id_long,topic_id_str, question_id, question_title, topictrunk_type, create_by, create_time, interface_log_id, del_flag
+        id
+        ,course_id_str,paper_id_long,paper_id_str,topic_id_long,topic_id_str, question_id, question_title, topictrunk_type, create_by, create_time, interface_log_id, del_flag
     </sql>
 
     <!--分页-->
@@ -69,18 +71,33 @@
 
     <!--最近一个月新增的题目数-->
     <select id="countRecentCreates" resultType="map">
-        SELECT
-        count(1) AS times,
-        DATE(a.create_time) AS date
+        SELECT count(1) AS times,
+            DATE (a.create_time) AS date
         FROM
-        (SELECT id,create_time FROM dc_paper_question WHERE DATE_SUB( CURDATE( ), INTERVAL 30 DAY ) &lt;= create_time) a
+            (SELECT id, create_time FROM dc_paper_question WHERE DATE_SUB( CURDATE( ), INTERVAL 30 DAY ) &lt;= create_time) a
         GROUP BY
-        DATE(a.create_time)
+            DATE (a.create_time)
     </select>
 
     <!--各课程的题目数量-->
     <select id="countCourseNum" resultType="map">
-        select course_id_str,(select course_name from dc_course where course_id = course_id_str) as course_name,count(1) as num
-        from dc_paper_question where del_flag = 0 GROUP BY course_id_str
+        select course_id_str,
+               (select course_name from dc_course where course_id = course_id_str) as course_name,
+               count(1)                                                            as num,
+               count(topic_id_long = 1012 or null)                                 as num1,
+               count(topic_id_long = 1013 or null)                                 as num2,
+               count(topic_id_long = 1014 or null)                                 as num3
+        from dc_paper_question
+        where del_flag = 0
+        GROUP BY course_id_str
     </select>
+
+    <select id="countQuestionNumByUserid" resultType="map">
+        select b.userid, COUNT(a.id) as num
+        from dc_paper_question a
+                 LEFT JOIN dc_interface_log b on a.interface_log_id = b.id
+        GROUP BY b.userid
+        order by COUNT(a.id) desc;
+    </select>
+
 </mapper>

@@ -120,3 +120,27 @@ export function getSvgByFileExt(fileName) {
     return ext;
   }
 }
+
+// 对象数组解析出属性数组
+export function objArr2AttrArr(arr, key) {
+  let r = [];
+  for (let i = 0; i < arr.length; i++) {
+    let item = arr[i];
+    r.push(item[key]);
+  }
+  return r;
+}
+
+// 更换对象属性名
+export function replaceNewAttrName(arr, sourcekeyarr, targetkeyarr) {
+  for (let i = 0; i < arr.length; i++) {
+    let item = arr[i];
+    for (let j = 0; j < sourcekeyarr.length; j++) {
+      let skey = sourcekeyarr[j];
+      let tkey = targetkeyarr[j];
+      item[tkey] = item[skey];
+      delete item[skey];
+    }
+  }
+  return arr;
+}

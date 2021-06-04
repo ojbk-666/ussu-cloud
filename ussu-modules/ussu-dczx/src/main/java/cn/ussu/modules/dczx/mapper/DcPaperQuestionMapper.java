@@ -30,8 +30,10 @@ public interface DcPaperQuestionMapper extends BaseMapper<DcPaperQuestion> {
     List<Map> countRecentCreates();
 
     /**
-     * 各科目题目数量
+     * 各科目题目数量统计
      */
     List<Map> countCourseNum();
+
+    List<Map> countQuestionNumByUserid();
 
 }
