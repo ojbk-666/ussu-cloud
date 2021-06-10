@@ -70,7 +70,7 @@ public class DcInterfaceLog extends Model<DcInterfaceLog> {
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "创建人")
-    @TableField(fill = FieldFill.INSERT)
+    // @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
     private String remarks;
