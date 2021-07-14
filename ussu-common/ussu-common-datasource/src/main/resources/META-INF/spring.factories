@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.ussu.common.datasource.config.MybatisPlusMetaObjectHandler
+  cn.ussu.common.datasource.config.MybatisPlusMetaObjectHandler,\
+  cn.ussu.common.datasource.config.MybatisPlusConfig
