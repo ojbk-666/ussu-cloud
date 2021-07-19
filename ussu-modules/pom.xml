@@ -16,6 +16,8 @@
         <module>ussu-system</module>
         <module>ussu-dczx</module>
         <module>ussu-files</module>
+        <module>ussu-code-generator</module>
+        <module>ecps-item</module>
     </modules>
 
     <properties>

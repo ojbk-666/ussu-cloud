@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.item.mapper.EbFeatureMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.item.entity.EbFeature">
+        <id column="feature_id" property="featureId" />
+        <result column="group_id" property="groupId" />
+        <result column="cat_id" property="catId" />
+        <result column="feature_name" property="featureName" />
+        <result column="is_spec" property="isSpec" />
+        <result column="is_select" property="isSelect" />
+        <result column="is_show" property="isShow" />
+        <result column="select_values" property="selectValues" />
+        <result column="input_type" property="inputType" />
+        <result column="feature_sort" property="featureSort" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        feature_id, group_id, cat_id, feature_name, is_spec, is_select, is_show, select_values, input_type, feature_sort
+    </sql>
+    
+    <!--更新为null-->
+    <update id="updateGroupIdNullByGroupIdAndCatId">
+        update eb_feature set group_id = null where group_id = #{groupId} and cat_id = #{catId}
+    </update>
+
+    <!--分页-->
+    <select id="findPage" resultMap="BaseResultMap">
+        select a.*,b.group_name as groupName,c.cat_name as catName
+        from eb_feature a left join eb_feature_group b on a.group_id = b.group_id
+        join eb_cat c on a.cat_id = c.cat_id
+        where
+        1=1
+        <if test="p.catId != null">
+            and a.cat_id = #{p.catId}
+        </if>
+        <if test="p.groupId != null">
+            and a.group_id = #{p.groupId}
+        </if>
+        <if test="p.isSpec != null">
+            and a.is_spec = #{p.isSpec}
+        </if>
+        <if test="p.isSelect != null">
+            and a.is_select = #{p.isSelect}
+        </if>
+        <if test="p.isShow != null">
+            and a.is_show = #{p.isShow}
+        </if>
+        <if test="p.inputType != null">
+            and a.input_type = #{p.inputType}
+        </if>
+        <if test="p.featureName != null and p.featureName != ''">
+            and a.feature_name like concat('%', #{p.featureName},'%')
+        </if>
+    </select>
+
+</mapper>

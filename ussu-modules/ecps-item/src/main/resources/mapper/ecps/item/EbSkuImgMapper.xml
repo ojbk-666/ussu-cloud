@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.item.mapper.EbSkuImgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.item.entity.EbSkuImg">
+        <id column="img_id" property="imgId" />
+        <result column="sku_id" property="skuId" />
+        <result column="img_url" property="imgUrl" />
+        <result column="default_img" property="defaultImg" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        img_id, sku_id, img_url, default_img
+    </sql>
+
+</mapper>

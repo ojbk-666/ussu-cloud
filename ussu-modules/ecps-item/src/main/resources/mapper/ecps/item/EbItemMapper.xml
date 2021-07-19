@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.item.mapper.EbItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.item.entity.EbItem">
+        <id column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="item_no" property="itemNo" />
+        <result column="brand_id" property="brandId" />
+        <result column="cat_id" property="catId" />
+        <result column="tag_img_id" property="tagImgId" />
+        <result column="tag_img" property="tagImg" />
+        <result column="is_new" property="isNew" />
+        <result column="is_good" property="isGood" />
+        <result column="is_hot" property="isHot" />
+        <result column="promotion" property="promotion" />
+        <result column="audit_status" property="auditStatus" />
+        <result column="show_status" property="showStatus" />
+        <result column="imgs" property="imgs" />
+        <result column="keywords" property="keywords" />
+        <result column="page_desc" property="pageDesc" />
+        <result column="item_recycle" property="itemRecycle" />
+        <result column="on_sale_time" property="onSaleTime" />
+        <result column="check_time" property="checkTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="checker_user_id" property="checkerUserId" />
+        <result column="full_path_deploy" property="fullPathDeploy" />
+        <result column="full_path_deploy_offer" property="fullPathDeployOffer" />
+        <result column="original_item_id" property="originalItemId" />
+        <result column="last_status" property="lastStatus" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="item_sort" property="itemSort" />
+        <result column="sales" property="sales" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="gift_desc" property="giftDesc" />
+        <result column="gift_img" property="giftImg" />
+        <result column="gift_show_type" property="giftShowType" />
+        <result column="img_size1" property="imgSize1" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        item_id, item_name, item_no, brand_id, cat_id, tag_img_id, tag_img, is_new, is_good, is_hot, promotion, audit_status, show_status, imgs, keywords, page_desc, item_recycle, on_sale_time, check_time, update_time, update_user_id, create_time, checker_user_id, full_path_deploy, full_path_deploy_offer, original_item_id, last_status, merchant_id, item_sort, sales, create_user_id, gift_desc, gift_img, gift_show_type, img_size1
+    </sql>
+
+</mapper>

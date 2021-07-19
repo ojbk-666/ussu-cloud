@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.item.mapper.EbSkuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.item.entity.EbSku">
+        <id column="sku_id" property="skuId" />
+        <result column="item_id" property="itemId" />
+        <result column="sku" property="sku" />
+        <result column="sku_price" property="skuPrice" />
+        <result column="show_status" property="showStatus" />
+        <result column="stock_inventory" property="stockInventory" />
+        <result column="sku_upper_limit" property="skuUpperLimit" />
+        <result column="location" property="location" />
+        <result column="sku_img" property="skuImg" />
+        <result column="sku_sort" property="skuSort" />
+        <result column="sku_name" property="skuName" />
+        <result column="market_price" property="marketPrice" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="original_sku_id" property="originalSkuId" />
+        <result column="last_status" property="lastStatus" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="sku_type" property="skuType" />
+        <result column="sales" property="sales" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sku_id, item_id, sku, sku_price, show_status, stock_inventory, sku_upper_limit, location, sku_img, sku_sort, sku_name, market_price, create_time, update_time, create_user_id, update_user_id, original_sku_id, last_status, merchant_id, sku_type, sales
+    </sql>
+
+</mapper>

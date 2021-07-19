@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.item.mapper.EbFeatureGroupMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.item.entity.EbFeatureGroup">
+        <id column="group_id" property="groupId" />
+        <result column="cat_id" property="catId" />
+        <result column="group_name" property="groupName" />
+        <result column="group_desc" property="groupDesc" />
+        <result column="group_sort" property="groupSort" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        group_id, cat_id, group_name, group_desc, group_sort
+    </sql>
+
+</mapper>

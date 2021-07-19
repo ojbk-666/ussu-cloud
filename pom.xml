@@ -20,7 +20,6 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
-        <!--<ruoyi.version>2.4.0</ruoyi.version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -42,7 +41,7 @@
         <minio.version>8.0.3</minio.version>
         <poi.version>4.1.2</poi.version>
         <common-pool.version>2.6.2</common-pool.version>
-        <hutool.version>5.6.3</hutool.version>
+        <hutool.version>5.7.1</hutool.version>
         <lombok.version>1.16.20</lombok.version>
         <mybatis-puls.version>3.4.2</mybatis-puls.version>
         <mysql-connector.version>8.0.22</mysql-connector.version>
@@ -120,6 +119,16 @@
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>2.11.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.31</version>
             </dependency>
             <dependency>
                 <groupId>com.github.whvcse</groupId>
