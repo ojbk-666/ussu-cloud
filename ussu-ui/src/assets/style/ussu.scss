@@ -1,6 +1,5 @@
 /**
-* 通用css样式布局处理
-* Copyright (c) 2019 ruoyi
+* 通用css样式布局
 */
 
 /** 基础通用 **/
@@ -51,6 +50,10 @@
 }
 .ml20 {
   margin-left: 20px;
+}
+
+.w100{
+  width: 100%;
 }
 
 .el-dialog:not(.is-fullscreen){

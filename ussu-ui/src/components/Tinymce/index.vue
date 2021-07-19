@@ -2,7 +2,7 @@
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+<!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />-->
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ import editorImage from './components/EditorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
+import {uploadFile} from "@/api/files/files";
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
@@ -158,7 +159,7 @@ export default {
         // it will try to keep these URLs intact
         // https://www.tiny.cloud/docs-3x/reference/configuration/Configuration3x@convert_urls/
         // https://stackoverflow.com/questions/5196205/disable-tinymce-absolute-to-relative-url-conversions
-        convert_urls: false
+        convert_urls: false,
         // 整合七牛上传
         // images_dataimg_filter(img) {
         //   setTimeout(() => {
@@ -192,6 +193,39 @@ export default {
         //     console.log(err);
         //   });
         // },
+        images_upload_handler(blobInfo, success, failure, progress) {
+          progress(0);
+          const formData = new FormData();
+          formData.append('file', blobInfo.blob());
+          uploadFile(formData).then(res => {
+            progress(100);
+            success(res.data.url);
+          }).catch(res => {
+            console.log('文件上传失败', res);
+            failure(res.msg);
+          }).finally(() => {
+          })
+        },
+        // 视频上传
+        file_picker_types: 'media',
+        file_picker_callback: function(cb, value, meta) {
+          if (meta.filetype == 'media') {
+            let input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.onchange = function() {
+              let file = this.files[0];//只选取第一个文件。如果要选取全部，后面注意做修改
+              const formData = new FormData();
+              formData.append('file', file);
+              uploadFile(formData).then(res => {
+                cb(res.data.url, {title: file.name});
+              }).catch(res => {
+                console.log('文件上传失败', res);
+              }).finally(() => {
+              })
+            }
+            input.click();
+          }
+        }
       })
     },
     destroyTinymce() {

@@ -19,7 +19,7 @@ import './assets/icons' // icon
 import './permission' // permission control
 
 // 挂载全局方法
-import { parseTime, resetForm, handleTree, selectDictLabel } from '@/utils/ussu'
+import { parseTime, resetForm, handleTree, selectDictLabel, deepClone } from '@/utils/ussu'
 import { listByTypeCode } from '@/api/system/dict'
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
@@ -34,16 +34,37 @@ import RightToolbar from '@/components/RightToolbar'
 import * as filters from './filters' // global filters
 import perm from '@/directive/permission/index'
 
-Vue.prototype.msgSuccess = function (msg) {
+Vue.prototype.msgSuccess = function(msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
 }
 
-Vue.prototype.msgError = function (msg) {
+Vue.prototype.msgError = function(msg) {
   this.$message({ showClose: true, message: msg, type: "error" });
 }
 
-Vue.prototype.msgInfo = function (msg) {
+Vue.prototype.msgInfo = function(msg) {
   this.$message.info(msg);
+}
+
+Vue.prototype.resetObj = function(obj) {
+  // 清空对象属性，不递归
+  for (const key in obj) {
+    if (obj[key] instanceof Array) {
+      obj[key] = [];
+    } else if (obj[key] in Object) {
+      obj[key] = {};
+    } else {
+      obj[key] = undefined
+    }
+  }
+}
+
+Vue.prototype.deepClone = function(obj) {
+  return deepClone(obj);
+}
+
+Vue.prototype.showImg = function(path) {
+  return process.env.VUE_APP_FILE_SERVER + path;
 }
 
 // 挂载全局组件

@@ -144,3 +144,38 @@ export function replaceNewAttrName(arr, sourcekeyarr, targetkeyarr) {
   }
   return arr;
 }
+
+/**
+ * 递归查找所有父节点的id
+ *
+ * @param array 树结构数据
+ * @param id 目标节点
+ * @param idKey id的key
+ * @param pidKey panretId的key
+ * @param resultKey 返回那个字段的集合
+ * @returns {[]}
+ */
+export function findParents(array, id, idKey, pidKey = 'parentId', resultKey = idKey) {
+  let parentArray = [];
+  if (array.length === 0) {
+    return parentArray;
+  }
+  function recursion(arrayNew, id) {
+    for (let i = 0; i < arrayNew.length; i++) {
+      let node = arrayNew[i];
+      if (node[idKey] === id) {
+        parentArray.unshift(node[resultKey]);
+        recursion(array, node[pidKey]);
+        break;
+      } else {
+        if (node.children) {
+          recursion(node.children, id);
+        }
+      }
+    }
+    return parentArray;
+  }
+  let arrayNew = array;
+  parentArray = recursion(arrayNew, id);
+  return parentArray;
+}
