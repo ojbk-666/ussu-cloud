@@ -15,9 +15,6 @@
             <el-form-item label="商品名称" prop="itemName" :required="true">
               <el-input v-model="form.itemName" maxlength="200" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="关键词" prop="keywords">
-              <el-input v-model="form.keywords" maxlength="120" placeholder="请输入"></el-input>
-            </el-form-item>
             <el-form-item label="分类" prop="catId" :required="true">
               <category-cascader
                 :paths="catIdPath"
@@ -40,6 +37,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="关键词" prop="keywords">
+              <el-input v-model="form.keywords" maxlength="120" placeholder="请输入"></el-input>
+            </el-form-item>
             <el-form-item label="促销语" prop="promotion">
               <el-input v-model="form.promotion" placeholder="请输入"></el-input>
             </el-form-item>
@@ -47,7 +47,11 @@
               <el-input v-model="form.pageDesc" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item label="商品图片" prop="imgs">
-              <el-input v-model="form.imgs" placeholder="请输入"></el-input>
+              <multi-image-upload
+                :list="form.imgsArr"
+                :limit="2"
+                :relative-path="itemImgsRelativePath"
+              ></multi-image-upload>
             </el-form-item>
             <el-form-item label="商品详情" prop="itemDesc">
               <tinymce v-model="form.itemClob.itemDesc" :height="300" />
@@ -152,11 +156,12 @@
               </el-table-column>
               <el-table-column type="expand">
                 <template slot-scope="scope">
-                  <el-form-item label="图片" v-for="(item,index) in scope.row.skuImgList" :key="index">
-                    <el-image
-                      :src="showImg(item.imgUrl)"
-                    ></el-image>
-                  </el-form-item>
+                  <multi-image-upload
+                    :list="scope.row.skuImgPathArr"
+                    :limit="5"
+                    :relative-path="skuImgsRelativePath"
+                    @change="((value)=>{skuImgChange(value, scope.$index)})"
+                  ></multi-image-upload>
                 </template>
               </el-table-column>
             </el-table>
@@ -200,13 +205,16 @@ import {getListByCatId as getFeatureGroupListByCatId} from "@/api/ecps/item/feat
 import {getAllByCatId} from "@/api/ecps/item/feature";
 import {add} from "@/api/ecps/item/item";
 import Tinymce from "@/components/Tinymce/index";
+import MultiImageUpload from "@/components/Upload/MultiImageUpload";
 
 export default {
   name: "AddItem",
-  components: {Tinymce, CategoryCascader},
+  components: {MultiImageUpload, Tinymce, CategoryCascader},
   data() {
     return {
       stepsIndex: 0,
+      itemImgsRelativePath: 'item/' + this.getDateStr(),
+      skuImgsRelativePath: 'sku/' + this.getDateStr(),
       form: {
         itemName: undefined,
         catId: undefined,
@@ -214,6 +222,7 @@ export default {
         keywords: undefined,
         promotion: undefined,
         imgs: undefined,
+        imgsArr: [],
         pageDesc: undefined,
         itemClob: {
           itemId: undefined,
@@ -270,8 +279,22 @@ export default {
   },
   mounted() {
   },
-  watch: {},
+  watch: {
+    'form.imgsArr': function(v, ov) {
+      this.form.imgs = JSON.stringify(v);
+    },
+    'form.skuImgList.skuImgPathArr': function(v, ov) {
+      // this.form.skuList
+    }
+  },
   methods: {
+    getDateStr() {
+      let now = new Date();
+      let fullYear = now.getFullYear();
+      let month = now.getMonth().toString().length == 1 ? '0' + now.getMonth() : now.getMonth();
+      let day = now.getDate().toString().length == 1 ? '0' + now.getDate() : now.getDate();
+      return fullYear + '-' + month + '-' + day;
+    },
     // 下一步
     nextStep() {
       ++this.stepsIndex;
@@ -357,7 +380,7 @@ export default {
     },
     // 属性选项切换
     handleTabsClick(tab, event) {
-      console.log(tab)
+      // console.log(tab)
     },
     // 字符串属性值转select选项数组
     strToSelectOptions(str) {
@@ -439,7 +462,7 @@ export default {
       // 计算笛卡尔积
       let result = [];
       this.descartes(specOptionsNew, result, 0, []);
-      console.log(result)
+      // console.log(result)
       this.calculationSpecData = result;
       // 生成SKU表格数据
       let skuArr = [];
@@ -455,16 +478,24 @@ export default {
           skuPrice: undefined,
           stockInventory: undefined,
           specList: spec,
-          skuImgList: [
-            {
-              imgUrl: 'epcs/brand/76cbbc5ae6a1436db0ecb791ab7844b9.png',
-              defaultImg: 0
-            }
-          ]
+          skuImgList: [],
+          skuImgPathArr: []
         }
         skuArr.push(sku);
       }
       this.form.skuList = skuArr;
+    },
+    // sku图片变化
+    skuImgChange(arr, index) {
+      // console.log(arr, index);
+      let rarr = [];
+      for (const it of arr) {
+        rarr.push({
+          imgUrl: it,
+          defaultImg: 0
+        })
+      }
+      this.form.skuList[index].skuImgList = rarr;
     },
     // 提交表单
     submitItem() {

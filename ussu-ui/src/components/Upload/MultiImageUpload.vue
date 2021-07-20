@@ -3,6 +3,7 @@
     <el-upload
       :data="uploadOption.data"
       :multiple="true"
+      :disabled="pathList.length >= limit"
       list-type="picture-card"
       :file-list="fileList"
       :limit="limit"
@@ -92,6 +93,7 @@ export default {
     pathList(v, ov) {
       console.log('watch:pathList', v);
       this.$emit("update:list", v);
+      this.$emit('change', v);
     }
   },
   created() {
