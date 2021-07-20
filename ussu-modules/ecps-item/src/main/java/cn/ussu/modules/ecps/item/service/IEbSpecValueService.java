@@ -3,6 +3,8 @@ package cn.ussu.modules.ecps.item.service;
 import cn.ussu.modules.ecps.item.entity.EbSpecValue;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 规格值（与价格有关） 服务类
@@ -20,5 +22,7 @@ public interface IEbSpecValueService extends IService<EbSpecValue> {
     void edit(EbSpecValue p);
 
     void del(String ids);
+
+    List<EbSpecValue> getBySkuId(Integer skuId);
 
 }

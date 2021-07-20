@@ -7,6 +7,7 @@ import cn.ussu.modules.ecps.item.entity.EbItemClob;
 import cn.ussu.modules.ecps.item.mapper.EbItemClobMapper;
 import cn.ussu.modules.ecps.item.service.IEbItemClobService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,4 +52,11 @@ public class EbItemClobServiceImpl extends ServiceImpl<EbItemClobMapper, EbItemC
         super.remove(qw);
     }
 
+    @Override
+    public EbItemClob getByItemId(Integer itemId) {
+        Assert.notNull(itemId);
+        LambdaQueryWrapper<EbItemClob> qw = Wrappers.lambdaQuery(EbItemClob.class)
+                .eq(EbItemClob::getItemId, itemId);
+        return super.getOne(qw, true);
+    }
 }

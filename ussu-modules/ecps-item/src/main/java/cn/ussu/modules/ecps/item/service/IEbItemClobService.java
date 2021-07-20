@@ -21,4 +21,6 @@ public interface IEbItemClobService extends IService<EbItemClob> {
 
     void del(String ids);
 
+    EbItemClob getByItemId(Integer itemId);
+
 }

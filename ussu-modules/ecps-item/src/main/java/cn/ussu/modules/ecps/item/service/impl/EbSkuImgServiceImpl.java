@@ -7,9 +7,12 @@ import cn.ussu.modules.ecps.item.entity.EbSkuImg;
 import cn.ussu.modules.ecps.item.mapper.EbSkuImgMapper;
 import cn.ussu.modules.ecps.item.service.IEbSkuImgService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -49,6 +52,15 @@ public class EbSkuImgServiceImpl extends ServiceImpl<EbSkuImgMapper, EbSkuImg> i
         LambdaQueryWrapper<EbSkuImg> qw = new LambdaQueryWrapper<>();
         qw.in(EbSkuImg::getImgId, ids);
         super.remove(qw);
+    }
+
+    @Override
+    public List<EbSkuImg> getBySkuId(Integer skuId) {
+        Assert.notNull(skuId);
+        LambdaQueryWrapper<EbSkuImg> qw = Wrappers.lambdaQuery(EbSkuImg.class)
+                .orderByAsc(EbSkuImg::getImgId)
+                .eq(EbSkuImg::getSkuId, skuId);
+        return super.list(qw);
     }
 
 }

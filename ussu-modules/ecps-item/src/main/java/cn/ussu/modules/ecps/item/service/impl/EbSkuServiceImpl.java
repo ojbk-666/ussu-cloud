@@ -14,6 +14,7 @@ import cn.ussu.modules.ecps.item.service.IEbSkuService;
 import cn.ussu.modules.ecps.item.service.IEbSpecValueService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,4 +104,19 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
         super.remove(qw);
     }
 
+    @Override
+    public List<EbSku> getByItemId(Integer itemId) {
+        Assert.notNull(itemId);
+        LambdaQueryWrapper<EbSku> qw = Wrappers.lambdaQuery(EbSku.class)
+                .orderByAsc(EbSku::getSkuSort, EbSku::getSkuId)
+                .eq(EbSku::getItemId, itemId);
+        List<EbSku> list = super.list(qw);
+        for (EbSku sku : list) {
+            // 设置规格
+            sku.setSpecList(specValueService.getBySkuId(sku.getSkuId()));
+            // 设置图片
+            sku.setSkuImgList(skuImgService.getBySkuId(sku.getSkuId()));
+        }
+        return list;
+    }
 }

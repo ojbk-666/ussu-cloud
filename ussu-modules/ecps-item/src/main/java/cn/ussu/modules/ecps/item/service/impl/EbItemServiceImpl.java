@@ -9,6 +9,7 @@ import cn.ussu.modules.ecps.item.entity.EbItemClob;
 import cn.ussu.modules.ecps.item.entity.EbParaValue;
 import cn.ussu.modules.ecps.item.entity.EbSku;
 import cn.ussu.modules.ecps.item.mapper.EbItemMapper;
+import cn.ussu.modules.ecps.item.service.IEbItemClobService;
 import cn.ussu.modules.ecps.item.service.IEbItemService;
 import cn.ussu.modules.ecps.item.service.IEbParaValueService;
 import cn.ussu.modules.ecps.item.service.IEbSkuService;
@@ -37,12 +38,20 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
     private IEbParaValueService paraValueService;
     @Autowired
     private IEbSkuService skuService;
+    @Autowired
+    private IEbItemClobService itemClobService;
 
     @Override
     public EbItem detail(Integer id) {
         Assert.notNull(id);
         EbItem obj = new EbItem().selectById(id);
-        obj.setItemClob(new EbItemClob().setItemId(obj.getItemId()).selectById());
+        // 详情
+        obj.setItemClob(itemClobService.getByItemId(obj.getItemId()));
+        // 属性
+        List<EbParaValue> paraValueList = paraValueService.getByItemId(obj.getItemId());
+        obj.setParaList(paraValueList);
+        // sku
+        obj.setSkuList(skuService.getByItemId(obj.getItemId()));
         return obj;
     }
 

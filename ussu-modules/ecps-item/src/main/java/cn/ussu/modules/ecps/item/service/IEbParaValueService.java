@@ -3,6 +3,8 @@ package cn.ussu.modules.ecps.item.service;
 import cn.ussu.modules.ecps.item.entity.EbParaValue;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -20,5 +22,7 @@ public interface IEbParaValueService extends IService<EbParaValue> {
     void edit(EbParaValue p);
 
     void del(String ids);
+
+    List<EbParaValue> getByItemId(Integer itemId);
 
 }

@@ -7,9 +7,12 @@ import cn.ussu.modules.ecps.item.entity.EbSpecValue;
 import cn.ussu.modules.ecps.item.mapper.EbSpecValueMapper;
 import cn.ussu.modules.ecps.item.service.IEbSpecValueService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -49,6 +52,15 @@ public class EbSpecValueServiceImpl extends ServiceImpl<EbSpecValueMapper, EbSpe
         LambdaQueryWrapper<EbSpecValue> qw = new LambdaQueryWrapper<>();
         qw.in(EbSpecValue::getSpecId, ids);
         super.remove(qw);
+    }
+
+    @Override
+    public List<EbSpecValue> getBySkuId(Integer skuId) {
+        Assert.notNull(skuId);
+        LambdaQueryWrapper<EbSpecValue> qw = Wrappers.lambdaQuery(EbSpecValue.class)
+                .orderByAsc(EbSpecValue::getSpecId)
+                .eq(EbSpecValue::getSkuId, skuId);
+        return super.list(qw);
     }
 
 }
