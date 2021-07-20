@@ -69,7 +69,7 @@
       <el-table-column label="图片" prop="imgs">
         <template slot-scope="scope">
           <el-image
-            :src="showImg(scope.row.imgs)"
+            :src="showImg(getFirstImgPath(scope.row.imgs))"
             :title="scope.row.imgs"
             fit="contain"
             style="width: 100%;height: 60px;"
@@ -243,6 +243,12 @@ export default {
         }
       } else if (auditStatus === 2) {
         return '审核不通过';
+      }
+    },
+    getFirstImgPath(imgs) {
+      let imgArr = JSON.parse(imgs);
+      if (imgArr && imgArr.length > 0) {
+        return imgArr[0];
       }
     },
     moduleFormat(row, column) {
