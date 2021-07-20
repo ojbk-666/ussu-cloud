@@ -13,6 +13,7 @@ import cn.ussu.modules.ecps.item.service.IEbSkuImgService;
 import cn.ussu.modules.ecps.item.service.IEbSkuService;
 import cn.ussu.modules.ecps.item.service.IEbSpecValueService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,9 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
         }
         if (StrUtil.isBlank(p.getCreateUserId())) {
             p.setCreateUserId(SecurityUtils.getUserId());
+        }
+        if (StrUtil.isBlank(p.getSku())) {
+            p.setSku(IdWorker.getIdStr());
         }
         // 写入sku
         p.insert();

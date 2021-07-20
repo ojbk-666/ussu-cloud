@@ -73,8 +73,7 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
         List<EbSku> skuList = p.getSkuList();
         for (EbSku sku : skuList) {
             sku.setItemId(p.getItemId())
-                    // 202107181402015241416639374887501825
-                    .setSku(IdWorker.getTimeId())
+                    // .setSku(IdWorker.getIdStr())
                     .setCreateTime(now)
                     .setCreateUserId(SecurityUtils.getUserId())
                     .setLastStatus(1)
