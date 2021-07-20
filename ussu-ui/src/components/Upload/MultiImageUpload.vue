@@ -44,6 +44,10 @@ export default {
       type: Array,
       default: () => []
     },
+    relativePath: {
+      type: String,
+      default: ''
+    },
     limit: {
       type: Number,
       default: 10
@@ -51,10 +55,13 @@ export default {
   },
   data() {
     return {
-      tempUrl: '',
+      // 文件列表数组
       fileList: [],
+      // 显示大图
       dialogVisible: false,
+      // 大图的url
       dialogImageUrl: undefined,
+      // 图片路径
       pathList: [],
       uploadOption: {
         action: process.env.VUE_APP_BASE_API + '/files/upload',
@@ -62,7 +69,7 @@ export default {
           token: store.getters.token
         },
         data: {
-          path: this.path
+          path: this.relativePath
         }
       }
     }
@@ -71,18 +78,11 @@ export default {
   },
   watch: {
     list: function(v, ov) {
+      // console.log('watch:list', v);
       // 回显
       this.pathList = v;
       // 构造fileList
-      let arr = [];
-      for (const it of v) {
-        arr.push({
-          name: it,
-          url: this.getShowImgUrl(it)
-        });
-      }
-      console.log(arr);
-      this.fileList = arr;
+      this.fileList = this.echoImgToFileList(v);
     },
     dialogVisible: function(v, ov) {
       if (!v) {
@@ -90,21 +90,26 @@ export default {
       }
     },
     pathList(v, ov) {
-      // this.$emit('input', v);
+      console.log('watch:pathList', v);
       this.$emit("update:list", v);
     }
   },
+  created() {
+    console.log('created', this.list)
+    this.pathList = this.list;
+    this.fileList = this.echoImgToFileList(this.list);
+  },
   methods: {
-    rmImage() {
-      this.emitInput('')
-    },
-    emitInput(val) {
-      this.$emit('input', val)
-    },
-    handleImageSuccess() {
-      this.emitInput(this.tempUrl)
-    },
-    beforeUpload() {
+    // 根据list计算回显的fileList
+    echoImgToFileList(arr) {
+      let rarr = [];
+      for (const it of arr) {
+        rarr.push({
+          name: it,
+          url: this.getShowImgUrl(it)
+        })
+      }
+      return rarr;
     },
     getShowImgUrl(path) {
       return this.showImg(path);
@@ -112,8 +117,6 @@ export default {
     uploadSuccess(res, file, fileList) {
       if (res.code === 20000) {
         this.msgSuccess(`文件${res.data.name}}[${res.data.sizeStr}]上传成功`)
-        this.tempUrl = res.data.path;
-        this.emitInput(this.tempUrl)
         this.fileList = fileList;
         this.pathList.push(res.data.path);
       }
@@ -137,6 +140,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/*//关闭文件回显动画*/
+::v-deep .el-list-enter-active, ::v-deep .el-list-leave-active {
+  //transition: none;
+  transition: left;
+}
 .upload-container {
   width: 100%;
   height: 100%;
