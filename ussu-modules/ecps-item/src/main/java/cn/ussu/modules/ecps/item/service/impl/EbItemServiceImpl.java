@@ -66,7 +66,7 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
                 .setCreateTime(now)
                 .setCreateUserId(SecurityUtils.getUserId())
                 .setSales(0)
-                .setItemNo(IdWorker.getTimeId())
+                .setItemNo(IdWorker.getIdStr())
                 .setLastStatus(1)
                 .insert();
         // 添加商品详情
