@@ -1,13 +1,13 @@
 package cn.ussu.modules.ecps.item.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -20,20 +20,17 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="EbParaValue对象", description="")
-public class EbParaValue extends Model<EbParaValue> {
+@ApiModel(value="EbItemClob对象", description="")
+public class EbItemClob extends Model<EbItemClob> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "参数值主键")
-    @TableId(value = "para_id", type = IdType.AUTO)
-    private Integer paraId;
-
     private Integer itemId;
 
-    private Integer featureId;
+    @ApiModelProperty(value = "商品描述：富文本编辑器；可以输入特殊字符，需转义；无字符限制")
+    private String itemDesc;
 
-    @ApiModelProperty(value = "参数值")
-    private String paraValue;
+    @ApiModelProperty(value = "包装清单")
+    private String packingList;
 
 }

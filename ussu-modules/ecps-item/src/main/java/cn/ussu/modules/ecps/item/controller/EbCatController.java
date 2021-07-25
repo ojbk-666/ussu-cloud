@@ -1,7 +1,5 @@
 package cn.ussu.modules.ecps.item.controller;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.model.vo.JsonResult;
@@ -11,7 +9,10 @@ import cn.ussu.modules.ecps.item.service.IEbCatService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -42,48 +43,27 @@ public class EbCatController extends BaseAdminController {
     }
 
     @GetMapping("/list/tree")
-    public JsonResult listTree() {
-        return JsonResult.ok().data(ebCatService.listTree());
+    public List<EbCat> listTree() {
+        return ebCatService.listTree();
     }
 
     @PutMapping
     public JsonResult add(@RequestBody EbCat ebCat) {
-        String parentIdPath = null;
-        if (ebCat.getParentId() == null) {
-            ebCat.setParentId(0);
-        } else {
-            Integer parentId = ebCat.getParentId();
-            String idPath = new EbCat().setCatId(parentId).selectById().getIdPath();
-            parentIdPath = idPath;
-        }
-        ebCat.insert();
-        if (parentIdPath == null) {
-            ebCat.setIdPath(ebCat.getCatId() + "");
-        } else {
-            ebCat.setIdPath(parentIdPath + StrPool.COMMA + ebCat.getCatId());
-        }
-        ebCat.updateById();
+        ebCatService.add(ebCat);
         return JsonResult.ok();
     }
 
+    @CacheEvict(value = "item", key = "'catTree'", allEntries = true)
     @PostMapping
     public JsonResult edit(@RequestBody EbCat ebCat) {
-        Assert.notNull(ebCat.getCatId());
-        if (ebCat.getParentId() == null) {
-            ebCat.setParentId(0);
-            ebCat.setIdPath(ebCat.getCatId() + "");
-        } else {
-            ebCat.setIdPath(new EbCat()
-                    .setCatId(ebCat.getParentId())
-                    .selectById()
-                    .getIdPath() + StrPool.COMMA + ebCat.getCatId());
-        }
-        ebCat.updateById();
+
         return JsonResult.ok();
     }
 
+    @CacheEvict(value = "item", key = "'catTree'", allEntries = true)
     @DeleteMapping
-    public JsonResult delete(@RequestBody Integer[] catIds) {
+    public JsonResult delete(String catIds) {
+        ebCatService.del(catIds);
         return JsonResult.ok();
     }
 

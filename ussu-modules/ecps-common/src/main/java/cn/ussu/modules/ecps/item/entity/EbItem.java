@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="EbItem对象", description="商品，包含手机和号卡，通过在类目表中预置的手机类目和号卡类目来区分。裸机：手机机体，不包含任何通信服务和绑定的费用的机器")
-public class EbItem extends Model<EbItem> {
+public class EbItem extends Model<EbItem> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -126,6 +127,9 @@ public class EbItem extends Model<EbItem> {
     private String giftShowType;
 
     private String imgSize1;
+
+    @TableField(exist = false)
+    private String brandName;
 
     /**
      * 商品详情

@@ -9,9 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * <p>
- * 规格值（与价格有关）
+ * 
  * </p>
  *
  * @author liming
@@ -20,20 +22,20 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="EbSpecValue对象", description="规格值（与价格有关）")
-public class EbSpecValue extends Model<EbSpecValue> {
+@ApiModel(value="EbParaValue对象", description="")
+public class EbParaValue extends Model<EbParaValue> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "规格值主键")
-    @TableId(value = "spec_id", type = IdType.AUTO)
-    private Integer specId;
+    @ApiModelProperty(value = "参数值主键")
+    @TableId(value = "para_id", type = IdType.AUTO)
+    private Integer paraId;
 
-    private Integer skuId;
+    private Integer itemId;
 
     private Integer featureId;
 
-    @ApiModelProperty(value = "规格值")
-    private String specValue;
+    @ApiModelProperty(value = "参数值")
+    private String paraValue;
 
 }

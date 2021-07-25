@@ -17,4 +17,10 @@ public interface IEbCatService extends IService<EbCat> {
 
     List<EbCat> listTree();
 
+    void add(EbCat p);
+
+    void edit(EbCat p);
+
+    void del(String ids);
+
 }

@@ -43,6 +43,8 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
     public EbSku detail(Integer id) {
         Assert.notNull(id);
         EbSku obj = new EbSku().selectById(id);
+        obj.setSpecList(specValueService.getBySkuId(obj.getSkuId()))
+                .setSkuImgList(skuImgService.getBySkuId(obj.getSkuId()));
         return obj;
     }
 
@@ -70,6 +72,7 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
         specValueService.saveBatch(specList);
         // 写入图片列表
         boolean existDefaultImage = false;
+        String skuImgOfSku = null;
         List<EbSkuImg> skuImgList = p.getSkuImgList();
         for (EbSkuImg skuImg : skuImgList) {
             skuImg.setSkuId(p.getSkuId());
@@ -78,13 +81,16 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
             }
             if (skuImg.getDefaultImg().equals(1)) {
                 existDefaultImage = true;
+                skuImgOfSku = skuImg.getImgUrl();
             }
         }
         if (!existDefaultImage) {
             if (CollUtil.isNotEmpty(skuImgList)) {
                 skuImgList.get(0).setDefaultImg(1);
+                skuImgOfSku = skuImgList.get(0).getImgUrl();
             }
         }
+        new EbSku().setSkuId(p.getSkuId()).setSkuImg(skuImgOfSku).updateById();
         skuImgService.saveBatch(skuImgList);
     }
 

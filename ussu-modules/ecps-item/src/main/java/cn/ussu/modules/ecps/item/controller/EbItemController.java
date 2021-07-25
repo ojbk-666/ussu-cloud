@@ -4,7 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
+import cn.ussu.modules.ecps.item.entity.EbBrand;
 import cn.ussu.modules.ecps.item.entity.EbItem;
+import cn.ussu.modules.ecps.item.service.IEbBrandService;
 import cn.ussu.modules.ecps.item.service.IEbItemService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -25,6 +27,8 @@ public class EbItemController extends BaseAdminController {
 
     @Autowired
     private IEbItemService service;
+    @Autowired
+    private IEbBrandService brandService;
 
     /**
      * 分页
@@ -35,10 +39,16 @@ public class EbItemController extends BaseAdminController {
         qw.eq(p.getCatId() != null, EbItem::getCatId, p.getCatId())
                 .eq(p.getBrandId() != null, EbItem::getBrandId, p.getBrandId())
                 .eq(p.getShowStatus() != null, EbItem::getShowStatus, p.getShowStatus())
-                .eq(p.getAuditStatus()!= null, EbItem::getAuditStatus,p.getAuditStatus())
+                .eq(p.getAuditStatus() != null, EbItem::getAuditStatus, p.getAuditStatus())
                 .eq(StrUtil.isNotBlank(p.getItemNo()), EbItem::getItemNo, p.getItemNo())
                 .like(StrUtil.isNotBlank(p.getItemName()), EbItem::getItemName, p.getItemName());
-        IPage page = service.page(DefaultPageFactory.getPage(), qw);
+        IPage<EbItem> page = service.page(DefaultPageFactory.getPage(), qw);
+        for (EbItem item : page.getRecords()) {
+            EbBrand brand = new EbBrand().setBrandId(item.getBrandId()).selectById();
+            if (brand != null) {
+                item.setBrandName(brand.getBrandName());
+            }
+        }
         return DefaultPageFactory.createReturnPageInfo(page);
     }
 

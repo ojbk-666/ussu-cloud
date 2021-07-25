@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="EbSku对象", description="最小销售单元，包括实体商品、虚拟商品（如号卡、套卡、话费等）	将要增加的字段：	STOCK_IN")
-public class EbSku extends Model<EbSku> {
+public class EbSku extends Model<EbSku> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -97,5 +98,8 @@ public class EbSku extends Model<EbSku> {
      */
     @TableField(exist = false)
     private List<EbSkuImg> skuImgList;
+
+    @TableField(exist = false)
+    private EbItem item;
 
 }

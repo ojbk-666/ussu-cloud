@@ -9,6 +9,7 @@ import cn.ussu.modules.ecps.item.mapper.EbFeatureMapper;
 import cn.ussu.modules.ecps.item.service.IEbFeatureService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,11 +48,13 @@ public class EbFeatureController extends BaseAdminController {
 
     @GetMapping("/catId/{catId}")
     public Object listByCatId(@PathVariable Integer catId, EbFeature p) {
-        LambdaQueryWrapper<EbFeature> qw = new LambdaQueryWrapper<>();
-        qw.orderByAsc(EbFeature::getFeatureSort, EbFeature::getGroupId)
+        LambdaQueryWrapper<EbFeature> qw = Wrappers.lambdaQuery(EbFeature.class)
+                .orderByAsc(EbFeature::getFeatureSort, EbFeature::getGroupId)
                 .orderByDesc(EbFeature::getFeatureId)
                 .eq(EbFeature::getCatId, catId)
-                .eq(p.getIsSpec() != null, EbFeature::getIsSpec, p.getIsSpec());
+                .eq(p.getIsSpec() != null, EbFeature::getIsSpec, p.getIsSpec())
+                .eq(p.getIsSelect() != null, EbFeature::getIsSelect, p.getIsSelect())
+                .like(StrUtil.isNotBlank(p.getFeatureName()), EbFeature::getFeatureName, p.getFeatureName());
         return service.list(qw);
     }
 

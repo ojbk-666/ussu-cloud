@@ -1,5 +1,7 @@
 package cn.ussu.modules.ecps.item.entity;
 
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -22,7 +27,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="EbFeature对象", description="商品属性	预置的手机参数（请将预置可选值补充完整）	1.      型号            ")
-public class EbFeature extends Model<EbFeature> {
+public class EbFeature extends Model<EbFeature> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,6 +53,15 @@ public class EbFeature extends Model<EbFeature> {
 
     @ApiModelProperty(value = "属性可选值：用英文逗号分割的可选值，可选值里不许有逗号")
     private String selectValues;
+
+    public EbFeature setSelectValues(String selectValues) {
+        this.selectValues = selectValues;
+        this.selectValueList = (StrUtil.split(selectValues, StrPool.COMMA));
+        return this;
+    }
+
+    @TableField(exist = false)
+    private List<String> selectValueList;
 
     @ApiModelProperty(value = "录入方式：1.树状菜单，2.单选，3.复选，4.文本框")
     private Integer inputType;
