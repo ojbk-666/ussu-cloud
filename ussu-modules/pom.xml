@@ -18,6 +18,9 @@
         <module>ussu-files</module>
         <module>ussu-code-generator</module>
         <module>ecps-item</module>
+        <module>ecps-portal</module>
+        <module>ecps-common</module>
+        <module>ecps-search</module>
     </modules>
 
     <properties>
