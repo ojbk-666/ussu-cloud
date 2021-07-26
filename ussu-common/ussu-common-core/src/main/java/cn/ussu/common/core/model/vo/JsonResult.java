@@ -1,5 +1,6 @@
 package cn.ussu.common.core.model.vo;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.ussu.common.core.constants.StrConstants;
 
 import java.util.HashMap;
@@ -153,6 +154,10 @@ public class JsonResult extends HashMap<String, Object> {
     public <T> T getData() {
         Object o = get(StrConstants.data);
         return ((T) o);
+    }
+
+    public <T> T getData(Class<T> clazz) {
+        return BeanUtil.toBean(get(StrConstants.data), clazz);
     }
 
     /**
