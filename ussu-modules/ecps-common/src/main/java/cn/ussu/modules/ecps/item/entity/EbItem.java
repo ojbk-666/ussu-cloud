@@ -149,4 +149,7 @@ public class EbItem extends Model<EbItem> implements Serializable {
     @TableField(exist = false)
     private List<EbSku> skuList;
 
+    @TableField(exist = false)
+    private EbBrand brand;
+
 }

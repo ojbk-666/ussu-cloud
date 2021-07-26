@@ -6,6 +6,7 @@ public interface ConstantsEcps {
     String SERVICE_ECPS_ORDER = "ecps-order";
     String SERVICE_ECPS_SKILL = "ecps-skill";
     String SERVICE_ECPS_MEMBER = "ecps-member";
+    String SERVICE_ECPS_SEARCH = "ecps-search";
 
     String CACHE_VALUE_CAT = "item:cat";
     String CACHE_VALUE_FEATURE = "item:feature";
