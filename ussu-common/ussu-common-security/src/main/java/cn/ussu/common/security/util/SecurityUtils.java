@@ -1,13 +1,12 @@
 package cn.ussu.common.security.util;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.util.HttpContext;
 import cn.ussu.common.core.util.SpringContextHolder;
-import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.common.security.entity.LoginUser;
 import cn.ussu.common.security.entity.SysUser;
+import cn.ussu.common.security.service.TokenService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,12 +50,15 @@ public class SecurityUtils {
      * 获取用户信息
      */
     public static LoginUser getLoginUser() {
-        RedisService redisService = SpringContextHolder.getBean(RedisService.class);
+        /*RedisService redisService = SpringContextHolder.getBean(RedisService.class);
         Object obj = redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + getRequestToken());
         if (obj == null) {
             return null;
         }
-        return BeanUtil.toBean(obj, LoginUser.class);
+        return BeanUtil.toBean(obj, LoginUser.class);*/
+        TokenService tokenService = SpringContextHolder.getBean(TokenService.class);
+        LoginUser loginUser = tokenService.getLoginUser();
+        return loginUser;
     }
 
     /**
@@ -74,9 +76,18 @@ public class SecurityUtils {
      * 获取请求token
      */
     public static String getRequestToken(HttpServletRequest request) {
+        return getRequestToken(request, true);
+    }
+
+    /**
+     * 获取请求token
+     */
+    public static String getRequestToken(HttpServletRequest request, boolean removePrefix) {
         String requestToken = request.getHeader(CacheConstants.TOKEN_IN_REQUEST_KEY);
-        if (StrUtil.isNotBlank(requestToken) && requestToken.startsWith(CacheConstants.TOKEN_PREFIX)) {
-            requestToken = requestToken.replaceFirst(CacheConstants.TOKEN_PREFIX, StrUtil.EMPTY);
+        if (StrUtil.isNotBlank(requestToken)) {
+            if (removePrefix && requestToken.startsWith(CacheConstants.TOKEN_PREFIX)) {
+                requestToken = requestToken.replaceFirst(CacheConstants.TOKEN_PREFIX, StrUtil.EMPTY);
+            }
         }
         return requestToken;
     }

@@ -2,10 +2,10 @@ package cn.ussu.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.constants.CacheConstants;
-import cn.ussu.common.core.constants.ErrorCodeConstants;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.gateway.properties.IgnoreWhiteProperties;
+import cn.ussu.gateway.util.TokenUtil;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,17 +49,28 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
 
         // 没有token
-        String token = getRequestToken(serverHttpRequest);
-        if (StrUtil.isBlank(token)) {
-            return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"缺少登录凭证");
-        }
-        Object object = redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + token);
+        // String token = getRequestToken(serverHttpRequest);
+        // if (StrUtil.isBlank(token)) {
+        //     return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"缺少登录凭证");
+        // }
+        // Object object = redisService.getCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + token);
         // token过期
-        if (object == null) {
-            return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"凭证过期,请重新登录");
+        // if (object == null) {
+        //     return setUnauthorizedResponse(exchange, ErrorCodeConstants.TIME_OUT,"凭证过期,请重新登录");
+        // }
+        JsonResult checkTokenResult = TokenUtil.checkTokenResult(getRequestToken(serverHttpRequest));
+        if (!checkTokenResult.isSuccess()) {
+            return setUnauthorizedResponse(exchange, checkTokenResult);
         }
-        // token篡改
-
+        // 设置用户信息到请求
+        ServerHttpRequest mutableReq = exchange.getRequest().mutate()
+                .header("userId", "")
+                .header("userType", "")
+                .header("name", "")
+                .header("nickName", "")
+                .build();
+        ServerWebExchange serverWebExchange = exchange.mutate().request(mutableReq).build();
+        // return chain.filter(serverWebExchange);
         return chain.filter(exchange);
     }
 
@@ -94,6 +105,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
             DataBufferFactory bufferFactory = response.bufferFactory();
             return bufferFactory.wrap(JSON.toJSONBytes(JsonResult.error(errorCode, msg)));
         }));
+    }
+
+    private Mono<Void> setUnauthorizedResponse(ServerWebExchange exchange, JsonResult jsonResult) {
+        return setUnauthorizedResponse(exchange, jsonResult.getCode(), jsonResult.getMsg());
     }
 
     /**

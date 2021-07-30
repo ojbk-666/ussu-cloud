@@ -20,10 +20,10 @@ public class SysUser implements Serializable {
     private String name;
     private String nickName;
     private String avatar;
-    private String sex;
+    private Integer sex;
     private String email;
     private String phone;
-    private String userType;
+    private Integer userType;
     private String deptId;
 
     private SysDept sysDept;

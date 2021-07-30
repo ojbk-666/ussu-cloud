@@ -54,10 +54,12 @@ public class RecordLogAspect {
             String userAgentStr = request.getHeader(Header.USER_AGENT.getValue());
             UserAgent userAgent = UserAgentUtil.parse(userAgentStr);
             LoginUser loginUser = SecurityUtils.getLoginUser();
+            String clientIP = ServletUtil.getClientIP(request);
+            clientIP = clientIP.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : clientIP;
             logVo.setRequestTime(LocalDateTime.now())
                     .setRequestUri(request.getServletPath())
                     .setRequestParams(StrUtil.maxLength(JSON.toJSONString(parameterMap), 2000))
-                    .setRemoteIp(ServletUtil.getClientIP(request))
+                    .setRemoteIp(clientIP)
                     .setRequestMethod(request.getMethod())
                     .setUserAgent(userAgentStr)
                     .setBrowserType(userAgent.getBrowser().getName())
