@@ -1,7 +1,6 @@
 package cn.ussu.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.constants.StrConstants;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.gateway.service.ValidateCodeService;
 import com.alibaba.fastjson.JSON;
@@ -46,7 +45,7 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object> {
             try {
                 String rspStr = resolveBodyFromRequest(request);
                 JSONObject obj = JSONObject.parseObject(rspStr);
-                validateCodeService.check(obj.getString(UUID), obj.getString(StrConstants.code));
+                // validateCodeService.check(obj.getString(UUID), obj.getString(StrConstants.code));
             } catch (Exception e) {
                 ServerHttpResponse response = exchange.getResponse();
                 response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

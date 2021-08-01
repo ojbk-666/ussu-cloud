@@ -1,6 +1,8 @@
 package cn.ussu.common.security.util;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.util.HttpContext;
 import cn.ussu.common.core.util.SpringContextHolder;
@@ -9,6 +11,7 @@ import cn.ussu.common.security.entity.SysUser;
 import cn.ussu.common.security.service.TokenService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 public class SecurityUtils {
@@ -84,7 +87,22 @@ public class SecurityUtils {
      */
     public static String getRequestToken(HttpServletRequest request, boolean removePrefix) {
         String requestToken = request.getHeader(CacheConstants.TOKEN_IN_REQUEST_KEY);
+        if (StrUtil.isBlank(requestToken)) {
+            Cookie[] cookies = request.getCookies();
+            if (ArrayUtil.isNotEmpty(cookies)) {
+                for (Cookie cookie : cookies) {
+                    if (CacheConstants.TOKEN_IN_REQUEST_KEY.equals(cookie.getName())) {
+                        String cookieValue = cookie.getValue();
+                        if (StrUtil.isNotBlank(cookieValue)) {
+                            requestToken = cookieValue;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
         if (StrUtil.isNotBlank(requestToken)) {
+            requestToken = URLUtil.decode(requestToken);
             if (removePrefix && requestToken.startsWith(CacheConstants.TOKEN_PREFIX)) {
                 requestToken = requestToken.replaceFirst(CacheConstants.TOKEN_PREFIX, StrUtil.EMPTY);
             }

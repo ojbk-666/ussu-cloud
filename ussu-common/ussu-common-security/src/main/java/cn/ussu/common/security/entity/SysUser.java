@@ -28,5 +28,6 @@ public class SysUser implements Serializable {
 
     private SysDept sysDept;
     private List<SysRole> roleList;
+    private List<String> roleIds;
 
 }

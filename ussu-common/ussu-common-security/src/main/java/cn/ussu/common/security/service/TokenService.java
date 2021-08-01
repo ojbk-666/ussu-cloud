@@ -3,9 +3,11 @@ package cn.ussu.common.security.service;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.ussu.common.core.constants.CacheConstants;
 import cn.ussu.common.core.constants.ErrorCodeConstants;
 import cn.ussu.common.core.constants.ErrorMsgConstants;
+import cn.ussu.common.core.exception.ServiceException;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.core.util.HttpContext;
 import cn.ussu.common.redis.service.RedisService;
@@ -134,13 +136,14 @@ public class TokenService {
         if (StrUtil.isBlank(tokenStr)) {
             return null;
         }
+        tokenStr = URLUtil.decode(tokenStr);
         if (tokenStr.startsWith(CacheConstants.TOKEN_PREFIX)) {
             tokenStr = tokenStr.substring(CacheConstants.TOKEN_PREFIX.length());
         }
         try {
             return this.parseToken(tokenStr);
         } catch (Exception e) {
-            return null;
+            throw new ServiceException(ErrorCodeConstants.TIME_OUT, ErrorMsgConstants.TIME_OUT);
         }
     }
 
@@ -177,7 +180,7 @@ public class TokenService {
      * 获取登录用户
      */
     public LoginUser getLoginUser(HttpServletRequest request) {
-        String requestToken = SecurityUtils.getRequestToken(request, false);
+        String requestToken = SecurityUtils.getRequestToken(request, true);
         Claims claims = checkToken(requestToken);
         if (claims != null) {
             Integer userType = (Integer) claims.get("userType");
@@ -186,12 +189,13 @@ public class TokenService {
                 return loginUser;
             } else {
                 LoginUser loginUser = new LoginUser();
-                loginUser.setExpireTime(claims.getExpiration().getTime());
+                loginUser.setLoginTime(claims.getIssuedAt().getTime()).setExpireTime(claims.getExpiration().getTime());
                 SysUser sysUser = new SysUser();
                 sysUser.setId(((String) claims.get("userId")))
                         .setUserType(userType)
                         .setName(((String) claims.get("name")))
                         .setNickName(((String) claims.get("nickName")));
+                loginUser.setSysUser(sysUser);
                 return loginUser;
             }
         } else {

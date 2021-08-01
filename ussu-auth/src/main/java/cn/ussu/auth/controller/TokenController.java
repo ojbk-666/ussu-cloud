@@ -32,6 +32,8 @@ public class TokenController extends BaseController {
         LoginUser loginUser = sysLoginService.login(loginParam);
         Map<String, Object> data = getNewHashMap();
         data.put(CacheConstants.TOKEN_IN_REQUEST_KEY, loginUser.getToken());
+        data.put("nickName", loginUser.getSysUser().getNickName());
+        data.put("avatar", loginUser.getSysUser().getAvatar());
         return JsonResult.ok().data(data);
     }
 
