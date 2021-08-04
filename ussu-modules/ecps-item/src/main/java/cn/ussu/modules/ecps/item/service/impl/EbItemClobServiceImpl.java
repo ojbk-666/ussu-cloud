@@ -12,6 +12,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  *  服务实现类
@@ -48,7 +51,7 @@ public class EbItemClobServiceImpl extends ServiceImpl<EbItemClobMapper, EbItemC
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbItemClob> qw = new LambdaQueryWrapper<>();
-        // qw.in(EbItemClob::getid, ids);
+        qw.in(EbItemClob::getItemId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 

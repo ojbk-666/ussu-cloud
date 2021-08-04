@@ -13,6 +13,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  * 商品属性	预置的手机参数（请将预置可选值补充完整）	1.      型号             服务实现类
@@ -52,7 +55,7 @@ public class EbFeatureServiceImpl extends ServiceImpl<EbFeatureMapper, EbFeature
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbFeature> qw = new LambdaQueryWrapper<>();
-        qw.in(EbFeature::getFeatureId, ids);
+        qw.in(EbFeature::getFeatureId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 

@@ -1,0 +1,14 @@
+spring:
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+  jackson:
+    parser:
+      ALLOW_UNQUOTED_CONTROL_CHARS: true
+feign:
+  compression:
+    request:
+      enabled: false
+    response:
+      enabled: false

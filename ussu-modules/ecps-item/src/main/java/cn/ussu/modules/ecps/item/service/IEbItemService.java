@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEbItemService extends IService<EbItem> {
 
-    EbItem detail(Integer id);
+    EbItem detail(Integer id, boolean includeSkuList);
 
     void add(EbItem p);
 

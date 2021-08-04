@@ -7,6 +7,7 @@ import cn.ussu.modules.ecps.item.entity.EbParaValue;
 import cn.ussu.modules.ecps.item.service.IEbParaValueService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,11 @@ public class EbParaValueController extends BaseAdminController {
         LambdaQueryWrapper<EbParaValue> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(DefaultPageFactory.getPage(), qw);
         return DefaultPageFactory.createReturnPageInfo(page);
+    }
+
+    @GetMapping("/item/{itemId}")
+    public JsonResult allByItemId(@PathVariable Integer itemId) {
+        return JsonResult.ok().data(service.list(Wrappers.lambdaQuery(EbParaValue.class).eq(EbParaValue::getItemId, itemId)));
     }
 
     /**

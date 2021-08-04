@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.member.mapper.EbUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.member.entity.EbUser">
+        <id column="eb_user_id" property="ebUserId" />
+        <result column="username" property="username" />
+        <result column="gender" property="gender" />
+        <result column="password" property="password" />
+        <result column="nickname" property="nickname" />
+        <result column="real_name" property="realName" />
+        <result column="phone" property="phone" />
+        <result column="resi_prov" property="resiProv" />
+        <result column="resi_city" property="resiCity" />
+        <result column="resi_dist" property="resiDist" />
+        <result column="addr" property="addr" />
+        <result column="zip_code" property="zipCode" />
+        <result column="login_time" property="loginTime" />
+        <result column="status" property="status" />
+        <result column="email" property="email" />
+        <result column="group_id" property="groupId" />
+        <result column="birthday" property="birthday" />
+        <result column="qq_num" property="qqNum" />
+        <result column="cellphone" property="cellphone" />
+        <result column="intro_info" property="introInfo" />
+        <result column="login_count" property="loginCount" />
+        <result column="register_time" property="registerTime" />
+        <result column="is_mobile_client" property="isMobileClient" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        eb_user_id, username, gender, password, nickname, real_name, phone, resi_prov, resi_city, resi_dist, addr, zip_code, login_time, status, email, group_id, birthday, qq_num, cellphone, intro_info, login_count, register_time, is_mobile_client
+    </sql>
+
+</mapper>

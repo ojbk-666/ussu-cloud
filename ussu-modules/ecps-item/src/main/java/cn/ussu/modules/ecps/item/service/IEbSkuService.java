@@ -15,7 +15,9 @@ import java.util.List;
  */
 public interface IEbSkuService extends IService<EbSku> {
 
-    EbSku detail(Integer id);
+    EbSku detail(Integer id, boolean includeItem);
+
+    EbSku detail2(Integer skuId, boolean includeItem);
 
     void add(EbSku p);
 
@@ -25,4 +27,10 @@ public interface IEbSkuService extends IService<EbSku> {
 
     List<EbSku> getByItemId(Integer itemId);
 
+    void upSkuBySkuId(String skuId);
+
+    /**
+     * 更新商品库存
+     */
+    void updateStock(EbSku sku);
 }

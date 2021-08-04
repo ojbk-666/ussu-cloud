@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.member.mapper.EbCartSkuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.member.entity.EbCartSku">
+        <id column="cart_sku_id" property="cartSkuId" />
+        <result column="eb_user_id" property="ebUserId" />
+        <result column="item_id" property="itemId" />
+        <result column="item_no" property="itemNo" />
+        <result column="item_name" property="itemName" />
+        <result column="sku_id" property="skuId" />
+        <result column="sku" property="sku" />
+        <result column="sku_name" property="skuName" />
+        <result column="sku_spec" property="skuSpec" />
+        <result column="sku_img" property="skuImg" />
+        <result column="market_price" property="marketPrice" />
+        <result column="offer_group_id" property="offerGroupId" />
+        <result column="offer_group_name" property="offerGroupName" />
+        <result column="offer_type" property="offerType" />
+        <result column="short_name" property="shortName" />
+        <result column="offer_name" property="offerName" />
+        <result column="short_name2" property="shortName2" />
+        <result column="price" property="price" />
+        <result column="quantity" property="quantity" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        cart_sku_id, eb_user_id, item_id, item_no, item_name, sku_id, sku, sku_name, sku_spec, sku_img, market_price, offer_group_id, offer_group_name, offer_type, short_name, offer_name, short_name2, price, quantity
+    </sql>
+
+</mapper>

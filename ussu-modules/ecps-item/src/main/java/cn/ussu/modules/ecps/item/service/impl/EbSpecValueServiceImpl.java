@@ -50,7 +50,7 @@ public class EbSpecValueServiceImpl extends ServiceImpl<EbSpecValueMapper, EbSpe
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbSpecValue> qw = new LambdaQueryWrapper<>();
-        qw.in(EbSpecValue::getSpecId, ids);
+        qw.in(EbSpecValue::getSpecId, ints);
         super.remove(qw);
     }
 

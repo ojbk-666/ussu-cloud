@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.order.mapper.EbOrderDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.order.entity.EbOrderDetail">
+        <id column="order_detail_id" property="orderDetailId" />
+        <result column="order_id" property="orderId" />
+        <result column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="item_no" property="itemNo" />
+        <result column="sku_id" property="skuId" />
+        <result column="sku" property="sku" />
+        <result column="sku_img" property="skuImg" />
+        <result column="sku_name" property="skuName" />
+        <result column="sku_cat_type" property="skuCatType" />
+        <result column="sku_spec" property="skuSpec" />
+        <result column="market_price" property="marketPrice" />
+        <result column="sku_discount" property="skuDiscount" />
+        <result column="sku_price" property="skuPrice" />
+        <result column="offer_group_id" property="offerGroupId" />
+        <result column="offer_group_name" property="offerGroupName" />
+        <result column="offer_type" property="offerType" />
+        <result column="short_name" property="shortName" />
+        <result column="offer_id" property="offerId" />
+        <result column="offer_name" property="offerName" />
+        <result column="offer_no" property="offerNo" />
+        <result column="short_name2" property="shortName2" />
+        <result column="order_detail_type" property="orderDetailType" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="quantity" property="quantity" />
+        <result column="price" property="price" />
+        <result column="product_id" property="productId" />
+        <result column="payment_price" property="paymentPrice" />
+        <result column="purchase_price" property="purchasePrice" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_detail_id, order_id, item_id, item_name, item_no, sku_id, sku, sku_img, sku_name, sku_cat_type, sku_spec, market_price, sku_discount, sku_price, offer_group_id, offer_group_name, offer_type, short_name, offer_id, offer_name, offer_no, short_name2, order_detail_type, merchant_id, quantity, price, product_id, payment_price, purchase_price
+    </sql>
+
+</mapper>

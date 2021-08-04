@@ -12,7 +12,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -50,7 +52,7 @@ public class EbSkuImgServiceImpl extends ServiceImpl<EbSkuImgMapper, EbSkuImg> i
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbSkuImg> qw = new LambdaQueryWrapper<>();
-        qw.in(EbSkuImg::getImgId, ids);
+        qw.in(EbSkuImg::getImgId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 

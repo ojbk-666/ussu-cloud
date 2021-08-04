@@ -4,11 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
+import cn.ussu.common.core.model.vo.JsonResult;
+import cn.ussu.common.redis.service.RedisService;
 import cn.ussu.common.security.util.SecurityUtils;
-import cn.ussu.modules.ecps.item.entity.EbSku;
-import cn.ussu.modules.ecps.item.entity.EbSkuImg;
-import cn.ussu.modules.ecps.item.entity.EbSpecValue;
+import cn.ussu.modules.ecps.item.entity.*;
+import cn.ussu.modules.ecps.item.feign.RemoteSearchService;
 import cn.ussu.modules.ecps.item.mapper.EbSkuMapper;
+import cn.ussu.modules.ecps.item.service.IEbItemService;
 import cn.ussu.modules.ecps.item.service.IEbSkuImgService;
 import cn.ussu.modules.ecps.item.service.IEbSkuService;
 import cn.ussu.modules.ecps.item.service.IEbSpecValueService;
@@ -20,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,13 +42,43 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
     private IEbSpecValueService specValueService;
     @Autowired
     private IEbSkuImgService skuImgService;
+    @Autowired
+    private IEbItemService itemService;
+    @Autowired
+    private RemoteSearchService remoteSearchService;
+    @Autowired
+    private RedisService redisService;
 
     @Override
-    public EbSku detail(Integer id) {
+    public EbSku detail(Integer id, boolean includeItem) {
         Assert.notNull(id);
         EbSku obj = new EbSku().selectById(id);
         obj.setSpecList(specValueService.getBySkuId(obj.getSkuId()))
                 .setSkuImgList(skuImgService.getBySkuId(obj.getSkuId()));
+        if (includeItem) {
+            EbItem item = itemService.detail(obj.getItemId(), false);
+            EbBrand brand = new EbBrand().setBrandId(item.getBrandId()).selectById();
+            item.setBrand(brand);
+            obj.setItem(item);
+        }
+        return obj;
+    }
+
+    @Override
+    public EbSku detail2(Integer skuId, boolean includeItem) {
+        Assert.notNull(skuId);
+        EbSku obj = new EbSku().selectById(skuId);
+        obj.setSpecList(specValueService.getBySkuId(obj.getSkuId()))
+                .setSkuImgList(skuImgService.getBySkuId(obj.getSkuId()));
+        for (EbSpecValue specValue : obj.getSpecList()) {
+            Integer featureId = specValue.getFeatureId();
+            EbFeature ebFeature = new EbFeature().setFeatureId(featureId).selectById();
+            specValue.setFeatureName(ebFeature.getFeatureName());
+        }
+        if (includeItem) {
+            EbItem ebItem = new EbItem().setItemId(obj.getItemId()).selectById();
+            obj.setItem(ebItem);
+        }
         return obj;
     }
 
@@ -106,7 +140,7 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbSku> qw = new LambdaQueryWrapper<>();
-        qw.in(EbSku::getSkuId, ids);
+        qw.in(EbSku::getSkuId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 
@@ -124,5 +158,41 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
             sku.setSkuImgList(skuImgService.getBySkuId(sku.getSkuId()));
         }
         return list;
+    }
+
+    @Transactional
+    @Override
+    public void upSkuBySkuId(String idstr) {
+        int[] ids = StrUtil.splitToInt(idstr, StrPool.COMMA);
+        List<Integer> skuIds = Arrays.stream(ids).boxed().collect(Collectors.toList());
+        Assert.notEmpty(skuIds);
+        for (Integer skuId : skuIds) {
+            EbSku ebSku = new EbSku().setSkuId(skuId).selectById();
+            if (ebSku.getShowStatus().equals(0)) {
+                new EbSku().setSkuId(skuId).setShowStatus(1).updateById();
+                EbSku sku = detail(skuId, true);
+                redisService.setCacheObject("up_sku_skuid_" + sku.getSkuId(), sku.getItem(), 30L);
+                sku.setItem(null);
+                JsonResult jsonResult = remoteSearchService.up(sku);
+                if (!jsonResult.isSuccess()) {
+                    throw new IllegalArgumentException(jsonResult.getMsg());
+                }
+            }
+        }
+    }
+
+    /**
+     * 更新商品库存
+     *
+     * @param sku
+     */
+    @Transactional
+    @Override
+    public void updateStock(EbSku sku) {
+        Assert.notNull(sku.getSkuId(), "skuId不能为空");
+        Assert.notNull(sku.getStockInventory(), "库存不能为空");
+        new EbSku().setSkuId(sku.getSkuId())
+                .setStockInventory(sku.getStockInventory())
+                .updateById();
     }
 }

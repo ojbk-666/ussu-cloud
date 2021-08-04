@@ -21,6 +21,8 @@
         <module>ecps-portal</module>
         <module>ecps-common</module>
         <module>ecps-search</module>
+        <module>ecps-member</module>
+        <module>ecps-order</module>
     </modules>
 
     <properties>

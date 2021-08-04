@@ -57,7 +57,7 @@ public class EbItemController extends BaseAdminController {
      */
     @GetMapping("/{id}")
     public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+        return service.detail(id, true);
     }
 
     /**

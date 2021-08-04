@@ -1,6 +1,7 @@
 package cn.ussu.modules.ecps.item.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
@@ -37,5 +38,9 @@ public class EbSpecValue extends Model<EbSpecValue> implements Serializable {
 
     @ApiModelProperty(value = "规格值")
     private String specValue;
+
+    // 属性名称
+    @TableField(exist = false)
+    private String featureName;
 
 }

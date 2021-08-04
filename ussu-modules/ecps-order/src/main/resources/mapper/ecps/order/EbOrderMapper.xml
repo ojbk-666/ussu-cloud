@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.order.mapper.EbOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.order.entity.EbOrder">
+        <id column="order_id" property="orderId" />
+        <result column="eb_user_id" property="ebUserId" />
+        <result column="username" property="username" />
+        <result column="order_num" property="orderNum" />
+        <result column="payment" property="payment" />
+        <result column="pay_platform" property="payPlatform" />
+        <result column="delivery" property="delivery" />
+        <result column="is_confirm" property="isConfirm" />
+        <result column="order_sum" property="orderSum" />
+        <result column="ship_fee" property="shipFee" />
+        <result column="is_paid" property="isPaid" />
+        <result column="order_state" property="orderState" />
+        <result column="payment_cash" property="paymentCash" />
+        <result column="distri_id" property="distriId" />
+        <result column="delivery_method" property="deliveryMethod" />
+        <result column="payment_no" property="paymentNo" />
+        <result column="order_time" property="orderTime" />
+        <result column="pay_time" property="payTime" />
+        <result column="deposit_time" property="depositTime" />
+        <result column="success_time" property="successTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+        <result column="is_display" property="isDisplay" />
+        <result column="notes" property="notes" />
+        <result column="ship_name" property="shipName" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="district" property="district" />
+        <result column="zip_code" property="zipCode" />
+        <result column="addr" property="addr" />
+        <result column="phone" property="phone" />
+        <result column="payable" property="payable" />
+        <result column="company" property="company" />
+        <result column="contents" property="contents" />
+        <result column="delivery_no" property="deliveryNo" />
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+        <result column="is_print" property="isPrint" />
+        <result column="order_type" property="orderType" />
+        <result column="fixed_phone" property="fixedPhone" />
+        <result column="attach_file" property="attachFile" />
+        <result column="return_type" property="returnType" />
+        <result column="seckill_id" property="seckillId" />
+        <result column="order_ext1" property="orderExt1" />
+        <result column="order_ext2" property="orderExt2" />
+        <result column="order_ext3" property="orderExt3" />
+        <result column="order_ext4" property="orderExt4" />
+        <result column="order_ext5" property="orderExt5" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_id, eb_user_id, username, order_num, payment, pay_platform, delivery, is_confirm, order_sum, ship_fee, is_paid, order_state, payment_cash, distri_id, delivery_method, payment_no, order_time, pay_time, deposit_time, success_time, update_time, is_delete, is_display, notes, ship_name, province, city, district, zip_code, addr, phone, payable, company, contents, delivery_no, area_code, area_name, is_print, order_type, fixed_phone, attach_file, return_type, seckill_id, order_ext1, order_ext2, order_ext3, order_ext4, order_ext5
+    </sql>
+
+</mapper>

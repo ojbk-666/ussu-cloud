@@ -36,11 +36,25 @@ public class EbSkuController extends BaseAdminController {
     }
 
     /**
+     * 获取单个sku详情
+     */
+    @GetMapping("/simpleDetail/{skuId}")
+    public EbSku simpleSkuDetail(@PathVariable Integer skuId) {
+        return service.getById(skuId);
+    }
+
+    /**
      * 详情
      */
     @GetMapping("/{id}")
     public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+        return service.detail(id, false);
+    }
+
+    @GetMapping("/detail2/{skuId}")
+    public Object detail2(@PathVariable Integer skuId) {
+        EbSku ebSku = service.detail2(skuId, true);
+        return ebSku;
     }
 
     /**
@@ -58,6 +72,24 @@ public class EbSkuController extends BaseAdminController {
     @PostMapping
     public JsonResult edit(@RequestBody EbSku obj) {
         service.edit(obj);
+        return JsonResult.ok();
+    }
+
+    /**
+     * 商品上架
+     */
+    @PostMapping("/up/{skuIds}")
+    public JsonResult up(@PathVariable String skuIds) {
+        service.upSkuBySkuId(skuIds);
+        return JsonResult.ok();
+    }
+
+    /**
+     * 更新sku库存
+     */
+    @PostMapping("/updateStock")
+    public JsonResult updateSkuStock(EbSku sku) {
+        service.updateStock(sku);
         return JsonResult.ok();
     }
 

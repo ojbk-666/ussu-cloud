@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.member.mapper.EbShipAddrMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.member.entity.EbShipAddr">
+        <id column="ship_addr_id" property="shipAddrId" />
+        <result column="eb_user_id" property="ebUserId" />
+        <result column="ship_name" property="shipName" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="district" property="district" />
+        <result column="zip_code" property="zipCode" />
+        <result column="addr" property="addr" />
+        <result column="phone" property="phone" />
+        <result column="default_addr" property="defaultAddr" />
+        <result column="fixed_phone" property="fixedPhone" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ship_addr_id, eb_user_id, ship_name, province, city, district, zip_code, addr, phone, default_addr, fixed_phone
+    </sql>
+
+</mapper>

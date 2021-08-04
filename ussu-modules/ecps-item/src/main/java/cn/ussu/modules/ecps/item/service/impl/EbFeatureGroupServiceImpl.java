@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -56,7 +58,7 @@ public class EbFeatureGroupServiceImpl extends ServiceImpl<EbFeatureGroupMapper,
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbFeatureGroup> qw = new LambdaQueryWrapper<>();
-        qw.in(EbFeatureGroup::getGroupId, ids);
+        qw.in(EbFeatureGroup::getGroupId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 

@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,7 +44,7 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
     private IEbItemClobService itemClobService;
 
     @Override
-    public EbItem detail(Integer id) {
+    public EbItem detail(Integer id, boolean includeSkuList) {
         Assert.notNull(id);
         EbItem obj = new EbItem().selectById(id);
         // 详情
@@ -50,8 +52,10 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
         // 属性
         List<EbParaValue> paraValueList = paraValueService.getByItemId(obj.getItemId());
         obj.setParaList(paraValueList);
-        // sku
-        obj.setSkuList(skuService.getByItemId(obj.getItemId()));
+        if (includeSkuList) {
+            // sku
+            obj.setSkuList(skuService.getByItemId(obj.getItemId()));
+        }
         return obj;
     }
 
@@ -71,6 +75,11 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
                 .insert();
         // 添加商品详情
         EbItemClob itemClob = p.getItemClob();
+        String itemDesc = itemClob.getItemDesc();
+        if (StrUtil.isNotBlank(itemDesc)) {
+            itemClob.setItemDesc(itemDesc.replaceAll(StrPool.LF, StrUtil.EMPTY).replaceAll(StrPool.CR, StrUtil.EMPTY)
+                    .replaceAll(StrPool.CRLF, StrUtil.EMPTY).replaceAll(StrPool.TAB, StrUtil.EMPTY));
+        }
         itemClob.setItemId(p.getItemId()).insert();
         // 添加属性
         List<EbParaValue> paraList = p.getParaList();
@@ -104,7 +113,7 @@ public class EbItemServiceImpl extends ServiceImpl<EbItemMapper, EbItem> impleme
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);
         Assert.isTrue(ints.length > 0);
         LambdaQueryWrapper<EbItem> qw = new LambdaQueryWrapper<>();
-        qw.in(EbItem::getItemId, ids);
+        qw.in(EbItem::getItemId, Arrays.stream(ints).boxed().collect(Collectors.toList()));
         super.remove(qw);
     }
 
