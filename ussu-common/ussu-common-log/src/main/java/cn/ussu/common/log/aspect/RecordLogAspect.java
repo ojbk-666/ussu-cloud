@@ -53,7 +53,11 @@ public class RecordLogAspect {
             Map<String, String[]> parameterMap = request.getParameterMap();
             String userAgentStr = request.getHeader(Header.USER_AGENT.getValue());
             UserAgent userAgent = UserAgentUtil.parse(userAgentStr);
-            LoginUser loginUser = SecurityUtils.getLoginUser();
+            LoginUser loginUser = null;
+            try {
+                loginUser = SecurityUtils.getLoginUser();
+            } catch (Exception e) {
+            }
             String clientIP = ServletUtil.getClientIP(request);
             clientIP = clientIP.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : clientIP;
             logVo.setRequestTime(LocalDateTime.now())
