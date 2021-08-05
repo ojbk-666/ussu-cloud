@@ -1,24 +1,16 @@
 package cn.ussu.modules.ecps.member.controller;
 
-import cn.hutool.core.util.NumberUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.security.util.SecurityUtils;
-import cn.ussu.modules.ecps.item.entity.EbItem;
-import cn.ussu.modules.ecps.item.entity.EbSku;
-import cn.ussu.modules.ecps.item.entity.EbSpecValue;
 import cn.ussu.modules.ecps.member.entity.EbCartSku;
-import cn.ussu.modules.ecps.member.feign.RemoteSkuService;
 import cn.ussu.modules.ecps.member.service.IEbCartSkuService;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * <p>
@@ -34,8 +26,6 @@ public class EbCartSkuController extends BaseAdminController {
 
     @Autowired
     private IEbCartSkuService service;
-    @Autowired
-    private RemoteSkuService remoteSkuService;
 
     /**
      * 分页
@@ -78,38 +68,7 @@ public class EbCartSkuController extends BaseAdminController {
      */
     @PutMapping("/add/{skuId}")
     public JsonResult addSkuToCartBySkuId(@PathVariable Integer skuId) {
-        // 检查是否已有
-        LambdaQueryWrapper<EbCartSku> qw = Wrappers.lambdaQuery(EbCartSku.class)
-                .eq(EbCartSku::getEbUserId, SecurityUtils.getUserId()).eq(EbCartSku::getSkuId, skuId);
-        EbCartSku one = service.getOne(qw);
-        if (one != null) {
-            new EbCartSku().setCartSkuId(one.getCartSkuId())
-                    .setQuantity(one.getQuantity() + 1)
-                    .setTotalPrice(NumberUtil.mul(one.getPrice(), one.getQuantity() + 1))
-                    .updateById();
-        } else {
-            JsonResult jr = remoteSkuService.getSkuBySkuId(skuId);
-            EbSku sku = jr.getData(EbSku.class);
-            EbItem item = sku.getItem();
-            Map<String, Object> skuSpec = getNewHashMap();
-            for (EbSpecValue spec : sku.getSpecList()) {
-                skuSpec.put(spec.getFeatureName(), spec.getSpecValue());
-            }
-            new EbCartSku().setEbUserId(SecurityUtils.getUserId())
-                    .setItemId(item.getItemId())
-                    .setItemNo(item.getItemNo())
-                    .setItemName(item.getItemName())
-                    .setSkuId(sku.getSkuId())
-                    .setSku(sku.getSku())
-                    .setSkuName(sku.getSkuName())
-                    .setSkuImg(sku.getSkuImg())
-                    .setSkuSpec(JSON.toJSONString(skuSpec))
-                    .setMarketPrice(sku.getMarketPrice())
-                    .setPrice(sku.getSkuPrice())
-                    .setQuantity(1)
-                    .setTotalPrice(NumberUtil.mul(sku.getSkuPrice(), 1))
-                    .insert();
-        }
+        service.addSkuToCartBySkuId(skuId);
         return JsonResult.ok();
     }
 

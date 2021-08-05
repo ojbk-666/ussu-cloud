@@ -21,4 +21,9 @@ public interface IEbCartSkuService extends IService<EbCartSku> {
 
     void del(String ids);
 
+    /**
+     * 商品加入购物车
+     */
+    boolean addSkuToCartBySkuId(Integer skuId);
+
 }

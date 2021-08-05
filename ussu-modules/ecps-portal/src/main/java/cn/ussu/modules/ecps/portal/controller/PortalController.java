@@ -191,8 +191,10 @@ public class PortalController extends BasePortalController {
      */
     @PostMapping("/submit_order")
     public ModelAndView submitOrder(EbOrder order, Model model) {
-        JsonResult jr = remoteOrderService.submitOrder(order);
-        if (!jr.isSuccess()) {
+        JsonResult jr = null;
+        try {
+            jr = remoteOrderService.submitOrder(order);
+        } catch (Exception e) {
             // error
             model.addAttribute("msg", jr.getMsg());
             return new ModelAndView("submit_order/error");
