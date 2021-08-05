@@ -44,7 +44,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
         p.updateById();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void del(String ids) {
         int[] ints = StrUtil.splitToInt(ids, StrPool.COMMA);

@@ -1,6 +1,7 @@
 package cn.ussu.modules.ecps.portal;
 
 import cn.ussu.common.security.config.FeignConfig;
+import cn.ussu.common.security.handler.GlobalExceptionHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @EnableDiscoveryClient
 // @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@Import(FeignConfig.class)
+@Import({FeignConfig.class, GlobalExceptionHandler.class})
 // @MapperScan({"cn.ussu.modules.ecps.**.mapper"})
 public class EcpsPortalApplication extends SpringApplication {
 

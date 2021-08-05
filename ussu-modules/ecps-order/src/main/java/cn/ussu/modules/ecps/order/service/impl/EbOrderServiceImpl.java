@@ -19,6 +19,7 @@ import cn.ussu.modules.ecps.order.service.IEbOrderService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,7 @@ public class EbOrderServiceImpl extends ServiceImpl<EbOrderMapper, EbOrder> impl
     /**
      * 提交订单
      */
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional
     @Override
     public EbOrder submitOrder(EbOrder order, String cartIds, String userId) {

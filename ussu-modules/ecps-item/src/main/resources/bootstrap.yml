@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 8091
+  port: 8083
 
 # Spring
 spring:
@@ -40,3 +40,14 @@ feign:
       enabled: false
     response:
       enabled: false
+seata:
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      group : "SEATA_GROUP"
+      namespace: ""
+      username: "nacos"
+      password: "nacos"
+  enable-auto-data-source-proxy: true
+  tx-service-group: ${spring.application.name}-fescar-service-group
