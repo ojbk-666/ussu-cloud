@@ -7,8 +7,12 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.util.SecurityUtils;
+import cn.ussu.modules.ecps.common.constants.ConstantsEcpsRabbit;
+import cn.ussu.modules.ecps.common.constants.OrderPayStatus;
+import cn.ussu.modules.ecps.common.constants.OrderStatus;
 import cn.ussu.modules.ecps.item.entity.EbSku;
 import cn.ussu.modules.ecps.member.entity.EbCartSku;
+import cn.ussu.modules.ecps.order.config.EcpsRabbitTemplate;
 import cn.ussu.modules.ecps.order.entity.EbOrder;
 import cn.ussu.modules.ecps.order.entity.EbOrderDetail;
 import cn.ussu.modules.ecps.order.feign.RemoteCartService;
@@ -56,6 +60,9 @@ public class EbOrderServiceImpl extends ServiceImpl<EbOrderMapper, EbOrder> impl
     public void setLock() {
         this.lock = redisson.getLock("order_sku_store_lock");
     }
+
+    @Autowired
+    private EcpsRabbitTemplate ecpsRabbitTemplate;
 
     @Override
     public EbOrder detail(Integer id) {
@@ -155,7 +162,29 @@ public class EbOrderServiceImpl extends ServiceImpl<EbOrderMapper, EbOrder> impl
         // 清空购物车
         remoteCartService.deleteByIds(cartIds);
         System.out.println("4.清空购物车");
+        ecpsRabbitTemplate.convertAndSend(ConstantsEcpsRabbit.EXCHANGE_ORDER_DEAD, ConstantsEcpsRabbit.ROUTING_KEY_ORDER_DEAD, order);
         return order;
+    }
+
+    /**
+     * 关闭订单
+     */
+    @GlobalTransactional
+    @Transactional
+    @Override
+    public boolean closeOrder(EbOrder order) {
+        Assert.notNull(order.getOrderId());
+        // 获取最新状态
+        EbOrder newOrder = new EbOrder().setOrderId(order.getOrderId()).selectById();
+        if (OrderPayStatus.NOT_PAID.getCode().equals(newOrder.getIsPaid())) {
+            // 未支付则关闭订单并回滚库存
+            new EbOrder().setOrderId(newOrder.getOrderId())
+                    .setIsPaid(OrderPayStatus.CLOSE.getCode())
+                    .setOrderState(OrderStatus.CLOSE.getCode())
+                    .updateById();
+            remoteSkuService.rollbackStock(order);
+        }
+        return true;
     }
 
     /**

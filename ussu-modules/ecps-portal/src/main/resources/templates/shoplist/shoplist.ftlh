@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" type="image/x-icon" href="https://img0.shop.10086.cn/favicon.ico__0.ico">
     <meta name="WT.location" content="431">
-    <title>我的购物车-移动商城_移动商城</title>
+    <title>我的购物车</title>
     <link href="${IMAGE_SERVER}cloud/static/jiesuan/css/list.css" rel="stylesheet" type="text/css">
     <!--[if lt IE 9]>
     <script r='m'>document.createElement("section")</script><![endif]-->
@@ -46,7 +46,7 @@
             <form class="clearfix" action="https://search.10086.cn/shop/list" autocomplete="off" method="get"
                   target="_blank">
                 <input id="skeywords" type="text" name="key" autocomplete="off" disableautocomplete="" class="txt"
-                       onfocus=" this.style.color = &quot;#333333&quot;" onblur=" this.style.color =&quot;#ccc&quot;">
+                       onfocus=" this.style.color = '#333333'" onblur=" this.style.color ='#ccc'">
                 <ul id="searchKeyWord1598367246265" class="search_toplist" style="display: none;"></ul>
                 <ul id="searchHistory1598367246265" class="search_toplist" style="display: none;"></ul>
                 <input type="submit" class="b" value="">
@@ -98,7 +98,7 @@
 </style>
 <div class="globalMain">
     <ul class="filter-bar">
-        <li class="current">全部商品<span>1</span></li>
+        <li class="current">全部商品<span>${cartList?size}</span></li>
     </ul>
 </div>
 <div class="globalMain cart-warp">
@@ -139,10 +139,10 @@
                                 <dd class="p-props"><span class="gray">红色  64G</span></dd>
                                 <dd class="p-price">¥ ${cartItem.price}</dd>
                                 <dd class="p-quantity aligncenter">
-                                    <a href="javascript:void(0)" class="bt minus ac_cart_decr ac_dcs_base disable " dcs_id="SHOPLIST_GOODS_DECR">-</a>
+                                    <a href="javascript:void(0)" class="bt minus ac_dcs_base disable update_cart_num_a">-</a>
                                     <input type="text" num="1" value="${cartItem.quantity}" class="txt-normal ac_cart_update ">
-                                    <a href="javascript:void(0)" class="bt plus ac_cart_incr ac_dcs_base disable" dcs_id="SHOPLIST_GOODS_INCR">+</a> <br>
-                                    <span class="red">限购1件</span>
+                                    <a href="javascript:void(0)" class="bt plus ac_dcs_base disable update_cart_num_b">+</a> <br>
+                                    <span class="red" style="display: none;">限购1件</span>
                                 </dd>
                                 <dd class="p-sum">¥ ${cartItem.totalPrice}</dd>
                                 <dd class="p-action">
@@ -170,11 +170,11 @@
             </dd>
             <dd class="price-sum floatright">
                 <div class="black">总价（不含运费）：
-                    <span class="price totalprice">¥ <label id="totalprice">4399.00</label></span>
+                    <span class="price totalprice">¥ <label id="totalprice">0.00</label></span>
                 </div>
                 <!-- div >已节省：<span class="price reprice">- ¥ <label id="discount">0.00</label></span></div -->
             </dd>
-            <dd class="amount-sum floatright black">已选择<em class="red" id="cartcount">1</em>件商品</dd>
+            <dd class="amount-sum floatright black">已选择<em class="red" id="cartcount">0</em>件商品</dd>
         </dl>
     </div>
 </div>
@@ -302,8 +302,37 @@
 </div>
 
 <script type="text/javascript" src="${IMAGE_SERVER}cloud/static/jiesuan/js/loader.js__357.js"></script>
-<script src="${IMAGE_SERVER}cloud/static/jiesuan/js/sdc_mall.js__463.js"></script>
+<#--<script src="${IMAGE_SERVER}cloud/static/jiesuan/js/sdc_mall.js__463.js"></script>-->
 <script type="text/javascript">
+
+    // 更新购物车商品数量
+    $('.update_cart_num_a').click(function () {
+        updateCartNum($(this), -1);
+    })
+    $('.update_cart_num_b').click(function () {
+        updateCartNum($(this), 1);
+    })
+    function updateCartNum(t, n) {
+        let cartid = $(t).parent().parent().parent().attr('cartid');
+        let currentQuantity = new Number($(t).parent().find('input').val());
+        if (n < 0) {
+            if (currentQuantity == 1) {
+                return;
+            } else {
+                currentQuantity = new Number(currentQuantity) + n;
+            }
+        } else {
+            // 增加
+            currentQuantity = new Number(currentQuantity) + n;
+        }
+        console.log(cartid, currentQuantity);
+        request('member/cart/updateNum', {cartSkuId: cartid, quantity: currentQuantity}, 'post').then(r => {
+            window.location.reload();
+        }).catch(err => {
+            $.alert(err.msg);
+        })
+    }
+
     window.ENVOBJ = {
         "loc": {"province_id": 431, "city_id": 431},
         "loginurl": "https:\/\/login.10086.cn\/SSOCheck.action?channelID=12002&backUrl=https%3A%2F%2Fshop.10086.cn%2Forder%2Fshoplist.php%3Fforcelogin%3D1"
@@ -374,83 +403,6 @@
 
         ;
         $(function () {
-            $.getJSON('/ajax/cartshop/amount.json', function (r) {
-                if (r.code) {
-                    $.alert(r.msg);
-                } else {
-                    $('.cart .red').text(r.data.num);
-                    $('#returntop .cart-quan em').text(r.data.num);
-                    $('.have_goods .btm .cartcount b').text(r.data.num);
-                }
-                ;
-            });
-            $
-                .sub('mouseover_cart1_count', __cart1_count)
-                .sub('msg_cart', __cart1_show, false)
-            ;
-            var list_lock = true;
-
-            function __cart1_count() {
-                if (list_lock) {
-                    $.getJSON('/ajax/cartshop/list.json', function (r) {
-                        if (r.code) {
-                            $.alert(r.msg);
-                        } else {
-                            $.pub('msg_cart', r.data);
-                        }
-                    });
-                }
-                list_lock = false;
-            }
-
-
-            function __cart1_show(event, r) {
-                var cartdata = r;
-                var $cart_list = [];
-                var $cartcount = null;
-                if (cartdata && cartdata.cartcount) {
-                    var total = 0, count = 0;
-                    $('.dorpdown-layer .cart_list .mCSB_container').html(cartdata.content);
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html(cartdata.cartcount);
-                    $cart_list = $('.rightMenu .cart_list').find('li');
-                    if ($cart_list.length > 5) {
-                        $('.cart_list').addClass('height268');
-                    } else {
-                        $('.cart_list').removeClass('height268');
-                    }
-                    ;
-                    $($cart_list).each(function () {
-                        var $t = $(this);
-                        total += parseInt($t.attr('num')) * parseInt($t.attr('price') * 100) || 0;
-                        //count +=parseInt($t.attr('num'))||0;
-                    });
-                    $('.have_goods .btm .red b').text((total / 100).toFixed(2));
-                    //$('.have_goods .btm .cartcount b').text(count);
-                    $cartcount = $('.cart_list ul').attr('cartcount');
-                    if ($cart_list.length == 0 && $cartcount) {
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .nogoods_p').hide();
-                        $('.dorpdown-layer .abate').show();
-                        $('.dorpdown-layer .nogoods').show();
-                        $('.dorpdown-layer .have_goods').hide();
-                    } else {
-                        $('.dorpdown-layer .nogoods').hide();
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .have_goods').show();
-                        $('.dorpdown-layer .cart_goodslist').show();
-                        $('.dorpdown-layer .have_goods .btm').show();
-                    }
-                } else {
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html('0');
-                    $('.dorpdown-layer .loadingBlock').hide();
-                    $('.dorpdown-layer .abate').hide();
-                    $('.dorpdown-layer .nogoods_p').show();
-                    $('.dorpdown-layer .nogoods').show();
-                    $('.dorpdown-layer .have_goods').hide();
-                }
-                ;
-
-            }
 
             var timer = null;
             $('.cart').hover(function () {
@@ -480,50 +432,6 @@
                 }, 100);
             });
 
-
-            $.sub('click_cartlist_delete', __cartlist_delete, false).sub('cartlist_del', cartlist_del, false);
-
-            function __cartlist_delete() {
-                var $t = $(this);
-                var cartcount = $t.closest('ul').attr('cartcount');
-                $.getJSON('/ajax/cartshop/delete.json', {selected: $t.closest('li').attr('cartid')}, function (r) {
-                    if (r.code) {
-                        $.alert(r.msg);
-                    } else {
-                        $t.closest('li').remove();
-                        $cart_list = $('.rightMenu .cart_list').find('li');
-                        if ($cart_list.length > 5) {
-                            $('.cart_list').addClass('height268');
-                        } else {
-                            $('.cart_list').removeClass('height268');
-                        }
-                        ;
-                        $.pub('cartlist_del');
-                    }
-                    ;
-                });
-            }
-
-            function cartlist_del() {
-                var c_num = $('.cart .red').text();
-                $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').text(parseInt(c_num - 1));
-                $('#returntop .cart-quan em').text(parseInt(c_num - 1));
-                var total = 0;
-                var $cart_list = $('.rightMenu .cart_list').find('li');
-                $($cart_list).each(function () {
-                    var $t = $(this);
-                    total += parseInt($t.attr('num')) * parseInt($t.attr('price') * 100) || 0;
-                });
-                $('.have_goods .btm .red b').text((total / 100).toFixed(2));
-                if (c_num && c_num - 1 != 0) {
-                    $('.dorpdown-layer .nogoods').hide();
-                    $('.dorpdown-layer .have_goods').show();
-                } else {
-                    $('.dorpdown-layer .nogoods').show();
-                    $('.dorpdown-layer .have_goods').hide();
-                }
-                ;
-            }
         });
 
 
@@ -978,20 +886,18 @@
                 $.confirm("您确认要删除所选商品？", {
                     title: "删除",
                     onAccept: function () {
-                        $.getJSON('/ajax/cartshop/delete.json', {
-                            selected: $t.attr('cartid')
-                        }, function (r) {
-                            $t.successmsg(r.msg, {
+                        request('member/cart/' + $t.attr('cartid'), {}, 'delete').then(r => {
+                            $t.successmsg('删除成功', {
                                 direction: 'down',
                                 align: 'center',
                                 liveTime: 1000,
                                 onClose: function () {
-                                    if (r.code == 0) {
-                                        location.href = location.href;
-                                    }
+                                    location.href = location.href;
                                 }
                             });
-                        });
+                        }).catch(err => {
+
+                        })
                     }
                 });
 
@@ -1010,9 +916,7 @@
                 $.confirm("您确认要删除所选商品？", {
                     title: "删除",
                     onAccept: function () {
-                        $.getJSON('/ajax/cartshop/delete.json', {
-                            selected: temp.join(',')
-                        }, function (r) {
+                        request('member/cart/' + temp.join(','), {}, 'delete').then(r => {
                             $t.notice(r.msg, {
                                 onClose: function () {
                                     location.href = location.href;

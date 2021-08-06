@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -23,7 +24,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="EbOrderDetail对象", description="3-10是商品的冗余数据	11-26是营销案的冗余数据	营销案的时候，根据SKU存多条，每条SK")
-public class EbOrderDetail extends Model<EbOrderDetail> {
+public class EbOrderDetail extends Model<EbOrderDetail> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

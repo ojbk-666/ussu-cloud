@@ -73,7 +73,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
      * 商品加入购物车
      */
     @Override
-    public synchronized boolean addSkuToCartBySkuId(Integer skuId) {
+    public synchronized Integer addSkuToCartBySkuId(Integer skuId) {
         Assert.notNull(skuId);
         // 检查是否已有
         LambdaQueryWrapper<EbCartSku> qw = Wrappers.lambdaQuery(EbCartSku.class)
@@ -84,6 +84,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
                     .setQuantity(one.getQuantity() + 1)
                     .setTotalPrice(NumberUtil.mul(one.getPrice(), one.getQuantity() + 1))
                     .updateById();
+            return one.getCartSkuId();
         } else {
             JsonResult jr = remoteSkuService.getSkuBySkuId(skuId);
             EbSku sku = jr.getData(EbSku.class);
@@ -92,7 +93,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
             for (EbSpecValue spec : sku.getSpecList()) {
                 skuSpec.put(spec.getFeatureName(), spec.getSpecValue());
             }
-            new EbCartSku().setEbUserId(SecurityUtils.getUserId())
+            EbCartSku cartSku = new EbCartSku().setEbUserId(SecurityUtils.getUserId())
                     .setItemId(item.getItemId())
                     .setItemNo(item.getItemNo())
                     .setItemName(item.getItemName())
@@ -104,9 +105,9 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
                     .setMarketPrice(sku.getMarketPrice())
                     .setPrice(sku.getSkuPrice())
                     .setQuantity(1)
-                    .setTotalPrice(NumberUtil.mul(sku.getSkuPrice(), 1))
-                    .insert();
+                    .setTotalPrice(NumberUtil.mul(sku.getSkuPrice(), 1));
+            cartSku.insert();
+            return cartSku.getCartSkuId();
         }
-        return true;
     }
 }

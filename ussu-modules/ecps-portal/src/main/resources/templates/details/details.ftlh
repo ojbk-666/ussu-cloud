@@ -356,8 +356,7 @@
                 }
             </style>
             <div class="margin15 clearfix" id="buy_area">
-                <a href="javascript:void(0);"
-                   <#--srv="/ajax/buy/buy.json"-->class="btn btnBig btnPink  ac_cart_buy floatleft marginRight10 btnBuy click_float_buy">
+                <a href="javascript:void(0);" class="btn btnBig btnPink floatleft marginRight10 btnBuy click_float_buy" id="buyNowBtn">
                     <em>立即购买</em><i></i><b></b>
                 </a>
                 <a href="javascript:void(0);" class="btn btnBig btnNotbuy btnDisabled floatleft marginRight10">
@@ -951,7 +950,7 @@
 </div>
 
 <script type="text/javascript" src="${IMAGE_SERVER}cloud/static/details/loader.js__357.js"></script>
-<script src="${IMAGE_SERVER}cloud/static/details/sdc_mall.js__635.js"></script>
+<#--<script src="${IMAGE_SERVER}cloud/static/details/sdc_mall.js__635.js"></script>-->
 <script type="text/javascript">
     var HtmlUtil = {
         /*1.用浏览器内部转换器实现html编码（转义）*/
@@ -1000,10 +999,6 @@
             temp = temp.replace(/'/g,"\"");
             return temp;
         },
-        /*5.用正则表达式实现html编码（转义）（另一种写法）*/
-        html2Escape:function(sHtml) {
-            return sHtml.replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&','"':'''}[c];});
-        },
         /*6.用正则表达式实现html解码（反转义）（另一种写法）*/
         escape2Html:function (str) {
             var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'};
@@ -1024,10 +1019,20 @@
         // 加入购物车
         $('#addToCartBtn').click(function () {
             let skuId = getQueryString('skuId');
-            console.log(skuId);
             request('member/cart/add/' + skuId, {}, 'put').then(res => {
-                $.alert('加入购物车成功');
-            }).then(err => {
+                // $.alert('加入购物车成功');
+                layer.msg('加入购物车成功');
+            }).catch(err => {
+                $.alert(err.msg);
+            })
+        })
+        // 立即购买按钮
+        $('#buyNowBtn').click(function () {
+            let skuId = getQueryString('skuId');
+            request('member/cart/add/' + skuId, {}, 'put').then(res => {
+                // 获取购物车id
+                window.location = './create_order?cartIds=' + res.data;
+            }).catch(err => {
                 $.alert(err.msg);
             })
         })
@@ -1035,7 +1040,7 @@
 
     window.ENVOBJ = {
         "loc": {"province_id": 771, "city_id": 771},
-        "loginurl": "https:\/\/login.10086.cn\/SSOCheck.action?channelID=12002&backUrl=https%3A%2F%2Fshop.10086.cn%2Fgoods%2F771_771_1082982_1071935.html%3Fforcelogin%3D1",
+        "loginurl": "",
         "choice": {
             "info": {
                 "third_id": "1001931986999991413332",
@@ -1139,86 +1144,6 @@
 
         ;
         $(function () {
-            $.getJSON('/ajax/cartshop/amount.json', function (r) {
-                if (r.code) {
-                    $.alert(r.msg);
-                } else {
-                    $('.cart .red').text(r.data.num);
-                    $('#returntop .cart-quan em').text(r.data.num);
-                    $('.have_goods .btm .cartcount b').text(r.data.num);
-                }
-                ;
-            });
-            $.sub('mouseover_cart1_count', __cart1_count).sub('msg_cart', __cart1_show, false);
-            var list_lock = true;
-
-            // 获取购物车商品数量
-            function __cart1_count() {
-                if (list_lock) {
-                    /*$.getJSON('/ajax/cartshop/list.json', function (r) {
-                        if (r.code) {
-                            $.alert(r.msg);
-                        } else {
-                            $.pub('msg_cart', r.data);
-                        }
-                    });*/
-                    request('member/cart/user', {}, 'get').then(res => {
-                        $.pub('msg_cart', res.data);
-                    }).catch(res => {
-                        $.alert(res.msg);
-                    })
-                }
-                list_lock = false;
-            }
-
-
-            function __cart1_show(event, r) {
-                var cartdata = r;
-                var $cart_list = [];
-                var $cartcount = null;
-                if (cartdata && cartdata.cartcount) {
-                    var total = 0, count = 0;
-                    $('.dorpdown-layer .cart_list .mCSB_container').html(cartdata.content);
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html(cartdata.cartcount);
-                    $cart_list = $('.rightMenu .cart_list').find('li');
-                    if ($cart_list.length > 5) {
-                        $('.cart_list').addClass('height268');
-                    } else {
-                        $('.cart_list').removeClass('height268');
-                    }
-                    ;
-                    $($cart_list).each(function () {
-                        var $t = $(this);
-                        total += parseInt($t.attr('num')) * parseInt($t.attr('price') * 100) || 0;
-                        //count +=parseInt($t.attr('num'))||0;
-                    });
-                    $('.have_goods .btm .red b').text((total / 100).toFixed(2));
-                    //$('.have_goods .btm .cartcount b').text(count);
-                    $cartcount = $('.cart_list ul').attr('cartcount');
-                    if ($cart_list.length == 0 && $cartcount) {
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .nogoods_p').hide();
-                        $('.dorpdown-layer .abate').show();
-                        $('.dorpdown-layer .nogoods').show();
-                        $('.dorpdown-layer .have_goods').hide();
-                    } else {
-                        $('.dorpdown-layer .nogoods').hide();
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .have_goods').show();
-                        $('.dorpdown-layer .cart_goodslist').show();
-                        $('.dorpdown-layer .have_goods .btm').show();
-                    }
-                } else {
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html('0');
-                    $('.dorpdown-layer .loadingBlock').hide();
-                    $('.dorpdown-layer .abate').hide();
-                    $('.dorpdown-layer .nogoods_p').show();
-                    $('.dorpdown-layer .nogoods').show();
-                    $('.dorpdown-layer .have_goods').hide();
-                }
-                ;
-
-            }
 
             var timer = null;
             $('.cart').hover(function () {
@@ -1364,7 +1289,6 @@
             'city_id': '771'
         }
         $.getJSON('/ajax/user/userinfo.json', userParam, initUser);
-
 
         ;
         $(function () {

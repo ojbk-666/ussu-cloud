@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="EbOrder对象", description="订单。包括实体商品和虚拟商品的订单")
-public class EbOrder extends Model<EbOrder> {
+public class EbOrder extends Model<EbOrder> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

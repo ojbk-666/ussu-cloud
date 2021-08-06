@@ -5,6 +5,7 @@ import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.ecps.item.entity.EbSku;
 import cn.ussu.modules.ecps.item.service.IEbSkuService;
+import cn.ussu.modules.ecps.order.entity.EbOrder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,15 @@ public class EbSkuController extends BaseAdminController {
     @PostMapping("/updateStock")
     public JsonResult updateSkuStock(EbSku sku) {
         service.updateStock(sku);
+        return JsonResult.ok();
+    }
+
+    /**
+     * 取消订单时恢复库存
+     */
+    @PostMapping("/rollbackStock")
+    public JsonResult rollbackSkuStock(@RequestBody EbOrder order) {
+        service.rollbackStock(order);
         return JsonResult.ok();
     }
 

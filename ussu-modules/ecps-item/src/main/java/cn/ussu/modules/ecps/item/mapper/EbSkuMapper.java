@@ -2,6 +2,7 @@ package cn.ussu.modules.ecps.item.mapper;
 
 import cn.ussu.modules.ecps.item.entity.EbSku;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-07-17
  */
 public interface EbSkuMapper extends BaseMapper<EbSku> {
+
+    void rollbackStock(@Param("skuId") Integer skuId, @Param("num") Integer num);
 
 }

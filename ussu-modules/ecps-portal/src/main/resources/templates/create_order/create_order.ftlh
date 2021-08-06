@@ -129,8 +129,8 @@
                         </label>
                         <span class="address_operation floatright">
                             <a href="javascript:void(0)" class="blue marginR20 default_action">设为默认地址</a>
-                            <a href="javascript:void(0)" class="blue marginR20 ac_address_bt editAddr">编辑</a>
-                            <a href="javascript:void(0)" class="blue marginR20 ac_address_bt deleteAddr">删除</a>
+                            <a href="javascript:void(0)" class="blue marginR20 editAddr">编辑</a>
+                            <a href="javascript:void(0)" class="blue marginR20 deleteAddr">删除</a>
 					    </span>
                     </li>
                 </#list>
@@ -175,7 +175,6 @@
                     $('.deleteAddr').click(function () {
                         let $this = $(this).parent().parent();
                         let shipAddrId = $this.attr('address_id');
-                        console.log(shipAddrId);
                         layer.confirm('确认删除?', {icon: 3}, function(index) {
                             request('member/ship-addr/' + shipAddrId, {}, 'delete').then(res => {
                                 $.alert("成功删除");
@@ -188,6 +187,37 @@
                         });
                     });
                     // 编辑
+                    $('.editAddr').click(function () {
+                        let shipAddrId = $(this).parent().parent().attr('address_id');
+                        request('member/ship-addr/' + shipAddrId, {}, 'get').then(res => {
+                            let field = res.data;
+                            showEditShipAddrForm(field);
+                        }).catch(err => {
+                            $.alert(err.msg);
+                        })
+                    });
+
+                    // 显示
+                    function showEditShipAddrForm(field) {
+                        if (field) {
+                            $('#address_content_form input[name=shipAddrId]').val(field.shipAddrId);
+                            $('#address_content_form input[name=shipName]').val(field.shipName);
+                            $('#address_content_form input[name=procince]').val(field.procince);
+                            $('#address_content_form input[name=city]').val(field.city);
+                            $('#address_content_form input[name=district]').val(field.district);
+                            $('#address_content_form input[name=zipCode]').val(field.zipCode);
+                            $('#address_content_form input[name=addr]').val(field.addr);
+                            $('#address_content_form input[name=phone]').val(field.phone);
+                            $('#address_content_form input[name=defaultAddr]').prop({checked: field.defaultAddr == 1});
+                            $('#address_content_form input[name=fixedPhone]').val(field.fixedPhone);
+                        }
+                        $('#address_content_form').show();
+                    }
+                    // 关闭
+                    function closeEditShipAddrForm() {
+                        $('#address_content_form').hide();
+                    }
+
                 </script>
                 <!--
                 <form method="post" action="https://shop.10086.cn/ajax/order/addaddr.json"
@@ -317,12 +347,13 @@
         <div class="globalForm orderMain address_add_content" style="display: none;" id="address_content_form">
             <ul class="btnChoose withhover">
 
-                <form method="post" action="https://shop.10086.cn/ajax/order/addaddr.json"
+                <form method="post" action="ajax/order/addaddr.json"
                       class="addressform address_add" onsubmit="return false" style="width:100%;">
-                    <input type="hidden" name="cart_code" value="565dc78d1fd497a2c5c237063103a94a">
+                    <input type="hidden" name="shipAddrId" value="">
                     <dl class="clearfix">
                         <dt><i class="red bold">*</i>&nbsp;&nbsp;收货人：</dt>
-                        <dd><input type="text" maxlength="50" class="txt-normal" name="rename" value=""
+                        <dd>
+                            <input type="text" maxlength="50" class="txt-normal" name="shipName" value=""
                                    placeholder="请输入收货人姓名">&nbsp;&nbsp;<span class="red rename_tips"></span></dd>
                     </dl>
 
@@ -407,29 +438,35 @@
 
                     <dl class="clearfix">
                         <dt><i class="red bold">*</i>&nbsp;&nbsp;详细地址：</dt>
-                        <dd><input type="text" class="txt-normal xxlarge" maxlength="150" name="addr" value=""
-                                   placeholder="请填写详细地址">&nbsp;&nbsp;<span class="red addr_tips"></span></dd>
+                        <dd>
+                            <input type="text" class="txt-normal xxlarge" maxlength="150" name="addr" value="" placeholder="请填写详细地址">&nbsp;&nbsp;
+                            <span class="red addr_tips"></span>
+                        </dd>
                     </dl>
                     <dl class="clearfix">
                         <dt><i class="red bold"></i>邮政编码：</dt>
-                        <dd><input type="text" class="txt-normal" name="postcode" value=""></dd>
+                        <dd><input type="text" class="txt-normal" name="zipCode" value=""></dd>
                     </dl>
                     <dl class="clearfix">
                         <dt><i class="red bold">*</i>&nbsp;&nbsp;手机号：</dt>
-                        <dd><input type="text" class="txt-normal txt-small" name="mobile"
-                                   value="">&nbsp;&nbsp;或固定电话：<input type="text" class="txt-normal  txt-small"
-                                                                     name="tel" value="" placeholder="例如:010-12345678">&nbsp;&nbsp;<span
-                                    class="red num_tips"></span></dd>
+                        <dd>
+                            <input type="text" class="txt-normal txt-small" name="phone" value="">&nbsp;&nbsp;
+                            或固定电话：<input type="text" class="txt-normal  txt-small" name="fixedPhone" value="" placeholder="例如:010-12345678">&nbsp;&nbsp;
+                            <span class="red num_tips"></span>
+                        </dd>
                     </dl>
                     <dl class="clearfix">
                         <dt>&nbsp;</dt>
-                        <dd><label><input class="checkbox" type="checkbox" name="default_address" value="1">
-                                设为默认地址</label></dd>
+                        <dd>
+                            <label>
+                                <input class="checkbox" type="checkbox" name="defaultAddr" value="1">设为默认地址
+                            </label>
+                        </dd>
                     </dl>
                     <input id="res" name="res" type="reset" style="display:none;">
-                    <button class="btn b-default ac_submit_addr" type="submit" style="margin-left: 255px;">
+                    <button class="btn b-default _submit_addr" type="submit" style="margin-left: 255px;">
                         <span>确定</span></button>
-                    <button class="btn b-default ac_submit_cancel" type="reset" style="margin-left: 70px;">
+                    <button class="btn b-default" type="reset" onclick="closeEditShipAddrForm()" style="margin-left: 70px;">
                         <span>取消</span></button>
                 </form>
             </ul>
@@ -683,83 +720,6 @@
 
         ;
         $(function () {
-            $.getJSON('/ajax/cartshop/amount.json', function (r) {
-                if (r.code) {
-                    $.alert(r.msg);
-                } else {
-                    $('.cart .red').text(r.data.num);
-                    $('#returntop .cart-quan em').text(r.data.num);
-                    $('.have_goods .btm .cartcount b').text(r.data.num);
-                }
-                ;
-            });
-            $
-                .sub('mouseover_cart1_count', __cart1_count)
-                .sub('msg_cart', __cart1_show, false)
-            ;
-            var list_lock = true;
-
-            function __cart1_count() {
-                if (list_lock) {
-                    $.getJSON('/ajax/cartshop/list.json', function (r) {
-                        if (r.code) {
-                            $.alert(r.msg);
-                        } else {
-                            $.pub('msg_cart', r.data);
-                        }
-                    });
-                }
-                list_lock = false;
-            }
-
-
-            function __cart1_show(event, r) {
-                var cartdata = r;
-                var $cart_list = [];
-                var $cartcount = null;
-                if (cartdata && cartdata.cartcount) {
-                    var total = 0, count = 0;
-                    $('.dorpdown-layer .cart_list .mCSB_container').html(cartdata.content);
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html(cartdata.cartcount);
-                    $cart_list = $('.rightMenu .cart_list').find('li');
-                    if ($cart_list.length > 5) {
-                        $('.cart_list').addClass('height268');
-                    } else {
-                        $('.cart_list').removeClass('height268');
-                    }
-                    ;
-                    $($cart_list).each(function () {
-                        var $t = $(this);
-                        total += parseInt($t.attr('num')) * parseInt($t.attr('price') * 100) || 0;
-                        //count +=parseInt($t.attr('num'))||0;
-                    });
-                    $('.have_goods .btm .red b').text((total / 100).toFixed(2));
-                    //$('.have_goods .btm .cartcount b').text(count);
-                    $cartcount = $('.cart_list ul').attr('cartcount');
-                    if ($cart_list.length == 0 && $cartcount) {
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .nogoods_p').hide();
-                        $('.dorpdown-layer .abate').show();
-                        $('.dorpdown-layer .nogoods').show();
-                        $('.dorpdown-layer .have_goods').hide();
-                    } else {
-                        $('.dorpdown-layer .nogoods').hide();
-                        $('.dorpdown-layer .loadingBlock').hide();
-                        $('.dorpdown-layer .have_goods').show();
-                        $('.dorpdown-layer .cart_goodslist').show();
-                        $('.dorpdown-layer .have_goods .btm').show();
-                    }
-                } else {
-                    $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html('0');
-                    $('.dorpdown-layer .loadingBlock').hide();
-                    $('.dorpdown-layer .abate').hide();
-                    $('.dorpdown-layer .nogoods_p').show();
-                    $('.dorpdown-layer .nogoods').show();
-                    $('.dorpdown-layer .have_goods').hide();
-                }
-                ;
-
-            }
 
             var timer = null;
             $('.cart').hover(function () {

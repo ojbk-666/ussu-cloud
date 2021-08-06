@@ -14,6 +14,8 @@ import cn.ussu.modules.ecps.item.service.IEbItemService;
 import cn.ussu.modules.ecps.item.service.IEbSkuImgService;
 import cn.ussu.modules.ecps.item.service.IEbSkuService;
 import cn.ussu.modules.ecps.item.service.IEbSpecValueService;
+import cn.ussu.modules.ecps.order.entity.EbOrder;
+import cn.ussu.modules.ecps.order.entity.EbOrderDetail;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -194,5 +196,18 @@ public class EbSkuServiceImpl extends ServiceImpl<EbSkuMapper, EbSku> implements
         new EbSku().setSkuId(sku.getSkuId())
                 .setStockInventory(sku.getStockInventory())
                 .updateById();
+    }
+
+    /**
+     * 回滚库存
+     */
+    @Transactional
+    @Override
+    public void rollbackStock(EbOrder order) {
+        List<EbOrderDetail> orderDetailList = order.getOrderDetailList();
+        Assert.notEmpty(orderDetailList);
+        for (EbOrderDetail orderDetail : orderDetailList) {
+            baseMapper.rollbackStock(orderDetail.getSkuId(), orderDetail.getQuantity().intValue());
+        }
     }
 }

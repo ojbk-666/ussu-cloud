@@ -55,6 +55,15 @@ public class EbCartSkuController extends BaseAdminController {
     }
 
     /**
+     * 获取购物车数量
+     */
+    @GetMapping("/amount")
+    public JsonResult getCartAmount() {
+        return JsonResult.ok().data(service.count(Wrappers.lambdaQuery(EbCartSku.class)
+                .eq(EbCartSku::getEbUserId, SecurityUtils.getUserId())));
+    }
+
+    /**
      * 新增
      */
     @PutMapping
@@ -68,7 +77,15 @@ public class EbCartSkuController extends BaseAdminController {
      */
     @PutMapping("/add/{skuId}")
     public JsonResult addSkuToCartBySkuId(@PathVariable Integer skuId) {
-        service.addSkuToCartBySkuId(skuId);
+        Integer cartSkuId = service.addSkuToCartBySkuId(skuId);
+        return JsonResult.ok().data(cartSkuId);
+    }
+
+    @PostMapping("/updateNum")
+    public JsonResult updateCartQuantity(@RequestBody EbCartSku cartSku) {
+        new EbCartSku().setCartSkuId(cartSku.getCartSkuId())
+                .setQuantity(cartSku.getQuantity())
+                .updateById();
         return JsonResult.ok();
     }
 

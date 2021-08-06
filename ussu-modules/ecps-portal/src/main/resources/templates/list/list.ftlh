@@ -994,29 +994,13 @@
             }
         }
 
-
         ;
         $(function () {
             $(".cart_list").mCustomScrollbar();
         });
 
-
-        ;
         $(function () {
-            $.getJSON('/ajax/cartshop/amount.json', function (r) {
-                if (r.code) {
-                    $.alert(r.msg);
-                } else {
-                    $('.cart .red').text(r.data.num);
-                    $('#returntop .cart-quan em').text(r.data.num);
-                    $('.have_goods .btm .cartcount b').text(r.data.num);
-                }
-                ;
-            });
-            $
-                .sub('mouseover_cart1_count', __cart1_count)
-                .sub('msg_cart', __cart1_show, false)
-            ;
+            /*$.sub('mouseover_cart1_count', __cart1_count).sub('msg_cart', __cart1_show, false);
             var list_lock = true;
 
             function __cart1_count() {
@@ -1076,10 +1060,8 @@
                     $('.dorpdown-layer .nogoods_p').show();
                     $('.dorpdown-layer .nogoods').show();
                     $('.dorpdown-layer .have_goods').hide();
-                }
-                ;
-
-            }
+                };
+            }*/
 
             var timer = null;
             $('.cart').hover(function () {

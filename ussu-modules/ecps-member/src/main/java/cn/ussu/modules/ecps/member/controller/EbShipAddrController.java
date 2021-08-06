@@ -45,7 +45,9 @@ public class EbShipAddrController extends BaseAdminController {
      */
     @GetMapping("/{id}")
     public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+        EbShipAddr one = service.getOne(Wrappers.lambdaQuery(EbShipAddr.class).eq(EbShipAddr::getShipAddrId, id)
+                .eq(!SecurityUtils.isSuperAdmin(), EbShipAddr::getEbUserId, SecurityUtils.getUserId()));
+        return JsonResult.ok().data(one);
     }
 
     @GetMapping("/allByUserId/{userId}")

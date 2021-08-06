@@ -25,4 +25,10 @@ public interface IEbOrderService extends IService<EbOrder> {
      * 提交订单
      */
     EbOrder submitOrder(EbOrder order, String cartIds, String userId);
+
+    /**
+     * 关闭订单，回滚库存
+     */
+    boolean closeOrder(EbOrder order);
+
 }

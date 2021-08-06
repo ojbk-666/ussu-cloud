@@ -1,6 +1,7 @@
 package cn.ussu.modules.ecps.item.service;
 
 import cn.ussu.modules.ecps.item.entity.EbSku;
+import cn.ussu.modules.ecps.order.entity.EbOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -33,4 +34,9 @@ public interface IEbSkuService extends IService<EbSku> {
      * 更新商品库存
      */
     void updateStock(EbSku sku);
+
+    /**
+     * 回滚库存
+     */
+    void rollbackStock(EbOrder order);
 }

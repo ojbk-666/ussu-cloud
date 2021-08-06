@@ -1,15 +1,15 @@
 <div class="topNav">
     <div class="clearfix globalMain">
         <p class="leftMenu clearfix">
-            <a href="http://www.10086.cn/gx/" class="current">个人客户</a>
-            <a href="http://zhengqi.10086.cn/?WT.ac_id=190620ZQKH_shop">政企客户</a>
+            <a href="javascript:void(0)" class="current">个人客户</a>
+            <a href="javascript:void(0)">政企客户</a>
         </p>
         <p class="floatleft">
             欢迎来到中国移动！
         </p>
         <div class="rightMenu clearfix">
             <a href="./shoplist" class="cart ac_cart1_count ac_dcs_base"
-               dcs_id="NAV_TOP_CART">购物车<span class="red">1</span><i></i></a>
+               dcs_id="NAV_TOP_CART">购物车<span class="red">0</span><i></i></a>
             <div class="dorpdown-layer" style="display:none">
                 <style type="text/css">
                     .cart-layer .cart_list {
@@ -52,8 +52,10 @@
                         </div>
                     </div>
                     <div class=" btm black" style="display: none;">
-                        <p><span class="cartcount">共<b style="font-weight: normal">1</b>件商品</span> 共计：<span class="red">¥ <b
-                                        style="font-weight: normal"></b></span></p>
+                        <p>
+                            <span class="cartcount">共<b style="font-weight: normal">0</b>件商品</span>
+                            共计：<span class="red">¥ <b style="font-weight: normal"></b></span>
+                        </p>
                         <a href="./shoplist" class="btn btnGraySmall btnRed ac_dcs_base"
                            dcs_id="NAV_CART_GO">去购物车<em></em><i></i><b></b></a>
                     </div>
@@ -106,11 +108,131 @@
                         return false;
                     }
                 }
+                function isLogin() {
+                    let isLogin = $.cookie('isLogin');
+                    return isLogin && isLogin == 'true';
+                }
                 function getQueryString(name) {
                     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
                     var r = window.location.search.substr(1).match(reg);
                     if (r != null) return unescape(r[2]); return null;
                 }
+
+                $(function () {
+                    if (!isLogin()) {
+                        return;
+                    }
+                    request('member/cart/amount', {}, 'get').then(r => {
+                        $('.cart .red').text(r.data);
+                        $('#returntop .cart-quan em').text(r.data);
+                        $('.have_goods .btm .cartcount b').text(r.data);
+                    })
+                })
+
+                $(document).ready(function () {
+                    $.sub('mouseover_cart1_count', __cart1_count).sub('msg_cart', __cart1_show, false);
+                    var list_lock = true;
+                    // 获取购物车商品数量
+                    function __cart1_count() {
+                        if (list_lock) {
+                            /*$.getJSON('/ajax/cartshop/list.json', function (r) {
+                                if (r.code) {
+                                    $.alert(r.msg);
+                                } else {
+                                    $.pub('msg_cart', r.data);
+                                }
+                            });*/
+                            request('member/cart/user', {}, 'get').then(res => {
+                                // $.pub('msg_cart', res.data);
+                                __cart1_show(res.data);
+                            }).catch(res => {
+                                $.alert(res.msg);
+                            })
+                        }
+                        list_lock = false;
+                    }
+                    function __cart1_show(r) {
+                        var cartdata = r;
+                        var $cart_list = [];
+                        var $cartcount = null;
+                        if (cartdata && cartdata.length > 0) {
+                            var total = 0, count = 0;
+                            let content = '<ul cartcount="'+cartdata.length+'">';
+                            for (const cart of cartdata) {
+                                total += cart.totalPrice;
+                                count += cart.quantity;
+                                let skuNameShort = cart.skuName.length > 20 ? cart.skuName.substring(0, 20) + '...' : cart.skuName;
+                                let specStr = getObjValueArr(JSON.parse(cart.skuSpec)).join(' ');
+                                content += '<li cartid="'+cart.cartSkuId+'" price="'+cart.skuPrice+'" price="'+cart.quantity+'">' +
+                                    '<div class="p-goods floatleft"><a target="_blank" href="./details?skuId='+cart.skuId+'" class="black ac_dcs_base" dcs_id="" title="'+cart.skuName+'">' +
+                                    '<img src="${IMAGE_SERVER}'+cart.skuImg+'" class="floatleft imgBorder">'+skuNameShort+'</br>' +
+                                    '<span class="gray">'+specStr+'</span></a></div><div class="p-price floatright"><span class="black">' +
+                                    '<strong class="red">￥ '+cart.price+'</strong> X '+cart.quantity+'</span></br>' +
+                                    '<a href="javascript:deleteCart(\''+cart.cartSkuId+'\')" class="gray ac_dcs_base">删除</a></div>' +
+                                    '</li>'
+                            }
+                            content += '</ul>';
+                            // $('.dorpdown-layer .cart_list .mCSB_container').html(cartdata.content);
+                            $('.dorpdown-layer .cart_list .mCSB_container').html(content);
+                            $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html(count);
+                            $cart_list = $('.rightMenu .cart_list').find('li');
+                            if ($cart_list.length > 5) {
+                                $('.cart_list').addClass('height268');
+                            } else {
+                                $('.cart_list').removeClass('height268');
+                            }
+                            // $('.have_goods .btm .red b').text((total / 100).toFixed(2));
+                            $('.have_goods .btm .red b').text(total);
+                            //$('.have_goods .btm .cartcount b').text(count);
+                            $cartcount = $('.cart_list ul').attr('cartcount');
+                            if ($cart_list.length == 0 && $cartcount) {
+                                $('.dorpdown-layer .loadingBlock').hide();
+                                $('.dorpdown-layer .nogoods_p').hide();
+                                $('.dorpdown-layer .abate').show();
+                                $('.dorpdown-layer .nogoods').show();
+                                $('.dorpdown-layer .have_goods').hide();
+                            } else {
+                                $('.dorpdown-layer .nogoods').hide();
+                                $('.dorpdown-layer .loadingBlock').hide();
+                                $('.dorpdown-layer .have_goods').show();
+                                $('.dorpdown-layer .cart_goodslist').show();
+                                $('.dorpdown-layer .have_goods .btm').show();
+                            }
+                        } else {
+                            $('.have_goods .cartcount b,.rightMenu .cart .red,.rightfloatbox .cart-quan em').html('0');
+                            $('.dorpdown-layer .loadingBlock').hide();
+                            $('.dorpdown-layer .abate').hide();
+                            $('.dorpdown-layer .nogoods_p').show();
+                            $('.dorpdown-layer .nogoods').show();
+                            $('.dorpdown-layer .have_goods').hide();
+                        }
+                    }
+
+                    // 删除购物车中得商品
+                    deleteCart = function (cartId) {
+                        if (!cartId || cartId == '') {
+                            return;
+                        }
+                        request('member/cart/'+cartId,{},'delete').then(res=>{
+                            list_lock = true;
+                            __cart1_count();
+                        }).catch(err=>{
+                            layer.msg(err.msg);
+                        })
+                    }
+
+                })
+
+                var deleteCart;
+
+                function getObjValueArr(obj) {
+                    let arr = [];
+                    for(let k in obj){
+                        arr.push(obj[k]);
+                    }
+                    return arr;
+                }
+
             </script>
             <a class="cmccclient" href="http://www.10086.cn/cmccclient/">手机营业厅</a>
             <em>|</em> <a href="http://jf.10086.cn/">积分商城</a>

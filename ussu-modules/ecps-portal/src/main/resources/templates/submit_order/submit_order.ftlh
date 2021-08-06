@@ -348,9 +348,8 @@
 
 <div class="globalMain minHeader clearfix">
     <div id="top_close" class="top_info" style="display: none">
-        <a onclick="$(&#39;#top_close&#39;).hide()" title="关闭提示" class="info_close" href="javascript:void(0)">关闭&nbsp;
-            <img src="${IMAGE_SERVER}cloud/static/submit_order/images/bg_close.jpg" width="12"
-                 height="12">
+        <a onclick="$('#top_close').hide()" title="关闭提示" class="info_close" href="javascript:void(0)">关闭&nbsp;
+            <img src="${IMAGE_SERVER}cloud/static/submit_order/images/bg_close.jpg" width="12" height="12">
         </a>
         <p id="topinfo">尊敬的客户：目前建设银行、招商银行、交通银行暂不支持信用卡支付。</p>
     </div>
@@ -611,7 +610,6 @@
     </div>
 </div>
 <script src="${IMAGE_SERVER}cloud/static/submit_order/js/jquery.js"></script>
-<script src="${IMAGE_SERVER}cloud/static/submit_order/js/sdc_mall.js"></script>
 <script type="text/javascript">
 
 
