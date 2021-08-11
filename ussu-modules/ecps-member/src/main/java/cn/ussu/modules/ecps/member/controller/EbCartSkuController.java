@@ -12,6 +12,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -49,9 +51,9 @@ public class EbCartSkuController extends BaseAdminController {
      * 获取个人购物车列表
      */
     @GetMapping("/user")
-    public JsonResult allByUserId() {
+    public List<EbCartSku> allByUserId() {
         String userId = SecurityUtils.getUserId();
-        return JsonResult.ok().data(service.list(Wrappers.lambdaQuery(EbCartSku.class).eq(EbCartSku::getEbUserId, userId)));
+        return service.list(Wrappers.lambdaQuery(EbCartSku.class).eq(EbCartSku::getEbUserId, userId));
     }
 
     /**

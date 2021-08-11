@@ -1,6 +1,5 @@
 package cn.ussu.modules.ecps.portal.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -16,13 +15,13 @@ import cn.ussu.modules.ecps.item.model.param.SearchParam;
 import cn.ussu.modules.ecps.member.entity.EbCartSku;
 import cn.ussu.modules.ecps.member.entity.EbShipAddr;
 import cn.ussu.modules.ecps.order.entity.EbOrder;
-import cn.ussu.modules.ecps.portal.feign.order.RemoteOrderService;
 import cn.ussu.modules.ecps.portal.feign.item.RemoteFeatureService;
 import cn.ussu.modules.ecps.portal.feign.item.RemoteParaValueService;
 import cn.ussu.modules.ecps.portal.feign.item.RemoteSkuIndexService;
 import cn.ussu.modules.ecps.portal.feign.item.RemoveFeatureGroupService;
 import cn.ussu.modules.ecps.portal.feign.member.RemoteCartService;
 import cn.ussu.modules.ecps.portal.feign.member.RemoteShipAddrService;
+import cn.ussu.modules.ecps.portal.feign.order.RemoteOrderService;
 import cn.ussu.modules.ecps.portal.service.ItemService;
 import cn.ussu.modules.ecps.portal.service.PortalCartSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -112,21 +110,14 @@ public class PortalController extends BasePortalController {
     @GetMapping("/details")
     public String details(Integer skuId, Model model) {
         Assert.notNull(skuId);
-        JsonResult jr = remoteSkuIndexService.detail(skuId);
-        Map skuDetail = jr.getData();
-        if (jr.isSuccess()) {
-            model.addAttribute("skuDetail", skuDetail);
-            // 获取规格
-            EbSku ebSku = BeanUtil.toBean(skuDetail, EbSku.class);
-            EbItem item = ebSku.getItem();
-            JsonResult featureJr = remoteFeatureService.getFeaturelistByCatId(item.getCatId(), 1, 0);
-            List<EbFeature> featureList = featureJr.getData();
-            model.addAttribute("featureList", featureList);
-            JsonResult featureListByCatId = removeFeatureGroupService.getFeatureListByCatId(item.getCatId(), true, 0);
-            model.addAttribute("featureGroup", featureListByCatId.getData());
-            JsonResult itemParaJr = remoteParaValueService.allByItemId(item.getItemId());
-            model.addAttribute("paraList", itemParaJr.getData());
-        }
+        EbSku ebSku = remoteSkuIndexService.detail(skuId);
+        model.addAttribute("skuDetail", ebSku);
+        // 获取规格
+        EbItem item = ebSku.getItem();
+        List<EbFeature> featureList = remoteFeatureService.getFeaturelistByCatId(item.getCatId(), 1, 0);
+        model.addAttribute("featureList", featureList);
+        model.addAttribute("featureGroup", removeFeatureGroupService.getFeatureListByCatId(item.getCatId(), true, 0));
+        model.addAttribute("paraList", remoteParaValueService.allByItemId(item.getItemId()));
         return "details/details";
     }
 
@@ -135,11 +126,7 @@ public class PortalController extends BasePortalController {
      */
     @GetMapping("/shoplist")
     public ModelAndView shoplist(Model model) {
-        JsonResult cartListJr = remoteCartService.getCartListByUserId();
-        if (!cartListJr.isSuccess()) {
-            return toLogin(request.getRequestURI());
-        }
-        model.addAttribute("cartList", cartListJr.getData());
+        model.addAttribute("cartList", remoteCartService.getCartListByUserId());
         return new ModelAndView("shoplist/shoplist");
     }
 
@@ -150,39 +137,28 @@ public class PortalController extends BasePortalController {
     public ModelAndView createOrder(Model model, String cartIds) {
         injectAllParamToRequestScope();
         // 用户收货地址
-        JsonResult shipAddrListJr = remoteShipAddrService.allByUserId(SecurityUtils.getUserId());
-        if (!shipAddrListJr.isSuccess()) {
-            return toLogin(request.getRequestURI());
-        }
-        model.addAttribute("shipAddrList", shipAddrListJr.getData());
+        List<EbShipAddr> shipAddrList = remoteShipAddrService.allByUserId(SecurityUtils.getUserId());
+        model.addAttribute("shipAddrList", shipAddrList);
         // 默认的收货地址
-        List<Map> tempList = shipAddrListJr.getData();
-        List<EbShipAddr> shipAddrList = BeanUtil.copyToList(tempList, EbShipAddr.class);
         List<EbShipAddr> collect1 = shipAddrList.stream().filter(item -> item.getDefaultAddr().equals(1)).collect(Collectors.toList());
         if (CollUtil.isNotEmpty(collect1)) {
             model.addAttribute("defaultShipAddr", collect1.get(0));
         }
         // 勾选的购物车
-        JsonResult cartListJr = remoteCartService.getCartListByUserId();
-        if (!cartListJr.isSuccess()) {
-            return toLogin(request.getRequestURI());
-        } else {
-            // 筛选已勾选购物车列表
-            List<Map> all = cartListJr.getData();
-            List<Integer> collect = Arrays.stream(StrUtil.splitToInt(cartIds, StrPool.COMMA)).boxed().collect(Collectors.toList());
-            List<EbCartSku> cartList = filterSelectedCartList(BeanUtil.copyToList(all, EbCartSku.class), collect);
-            model.addAttribute("cartList", cartList);
-            // 商品总价格
-            BigDecimal skuTotalPrice = new BigDecimal("0");
-            // 商品总数量
-            int skuTotalQuantity = 0;
-            for (EbCartSku cartSku : cartList) {
-                skuTotalPrice = NumberUtil.add(skuTotalPrice, cartSku.getTotalPrice());
-                skuTotalQuantity += cartSku.getQuantity();
-            }
-            model.addAttribute("skuTotalPrice", skuTotalPrice.setScale(2).toString());
-            model.addAttribute("skuTotalQuantity", skuTotalQuantity);
+        // 筛选已勾选购物车列表
+        List<Integer> collect = Arrays.stream(StrUtil.splitToInt(cartIds, StrPool.COMMA)).boxed().collect(Collectors.toList());
+        List<EbCartSku> cartList = filterSelectedCartList(remoteCartService.getCartListByUserId(), collect);
+        model.addAttribute("cartList", cartList);
+        // 商品总价格
+        BigDecimal skuTotalPrice = new BigDecimal("0");
+        // 商品总数量
+        int skuTotalQuantity = 0;
+        for (EbCartSku cartSku : cartList) {
+            skuTotalPrice = NumberUtil.add(skuTotalPrice, cartSku.getTotalPrice());
+            skuTotalQuantity += cartSku.getQuantity();
         }
+        model.addAttribute("skuTotalPrice", skuTotalPrice.setScale(2).toString());
+        model.addAttribute("skuTotalQuantity", skuTotalQuantity);
         return new ModelAndView("create_order/create_order");
     }
 
@@ -192,14 +168,7 @@ public class PortalController extends BasePortalController {
     @PostMapping("/submit_order")
     public ModelAndView submitOrder(EbOrder order, Model model) {
         JsonResult jr = null;
-        try {
-            jr = remoteOrderService.submitOrder(order);
-        } catch (Exception e) {
-            // error
-            model.addAttribute("msg", jr.getMsg());
-            return new ModelAndView("submit_order/error");
-        }
-        EbOrder ebOrder = jr.getData(EbOrder.class);
+        EbOrder ebOrder = remoteOrderService.submitOrder(order);
         model.addAttribute("order", ebOrder);
         model.addAttribute("orderTimeStr", DateUtil.formatDateTime(ebOrder.getOrderTime()));
         return new ModelAndView("submit_order/submit_order");

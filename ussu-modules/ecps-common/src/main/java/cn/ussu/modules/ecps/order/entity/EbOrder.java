@@ -1,9 +1,13 @@
 package cn.ussu.modules.ecps.order.entity;
 
+import cn.ussu.common.core.constants.StrConstants;
+import cn.ussu.modules.ecps.common.constants.OrderStatus;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -67,6 +71,16 @@ public class EbOrder extends Model<EbOrder> implements Serializable {
     @ApiModelProperty(value = "订单状态。参见类EbOrderStateConstants.java")
     private Integer orderState;
 
+    public EbOrder setOrderState(Integer orderState) {
+        this.orderState = orderState;
+        // 转换名称
+        this.orderStateStr = OrderStatus.getStatusByCode(orderState);
+        return this;
+    }
+
+    @TableField(exist = false)
+    private String orderStateStr;
+
     @ApiModelProperty(value = "货到付款方式：1: 现金；2: POS刷卡; 3: 支票")
     private Integer paymentCash;
 
@@ -80,20 +94,26 @@ public class EbOrder extends Model<EbOrder> implements Serializable {
     private String paymentNo;
 
     @ApiModelProperty(value = "下单时间")
+    @JsonFormat(pattern = StrConstants.DEFAULT_TIME_PATTERN)
     private Date orderTime;
 
     @ApiModelProperty(value = "付款时间")
+    @JsonFormat(pattern = StrConstants.DEFAULT_TIME_PATTERN)
     private Date payTime;
 
     @ApiModelProperty(value = "到帐时间")
+    @JsonFormat(pattern = StrConstants.DEFAULT_TIME_PATTERN)
     private Date depositTime;
 
     @ApiModelProperty(value = "成功时间")
+    @JsonFormat(pattern = StrConstants.DEFAULT_TIME_PATTERN)
     private Date successTime;
 
+    @JsonFormat(pattern = StrConstants.DEFAULT_TIME_PATTERN)
     private Date updateTime;
 
     @ApiModelProperty(value = "前台用户删除订单标记。1：是；0：否")
+    @TableLogic(value = "0", delval = "1")
     private Integer isDelete;
 
     @ApiModelProperty(value = "前台用户删除订单标记。1：是；0：否")

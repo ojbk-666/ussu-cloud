@@ -63,7 +63,7 @@ public class EbFeatureGroupController extends BaseAdminController {
      * 根据分类id获取组
      */
     @GetMapping("/catId/{catId}")
-    public Object listByCatId(@PathVariable Integer catId, Boolean needFeatureList, EbFeature feature) {
+    public List<EbFeatureGroup> listByCatId(@PathVariable Integer catId, Boolean needFeatureList, EbFeature feature) {
         LambdaQueryWrapper<EbFeatureGroup> qw = new LambdaQueryWrapper<>();
         qw.orderByAsc(EbFeatureGroup::getGroupSort)
                 .orderByDesc(EbFeatureGroup::getGroupId)

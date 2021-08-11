@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.ecps.common.constants.ConstantsEcpsRabbit;
 import cn.ussu.modules.ecps.common.constants.OrderPayStatus;
@@ -31,7 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -103,9 +105,8 @@ public class EbOrderServiceImpl extends ServiceImpl<EbOrderMapper, EbOrder> impl
         int[] cartIdArr = StrUtil.splitToInt(cartIds, StrPool.COMMA);
         // 购物车idList
         List<Integer> cartIdList = Arrays.stream(cartIdArr).boxed().collect(Collectors.toList());
-        JsonResult allCartJr = remoteCartService.getCartListByUserId();
-        List<Map> data = allCartJr.getData();
-        List<EbCartSku> cartList = filterSelectedCartList(BeanUtil.copyToList(data, EbCartSku.class), cartIdList);
+        List<EbCartSku> cartListByUserId = remoteCartService.getCartListByUserId();
+        List<EbCartSku> cartList = filterSelectedCartList(cartListByUserId, cartIdList);
         BigDecimal orderSum = new BigDecimal("0");
         BigDecimal shipFee = new BigDecimal("0");
         for (EbCartSku cartSku : cartList) {
@@ -145,8 +146,7 @@ public class EbOrderServiceImpl extends ServiceImpl<EbOrderMapper, EbOrder> impl
             Integer skuId = orderDetail.getSkuId();
             try {
                 lock.lock();
-                JsonResult simpleDetailJr = remoteSkuService.getSimpleDetail(skuId);
-                EbSku sku = simpleDetailJr.getData(EbSku.class);
+                EbSku sku = remoteSkuService.getSimpleDetail(skuId);
                 // 校验库存
                 int stock = sku.getStockInventory() - orderDetail.getQuantity().intValue();
                 if (stock < 0) {

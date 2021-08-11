@@ -40,4 +40,8 @@
         order_detail_id, order_id, item_id, item_name, item_no, sku_id, sku, sku_img, sku_name, sku_cat_type, sku_spec, market_price, sku_discount, sku_price, offer_group_id, offer_group_name, offer_type, short_name, offer_id, offer_name, offer_no, short_name2, order_detail_type, merchant_id, quantity, price, product_id, payment_price, purchase_price
     </sql>
 
+    <select id="findByOrderId" parameterType="integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from eb_order_detail where order_id = #{orderId}
+    </select>
+
 </mapper>

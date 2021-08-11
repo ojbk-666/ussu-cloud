@@ -54,9 +54,24 @@
         <result column="order_ext5" property="orderExt5" />
     </resultMap>
 
+    <resultMap id="pageResultMap" type="cn.ussu.modules.ecps.order.entity.EbOrder" extends="BaseResultMap">
+        <collection property="orderDetailList"
+                    column="order_id"
+                    select="cn.ussu.modules.ecps.order.mapper.EbOrderDetailMapper.findByOrderId"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         order_id, eb_user_id, username, order_num, payment, pay_platform, delivery, is_confirm, order_sum, ship_fee, is_paid, order_state, payment_cash, distri_id, delivery_method, payment_no, order_time, pay_time, deposit_time, success_time, update_time, is_delete, is_display, notes, ship_name, province, city, district, zip_code, addr, phone, payable, company, contents, delivery_no, area_code, area_name, is_print, order_type, fixed_phone, attach_file, return_type, seckill_id, order_ext1, order_ext2, order_ext3, order_ext4, order_ext5
     </sql>
+
+    <!--分页-->
+    <select id="findPage" resultMap="pageResultMap">
+        select <include refid="Base_Column_List"/> from eb_order
+        where is_delete = 0
+        <if test="p.orderNum != null and p.orderNum != ''">
+            and order_num = #{p.orderNum}
+        </if>
+    </select>
 
 </mapper>

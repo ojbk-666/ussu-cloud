@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 商品属性	预置的手机参数（请将预置可选值补充完整）	1.      型号             前端控制器
@@ -47,7 +49,7 @@ public class EbFeatureController extends BaseAdminController {
     }
 
     @GetMapping("/catId/{catId}")
-    public Object listByCatId(@PathVariable Integer catId, EbFeature p) {
+    public List<EbFeature> listByCatId(@PathVariable Integer catId, EbFeature p) {
         LambdaQueryWrapper<EbFeature> qw = Wrappers.lambdaQuery(EbFeature.class)
                 .orderByAsc(EbFeature::getFeatureSort, EbFeature::getGroupId)
                 .orderByDesc(EbFeature::getFeatureId)

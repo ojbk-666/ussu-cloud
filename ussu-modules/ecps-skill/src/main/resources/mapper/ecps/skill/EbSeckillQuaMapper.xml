@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.skill.mapper.EbSeckillQuaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.skill.entity.EbSeckillQua">
+        <id column="seckill_qua_id" property="seckillQuaId" />
+        <result column="eb_user_id" property="ebUserId" />
+        <result column="seckill_id" property="seckillId" />
+        <result column="sku_id" property="skuId" />
+        <result column="seckill_time" property="seckillTime" />
+        <result column="quantity" property="quantity" />
+        <result column="order_id" property="orderId" />
+        <result column="is_expired" property="isExpired" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        seckill_qua_id, eb_user_id, seckill_id, sku_id, seckill_time, quantity, order_id, is_expired
+    </sql>
+
+</mapper>

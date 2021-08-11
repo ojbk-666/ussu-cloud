@@ -1,6 +1,5 @@
 package cn.ussu.modules.ecps.portal.service;
 
-import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.ecps.common.constants.ConstantsEcps;
 import cn.ussu.modules.ecps.item.entity.EbBrand;
 import cn.ussu.modules.ecps.item.entity.EbCat;
@@ -46,8 +45,7 @@ public class ItemService {
             try {
                 System.out.println("我拿到锁了,从DB获取数据库后写入缓存");
                 // 从数据库查询数据
-                JsonResult jsonResult = remoteItemService.listCatTree();
-                cats = jsonResult.getData();
+                cats = remoteItemService.listCatTree();
             } finally {
                 lock.unlock();// 释放锁
             }
@@ -67,8 +65,7 @@ public class ItemService {
         if (lock.tryLock()) {
             try {
                 // 从数据库查询数据
-                JsonResult jsonResult = remoteBrandService.getBrandlistByCatId(catId);
-                list = jsonResult.getData();
+                list = remoteBrandService.getBrandlistByCatId(catId);
             } finally {
                 lock.unlock();
             }
@@ -90,8 +87,7 @@ public class ItemService {
             try {
                 System.out.println("我拿到锁了,从DB获取数据库后写入缓存");
                 // 从数据库查询数据
-                JsonResult jsonResult = remoteFeatureService.getFeaturelistByCatId(catId, 0, 1);
-                list = jsonResult.getData();
+                list = remoteFeatureService.getFeaturelistByCatId(catId, 0, 1);
             } finally {
                 lock.unlock();// 释放锁
             }

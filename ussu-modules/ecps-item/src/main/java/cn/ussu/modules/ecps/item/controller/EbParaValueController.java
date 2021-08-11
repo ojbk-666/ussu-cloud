@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -37,8 +39,8 @@ public class EbParaValueController extends BaseAdminController {
     }
 
     @GetMapping("/item/{itemId}")
-    public JsonResult allByItemId(@PathVariable Integer itemId) {
-        return JsonResult.ok().data(service.list(Wrappers.lambdaQuery(EbParaValue.class).eq(EbParaValue::getItemId, itemId)));
+    public List<EbParaValue> allByItemId(@PathVariable Integer itemId) {
+        return service.list(Wrappers.lambdaQuery(EbParaValue.class).eq(EbParaValue::getItemId, itemId));
     }
 
     /**

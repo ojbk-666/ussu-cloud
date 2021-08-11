@@ -53,7 +53,7 @@ public class EbBrandController extends BaseAdminController {
      * 根据分类获取
      */
     @GetMapping("/catId/{catId}")
-    public Object listByCatId(@PathVariable Integer catId, EbBrand p) {
+    public List<EbBrand> listByCatId(@PathVariable Integer catId, EbBrand p) {
         LambdaQueryWrapper<EbCatbrand> qw1 = Wrappers.lambdaQuery(EbCatbrand.class)
                 .eq(EbCatbrand::getCatId, catId);
         List<Integer> brandIdList = catbrandService.list(qw1).stream().map(EbCatbrand::getBrandId).collect(Collectors.toList());

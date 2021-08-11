@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.skill.mapper.EbSeckillSessionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.skill.entity.EbSeckillSession">
+        <id column="session_id" property="sessionId" />
+        <result column="session_name" property="sessionName" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        session_id, session_name, start_time, end_time
+    </sql>
+
+</mapper>

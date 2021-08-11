@@ -31,8 +31,8 @@ public class SkuIndexController extends BaseSearchController {
      * 获取sku详情
      */
     @GetMapping("/detail/{skuId}")
-    public JsonResult detail(@PathVariable Integer skuId) {
-        return JsonResult.ok().data(skuIndexService.detial(skuId));
+    public SkuIndex detail(@PathVariable Integer skuId) {
+        return skuIndexService.detial(skuId);
     }
 
     /**

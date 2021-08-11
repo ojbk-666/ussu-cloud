@@ -5,8 +5,8 @@ import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.ecps.order.entity.EbOrder;
+import cn.ussu.modules.ecps.order.mapper.EbOrderMapper;
 import cn.ussu.modules.ecps.order.service.IEbOrderService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +25,15 @@ public class EbOrderController extends BaseAdminController {
 
     @Autowired
     private IEbOrderService service;
+    @Autowired
+    private EbOrderMapper orderMapper;
 
     /**
      * 分页
      */
     @GetMapping
     public Object page(EbOrder p) {
-        LambdaQueryWrapper<EbOrder> qw = new LambdaQueryWrapper<>();
-        IPage page = service.page(DefaultPageFactory.getPage(), qw);
+        IPage page = orderMapper.findPage(DefaultPageFactory.getPage(), p);
         return DefaultPageFactory.createReturnPageInfo(page);
     }
 
@@ -57,9 +58,9 @@ public class EbOrderController extends BaseAdminController {
      * 创建订单
      */
     @PutMapping("/submitOrder")
-    public JsonResult submitOrder(@RequestBody EbOrder order) {
+    public EbOrder submitOrder(@RequestBody EbOrder order) {
         EbOrder r = service.submitOrder(order, order.getCartIdStr(), SecurityUtils.getUserId());
-        return JsonResult.ok().data(r);
+        return r;
     }
 
     /**

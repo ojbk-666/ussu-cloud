@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.security.util.SecurityUtils;
 import cn.ussu.modules.ecps.item.entity.EbItem;
 import cn.ussu.modules.ecps.item.entity.EbSku;
@@ -86,8 +85,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
                     .updateById();
             return one.getCartSkuId();
         } else {
-            JsonResult jr = remoteSkuService.getSkuBySkuId(skuId);
-            EbSku sku = jr.getData(EbSku.class);
+            EbSku sku = remoteSkuService.getSkuBySkuId(skuId);
             EbItem item = sku.getItem();
             Map<String, Object> skuSpec = new HashMap<>();
             for (EbSpecValue spec : sku.getSpecList()) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ussu.modules.ecps.skill.mapper.EbSeckillMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.skill.entity.EbSeckill">
+        <id column="seckill_id" property="seckillId" />
+        <result column="activity_type" property="activityType" />
+        <result column="seckill_title" property="seckillTitle" />
+        <result column="seckill_img" property="seckillImg" />
+        <result column="gift_info" property="giftInfo" />
+        <result column="seckill_order" property="seckillOrder" />
+        <result column="notice_order" property="noticeOrder" />
+        <result column="sales" property="sales" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="is_recommend" property="isRecommend" />
+        <result column="limit_seckill_times" property="limitSeckillTimes" />
+        <result column="limit_seckill_count" property="limitSeckillCount" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        seckill_id, activity_type, seckill_title, seckill_img, gift_info, seckill_order, notice_order, sales, start_time, end_time, is_recommend, limit_seckill_times, limit_seckill_count, is_delete
+    </sql>
+
+</mapper>

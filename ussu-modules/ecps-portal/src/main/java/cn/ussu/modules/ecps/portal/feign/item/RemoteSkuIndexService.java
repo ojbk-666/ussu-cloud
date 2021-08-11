@@ -2,6 +2,7 @@ package cn.ussu.modules.ecps.portal.feign.item;
 
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.ecps.common.constants.ConstantsEcps;
+import cn.ussu.modules.ecps.item.entity.EbSku;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,5 +22,5 @@ public interface RemoteSkuIndexService {
                                 @RequestParam("pageNum") Integer pageNum);
 
     @GetMapping("/search/sku/detail/{skuId}")
-    JsonResult detail(@PathVariable("skuId") Integer skuId);
+    EbSku detail(@PathVariable("skuId") Integer skuId);
 }

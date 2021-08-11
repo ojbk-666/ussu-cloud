@@ -1,5 +1,7 @@
 package cn.ussu.modules.ecps.item.controller;
 
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.StrUtil;
 import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.common.datasource.util.DefaultPageFactory;
@@ -10,6 +12,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,6 +51,15 @@ public class EbSkuController extends BaseAdminController {
     }
 
     /**
+     * 获取多个sku详情
+     */
+    @GetMapping("/simpleDetailList/{skuIds}")
+    public List<EbSku> simpleDetailList(@PathVariable String skuIds) {
+        List<Integer> skuIdList = Arrays.stream(StrUtil.splitToInt(skuIds, StrPool.COMMA)).boxed().collect(Collectors.toList());
+        return service.listByIds(skuIdList);
+    }
+
+    /**
      * 详情
      */
     @GetMapping("/{id}")
@@ -53,7 +68,7 @@ public class EbSkuController extends BaseAdminController {
     }
 
     @GetMapping("/detail2/{skuId}")
-    public Object detail2(@PathVariable Integer skuId) {
+    public EbSku detail2(@PathVariable Integer skuId) {
         EbSku ebSku = service.detail2(skuId, true);
         return ebSku;
     }

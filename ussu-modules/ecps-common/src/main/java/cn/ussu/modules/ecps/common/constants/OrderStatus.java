@@ -27,4 +27,14 @@ public enum OrderStatus {
     public String getStatus() {
         return status;
     }
+
+    public static String getStatusByCode(Integer code) {
+        for (OrderStatus value : OrderStatus.values()) {
+            if (value.getCode().equals(code)) {
+                return value.getStatus();
+            }
+        }
+        return null;
+    }
+
 }
