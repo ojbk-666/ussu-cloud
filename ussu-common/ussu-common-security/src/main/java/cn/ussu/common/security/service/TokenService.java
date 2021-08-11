@@ -60,17 +60,17 @@ public class TokenService {
     public String createToken(LoginUser loginUser) {
         // String token = UUID.fastUUID().toString();
         // loginUser.setToken(token);
-        boolean containsExpireTime = !loginUser.getSysUser().getUserType().equals(1);
+        boolean userType1 = loginUser.getSysUser().getUserType().equals(1);
         Map<String, Object> payloadParam = new HashMap<>();
         payloadParam.put("userId", loginUser.getSysUser().getId());
         payloadParam.put("userType", loginUser.getSysUser().getUserType());
         payloadParam.put("name", loginUser.getSysUser().getName());
         payloadParam.put("nickName", loginUser.getSysUser().getNickName());
-        String token = createToken(payloadParam, containsExpireTime);
+        String token = createToken(payloadParam, !userType1);
         loginUser.setToken(token);
         long now = new Date().getTime();
         loginUser.setLoginTime(now);
-        if (!containsExpireTime) {
+        if (userType1) {
             loginUser.setExpireTime(now + (MILLIS_MINUTE * jwtTokenProperties.getTimeout()));
             // 缓存至token
             cacheSystemUserToRedis(loginUser);
@@ -81,7 +81,8 @@ public class TokenService {
     }
 
     protected void cacheSystemUserToRedis(LoginUser loginUser) {
-        redisService.setCacheObject(CacheConstants.LOGIN_TOKEN_KEY_ + loginUser.getToken(), loginUser, MILLIS_MINUTE * jwtTokenProperties.getTimeout());
+        String key = CacheConstants.LOGIN_TOKEN_KEY_ + StrUtil.removePrefix(loginUser.getToken(), CacheConstants.TOKEN_PREFIX);
+        redisService.setCacheObject(key, loginUser, MILLIS_MINUTE * jwtTokenProperties.getTimeout());
     }
 
     /**
