@@ -23,6 +23,7 @@
         <module>ecps-search</module>
         <module>ecps-member</module>
         <module>ecps-order</module>
+        <module>ecps-skill</module>
     </modules>
 
     <properties>
