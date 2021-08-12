@@ -141,12 +141,12 @@ public class EbSeckillSessionServiceImpl extends ServiceImpl<EbSeckillSessionMap
             // 设置随机码
             for (EbSessionSkuRelation relation : seckillSession.getRelationList()) {
                 // 2.商品的信息 key是 skuId value是relation
-                if (!redisService.hHasKey(SKILL_SKU, relation.getSkuId().toString())) {
+                BoundHashOperations<String, String, String> ops = stringRedisTemplate.boundHashOps(SKILL_SKU);
+                if (!ops.hasKey(relation.getSkuId().toString())) {
                     relation.setStartTime(seckillSession.getStartTime().getTime())
                             .setEndTime(seckillSession.getEndTime().getTime())
                             .setRandomCode(UUID.randomUUID().toString(true));
                     // redisService.setCacheMapValue(SKILL_SKU, relation.getSkuId().toString(), relation);
-                    BoundHashOperations<String, String, String> ops = stringRedisTemplate.boundHashOps(SKILL_SKU);
                     ops.put(relation.getSkuId().toString(), JSON.toJSONString(relation));
                     // 3.信号量 key是randomCode value是秒杀库存
                     String stockKey = SKILL_STOCK_PREFIX + relation.getRandomCode();
@@ -191,7 +191,7 @@ public class EbSeckillSessionServiceImpl extends ServiceImpl<EbSeckillSessionMap
         }
         BoundHashOperations<String, String, String> ops = stringRedisTemplate.boundHashOps(SKILL_SKU);
         // 去除sku详情
-        String s = ops.get(skuId);
+        String s = ops.get(skuId.toString());
         if (StrUtil.isBlank(s)) {
             return JsonResult.error(NOT);
         }
