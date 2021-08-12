@@ -1,17 +1,15 @@
 package cn.ussu.modules.ecps.skill.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import cn.ussu.common.core.base.BaseAdminController;
 import cn.ussu.common.core.model.vo.JsonResult;
+import cn.ussu.common.datasource.util.DefaultPageFactory;
 import cn.ussu.modules.ecps.skill.entity.EbSeckillSession;
+import cn.ussu.modules.ecps.skill.entity.EbSessionSkuRelation;
 import cn.ussu.modules.ecps.skill.service.IEbSeckillSessionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import cn.ussu.common.datasource.util.DefaultPageFactory;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
-import org.springframework.web.bind.annotation.RestController;
-import cn.ussu.common.core.base.BaseAdminController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -71,6 +69,13 @@ public class EbSeckillSessionController extends BaseAdminController {
     public JsonResult delete(@PathVariable String ids) {
         service.del(ids);
         return JsonResult.ok();
+    }
+
+    @PostMapping("/seckill")
+    public JsonResult seckillSku(@RequestBody EbSessionSkuRelation relation) {
+        Integer skuId = relation.getSkuId();
+        String randomCode = relation.getRandomCode();
+        return service.seckillSku(skuId, randomCode, relation.getSeckillLimit());
     }
 
 }

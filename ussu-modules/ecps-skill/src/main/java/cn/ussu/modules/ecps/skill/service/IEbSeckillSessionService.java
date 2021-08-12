@@ -1,5 +1,6 @@
 package cn.ussu.modules.ecps.skill.service;
 
+import cn.ussu.common.core.model.vo.JsonResult;
 import cn.ussu.modules.ecps.skill.entity.EbSeckillSession;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,5 +26,10 @@ public interface IEbSeckillSessionService extends IService<EbSeckillSession> {
      * 上架当天的秒杀商品
      */
     void uploadSkillSku();
+
+    /**
+     * 秒杀商品
+     */
+    JsonResult seckillSku(Integer sku, String randomCode, Integer num);
 
 }
