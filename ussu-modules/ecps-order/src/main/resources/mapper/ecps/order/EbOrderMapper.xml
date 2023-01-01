@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ussu.modules.ecps.order.mapper.EbOrderMapper">
+<mapper namespace="cc.ussu.modules.ecps.order.mapper.EbOrderMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.order.entity.EbOrder">
+    <resultMap id="BaseResultMap" type="cc.ussu.modules.ecps.order.entity.EbOrder">
         <id column="order_id" property="orderId" />
         <result column="eb_user_id" property="ebUserId" />
         <result column="username" property="username" />
@@ -54,10 +54,10 @@
         <result column="order_ext5" property="orderExt5" />
     </resultMap>
 
-    <resultMap id="pageResultMap" type="cn.ussu.modules.ecps.order.entity.EbOrder" extends="BaseResultMap">
+    <resultMap id="pageResultMap" type="cc.ussu.modules.ecps.order.entity.EbOrder" extends="BaseResultMap">
         <collection property="orderDetailList"
                     column="order_id"
-                    select="cn.ussu.modules.ecps.order.mapper.EbOrderDetailMapper.findByOrderId"/>
+                    select="cc.ussu.modules.ecps.order.mapper.EbOrderDetailMapper.findByOrderId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

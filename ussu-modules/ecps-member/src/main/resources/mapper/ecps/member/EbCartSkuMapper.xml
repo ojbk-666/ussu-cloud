@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ussu.modules.ecps.member.mapper.EbCartSkuMapper">
+<mapper namespace="cc.ussu.modules.ecps.member.mapper.EbCartSkuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.member.entity.EbCartSku">
+    <resultMap id="BaseResultMap" type="cc.ussu.modules.ecps.member.entity.EbCartSku">
         <id column="cart_sku_id" property="cartSkuId" />
         <result column="eb_user_id" property="ebUserId" />
         <result column="item_id" property="itemId" />

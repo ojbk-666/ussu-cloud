@@ -25,9 +25,10 @@ spring:
         file-extension: yml
         # 共享配置
         shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-  #    alibaba:
-  #      seata:
-  #        tx-service-group: ${spring.application.name}-fescar-service-group
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
 
   rabbitmq:
     host: 127.0.0.1
@@ -55,3 +56,11 @@ seata:
       password: "nacos"
   enable-auto-data-source-proxy: true
   tx-service-group: ${spring.application.name}-fescar-service-group
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+feign:
+  sentinel:
+    enabled: true

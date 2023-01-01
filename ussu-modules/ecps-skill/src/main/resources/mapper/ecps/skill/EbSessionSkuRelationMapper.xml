@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ussu.modules.ecps.skill.mapper.EbSessionSkuRelationMapper">
+<mapper namespace="cc.ussu.modules.ecps.skill.mapper.EbSessionSkuRelationMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.ecps.skill.entity.EbSessionSkuRelation">
+    <resultMap id="BaseResultMap" type="cc.ussu.modules.ecps.skill.entity.EbSessionSkuRelation">
         <id column="relation_id" property="relationId" />
         <result column="session_id" property="sessionId" />
         <result column="sku_id" property="skuId" />

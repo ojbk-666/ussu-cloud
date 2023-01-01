@@ -793,7 +793,7 @@
 
                                     <svg version="1.1" class="stc-online" marchantid="1000049"
                                          orderid="415984075962525703" id="图层_1" xmlns="http://www.w3.org/2000/svg"
-                                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="75px"
+                                         x="0px" y="0px" width="75px"
                                          height="25px" viewBox="0 0 75 25" enable-background="new 0 0 75 25"
                                          xml:space="preserve">
 					<path fill="#0083D3" d="M75.087,19.992c0,2.761-2.239,5-5,5h-65c-2.761,0-5-2.239-5-5V4.812c0-2.761,2.239-5,5-5h65
