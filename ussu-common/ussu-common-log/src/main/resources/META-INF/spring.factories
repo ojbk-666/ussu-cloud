@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.ussu.common.log.aspect.RecordLogAspect,\
-  cn.ussu.common.log.service.impl.DbRecordLogServiceImpl,\
-  cn.ussu.common.log.feign.RemoteSysLogService
+  cc.ussu.common.log.aspect.RecordLogAspect,\
+  cc.ussu.common.log.service.impl.DbRecordLogServiceImpl,\
+  cc.ussu.common.log.feign.RemoteSysLogService

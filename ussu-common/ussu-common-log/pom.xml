@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ussu-common</artifactId>
-        <groupId>cn.ussu</groupId>
+        <groupId>cc.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,20 +18,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-core</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.ussu</groupId>
+            <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-security</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- SpringCloud Openfeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 
