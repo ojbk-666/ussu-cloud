@@ -7,9 +7,6 @@ spring:
   application:
     # 应用名称
     name: ussu-gateway
-  profiles:
-    # 环境配置
-    active: dev
   main:
     allow-bean-definition-overriding: true
   cloud:
@@ -40,6 +37,8 @@ spring:
             groupId: DEFAULT_GROUP
             data-type: json
             rule-type: flow
+      log:
+        dir: logs/${spring.application.name}/sentinel
   servlet:
     multipart:
       max-file-size: 100MB

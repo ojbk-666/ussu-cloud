@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ussu-cloud</artifactId>
-        <groupId>cn.ussu</groupId>
+        <groupId>cc.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,53 +18,56 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-dependencies</artifactId>
-            <version>${spring-cloud.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <!-- SpringCloud Ailibaba Nacos -->
+        <!-- SpringCloud Alibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-        <!-- SpringCloud Ailibaba Nacos Config -->
+        <!-- SpringCloud Alibaba Nacos Config -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+
+        <!-- SpringCloud Alibaba Sentinel -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
         <!-- SpringBoot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--feign-->
+
+        <!-- SpringBoot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
         <!-- SpringCloud Openfeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <!--common依赖-->
-        <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-core</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.ussu</groupId>
+        <!--<dependency>
+            <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-redis</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
-            <groupId>cn.ussu</groupId>
+            <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-security</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>cn.ussu</groupId>
+            <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-log</artifactId>
             <version>1.0</version>
         </dependency>
@@ -114,7 +117,7 @@
                             <!--jar包不包含唯一版本标识 -->
                             <useUniqueVersions>false</useUniqueVersions>
                             <!--指定入口类 -->
-                            <mainClass>cn.ussu.auth.UssuAuthApplication</mainClass>
+                            <mainClass>cc.ussu.auth.UssuAuthApplication</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>${project.build.directory}</outputDirectory>

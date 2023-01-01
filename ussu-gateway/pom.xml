@@ -3,35 +3,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cn.ussu</groupId>
+        <groupId>cc.ussu</groupId>
         <artifactId>ussu-cloud</artifactId>
         <version>1.0</version>
     </parent>
-    <groupId>cn.ussu</groupId>
+
+    <groupId>cc.ussu</groupId>
     <artifactId>ussu-gateway</artifactId>
     <version>1.0</version>
+
     <name>ussu-gateway</name>
     <description>Demo project for Spring Boot</description>
+
     <properties>
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
+        <!-- SpringCloud Gateway -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-dependencies</artifactId>
-            <version>${spring-cloud.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-
         <!-- SpringCloud Ailibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -42,29 +34,54 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
-
+        <!-- SpringCloud Alibaba Sentinel -->
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-core</artifactId>
-            <version>1.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
+        <!-- SpringCloud Alibaba Sentinel Gateway -->
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-redis</artifactId>
-            <version>1.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
         </dependency>
+        <!-- Sentinel Datasource Nacos -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- SpringCloud Loadbalancer -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <!-- Swagger -->
+        <!--<dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>-->
 
     </dependencies>
 
@@ -108,7 +125,7 @@
                             <!--jar包不包含唯一版本标识 -->
                             <useUniqueVersions>false</useUniqueVersions>
                             <!--指定入口类 -->
-                            <mainClass>cn.ussu.gateway.UssuGatewayApplication</mainClass>
+                            <mainClass>cc.ussu.gateway.UssuGatewayApplication</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>${project.build.directory}</outputDirectory>

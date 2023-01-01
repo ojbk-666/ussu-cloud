@@ -1,0 +1,91 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      # 网关路由配置 https://blog.csdn.net/weixin_44044929/article/details/124662543
+      # https://blog.csdn.net/qq_44749491/article/details/126560999
+      # https://blog.csdn.net/pichcar1982/article/details/120427469
+      routes:
+        # 认证中心
+        # 路由id，自定义，只要唯一即可
+        - id: ussu-auth
+          # 路由的目标地址 lb是负载均衡，后面跟服务名称(推荐)
+          uri: lb://ussu-auth
+          # 路由断言，判断请求是否符合路由规则的条件
+          predicates:
+            # 按照路径匹配，以/auth/开头的请求就符合要求
+            - Path=/auth/**
+          filters:
+            # 验证码处理
+            - CacheRequestFilter
+            - ValidateCodeFilter
+            # StripPrefix网关过滤器工厂采用一个参数StripPrefix。 StripPrefix参数表示在将请求发送到下游之前从请求中剥离的路径个数。作用： 去掉部分URL路径
+            - StripPrefix=1
+        # 代码生成
+        - id: ussu-gen
+          uri: lb://ussu-gen
+          predicates:
+            - Path=/code/**
+          filters:
+            - StripPrefix=1
+        # 定时任务
+        - id: ussu-job
+          uri: lb://ussu-job
+          predicates:
+            - Path=/schedule/**
+          filters:
+            - StripPrefix=1
+        # 系统模块
+        - id: ussu-system
+          uri: lb://ussu-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        # 文件服务
+        - id: ussu-file
+          uri: lb://ussu-file
+          predicates:
+            - Path=/file/**
+          filters:
+            - StripPrefix=1
+        # dczx
+        - id: ussu-dczx
+          uri: lb://ussu-dczx
+          predicates:
+            - Path=/dczx/**
+          filters:
+            - StripPrefix=1
+        # dczx-api
+        - id: ussu-dczx-api
+          uri: lb://ussu-dczx
+          predicates:
+            - Path=/api/dczx/**
+
+# 安全配置
+security:
+  # 验证码
+  captcha:
+    enabled: false
+    # 0 png 1 gif 2 中文 3中文gif 4算术
+    type: 4
+  # 防止XSS攻击
+  xss:
+    enabled: true
+    excludeUrls:
+      - /system/notice
+  # 不校验白名单
+  ignore:
+    whites:
+      - /auth/logout
+      - /auth/login
+      - /auth/register
+      - /*/v2/api-docs
+      - /csrf
+      - /api/**
