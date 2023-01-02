@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.dczx.mapper.DcTaskVideoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.ussu.modules.dczx.entity.DcTaskVideo">
+        <id column="vid" property="vid" />
+        <result column="version_code" property="versionCode" />
+        <result column="chapter_id" property="chapterId" />
+        <result column="sub_chapter_id" property="subChapterId" />
+        <result column="service_id" property="serviceId" />
+        <result column="service_type" property="serviceType" />
+        <result column="video_url" property="videoUrl" />
+        <result column="image" property="image" />
+        <result column="duration" property="duration" />
+        <result column="chapter_title" property="chapterTitle" />
+        <result column="division_course_title" property="divisionCourseTitle" />
+    </resultMap>
+
+    <resultMap id="BaseResultMapVO" type="cc.ussu.modules.dczx.entity.vo.DcTaskVideoVO">
+        <id column="vid" property="vid" />
+        <result column="version_code" property="versionCode" />
+        <result column="chapter_id" property="chapterId" />
+        <result column="sub_chapter_id" property="subChapterId" />
+        <result column="service_id" property="serviceId" />
+        <result column="service_type" property="serviceType" />
+        <result column="video_url" property="videoUrl" />
+        <result column="image" property="image" />
+        <result column="duration" property="duration" />
+        <result column="course_id" property="courseId" />
+        <result column="course_name" property="courseName" />
+        <result column="chapter_title" property="chapterTitle" />
+        <result column="division_course_title" property="divisionCourseTitle" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        vid, version_code, chapter_id, sub_chapter_id, service_id, service_type, video_url, image, duration
+    </sql>
+
+    <select id="findPage" resultMap="BaseResultMapVO" parameterType="cc.ussu.modules.dczx.entity.vo.DcTaskVideoQueryVO">
+        select a.*,b.course_id,b.course_name
+        from dc_task_video a join dc_course b on a.version_code = b.service_course_vers_id
+        where 1=1
+        <if test="versionCode != null and versionCode != ''">
+            and a.version_code = #{versionCode}
+        </if>
+        <if test="courseId != null and courseId != ''">
+            and b.course_id = #{courseId}
+        </if>
+        <if test="chapterTitle != null and chapterTitle != ''">
+            and a.chapter_title like concat('%', #{chapterTitle}, '%')
+        </if>
+        <if test="durationFlag != null and durationFlag == true">
+            and a.duration is not null
+        </if>
+        <if test="durationFlag != null and durationFlag == false">
+            and a.duration is null
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.dczx.mapper.DcPaperQuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.ussu.modules.dczx.entity.DcPaperQuestion">
+        <id column="question_id" property="questionId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="question_title" property="questionTitle"/>
+        <result column="full_topic_type_cd" property="fullTopicTypeCd"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="interface_log_id" property="interfaceLogId"/>
+    </resultMap>
+
+    <resultMap id="BaseVOResultMap" type="cc.ussu.modules.dczx.entity.vo.DcPaperQuestionVO">
+        <id column="question_id" property="questionId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="question_title" property="questionTitle"/>
+        <result column="full_topic_type_cd" property="fullTopicTypeCd"/>
+        <result column="create_time" property="createTime"/>
+        <result column="topicTypeCd" property="topicTypeCd"/>
+        <result column="topicName" property="topicName"/>
+        <result column="courseName" property="courseName"/>
+        <!--二次查询-->
+        <collection property="options"
+                    select="cc.ussu.modules.dczx.mapper.DcQuestionOptionMapper.selectVOListByQuestionId"
+                    column="question_id"/>
+    </resultMap>
+
+    <!--一次性查询-->
+    <resultMap id="BaseVOResultMap2" type="cc.ussu.modules.dczx.entity.vo.DcPaperQuestionVO">
+        <id column="question_id" property="questionId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="question_title" property="questionTitle"/>
+        <result column="full_topic_type_cd" property="fullTopicTypeCd"/>
+        <result column="create_time" property="createTime"/>
+        <result column="topicTypeCd" property="topicTypeCd"/>
+        <result column="topicName" property="topicName"/>
+        <result column="courseName" property="courseName"/>
+        <collection property="options" ofType="cc.ussu.modules.dczx.entity.vo.DcQuestionOptionVO">
+            <id column="option_id" property="optionId"/>
+            <result column="option_content" property="optionContent"/>
+            <result column="istrue" property="istrue"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="BaseVONoOptionsResultMap" type="cc.ussu.modules.dczx.entity.vo.DcPaperQuestionVO">
+        <id column="question_id" property="questionId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="question_title" property="questionTitle"/>
+        <result column="full_topic_type_cd" property="fullTopicTypeCd"/>
+        <result column="create_time" property="createTime"/>
+        <result column="topicTypeCd" property="topicTypeCd"/>
+        <result column="topicName" property="topicName"/>
+        <result column="courseName" property="courseName"/>
+        <collection property="options" ofType="cc.ussu.modules.dczx.entity.vo.DcQuestionOptionVO">
+            <result property="optionId" column="option_id"/>
+            <result property="optionContent" column="option_content"/>
+            <result property="istrue" column="istrue"/>
+        </collection>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List_A">
+        a.course_id, a.paper_id, a.question_id, a.question_title, a.full_topic_type_cd, a.create_by, a.create_time, a.interface_log_id
+    </sql>
+
+    <!--分页-->
+    <select id="findPage" resultMap="BaseVOResultMap">
+        select
+            <include refid="Base_Column_List_A"/>
+            , b.topic_type_cd as topicTypeCd
+            , b.question_type_nm as topicName
+            , c.course_name as courseName
+        from dc_paper_question a
+        left join dc_paper_question_topic b on a.full_topic_type_cd = b.full_topic_type_cd
+        left join dc_course c on a.course_id = c.course_id
+        where 1=1
+        <if test="param.courseId != null and param.courseId != ''">
+            and a.course_id = #{param.courseId}
+        </if>
+        <if test="param.questionId != null and param.questionId != ''">
+            and a.question_id = #{param.questionId}
+        </if>
+        <if test="param.questionTitle != null and param.questionTitle != ''">
+            and a.question_title like concat('%',#{param.questionTitle},'%')
+        </if>
+        <if test="param.fullTopicTypeCd != null and param.fullTopicTypeCd != ''">
+            and a.full_topic_type_cd = #{param.fullTopicTypeCd}
+        </if>
+    </select>
+
+    <select id="findWithOptions" resultMap="BaseVONoOptionsResultMap">
+        select
+            <include refid="Base_Column_List_A"/>
+            , b.topic_type_cd as topicTypeCd
+            , b.question_type_nm as topicName
+            , c.course_name as courseName
+            , o.option_id
+            , o.option_content
+            , o.istrue
+        from dc_paper_question a
+        inner join dc_question_option o on a.question_id = o.question_id
+        left join dc_paper_question_topic b on a.full_topic_type_cd = b.full_topic_type_cd
+        left join dc_course c on a.course_id = c.course_id
+        where 1=1
+        <if test="questionIds != null and questionIds.size > 0">
+            and a.question_id in
+            <foreach collection="questionIds" item="questionId" open="(" close=")" separator=",">
+                #{questionId}
+            </foreach>
+        </if>
+    </select>
+
+
+    <!--更新创建人为userid-->
+    <update id="updateQuestionCreateBy">
+        update dc_paper_question a set a.create_by =
+        (select b.userid from dc_interface_log b where b.id = a.interface_log_id limit 1) where a.create_by is null or a.create_by = ''
+    </update>
+
+</mapper>

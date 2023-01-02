@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.dczx.mapper.DcStatisticMapper">
+
+    <select id="countQuestionNumByRangeDate" resultType="java.lang.Long">
+        select count(*) from dc_paper_question
+        where create_time &gt;= #{start} and create_time &lt;= #{end}
+    </select>
+
+    <select id="getQuestionNumByRangeDate" resultType="java.util.Map">
+        select sdl.date_str as x,IFNULL(t.y,0) as y from (
+            select DATE_FORMAT(create_time, '%Y-%m-%d') as x, count(*) as y
+            from dc_paper_question
+            where create_time &gt;= #{start} and create_time &lt;= #{end}
+            group by DATE_FORMAT(create_time, '%Y-%m-%d')
+        ) t right join sys_date_line sdl on t.x = sdl.date_str
+        where sdl.date_date &gt;= #{start} and sdl.date_date &lt;= #{end}
+        order by sdl.date_str asc
+    </select>
+
+    <!--用户数-->
+    <select id="countUserNum" resultType="java.lang.Long">
+        select count(user_id) from dc_user_info
+    </select>
+
+    <!--各科目题目数-->
+    <select id="courseQuestionNum" resultType="java.util.Map">
+        select a.course_id,(select course_name from dc_course b where b.course_id = a.course_id) as x,count(1) as y
+        from dc_paper_question a
+        GROUP BY a.course_id
+    </select>
+
+    <!--用户贡献题目数-->
+    <select id="userQuestionNum" resultType="java.util.Map">
+        select create_by as x,count(*) as y
+        from dc_paper_question
+        where create_by is not null and create_by != ''
+        <if test="start != null">
+            and create_time &gt;= #{start}
+        </if>
+        <if test="end != null">
+            and create_time &lt;= #{end}
+        </if>
+        group by create_by
+        order by count(*) desc
+    </select>
+
+    <!--题型题目数-->
+    <select id="countTopicQuestionNum" resultType="java.util.Map">
+        select b.question_type_nm as x, count(*) as y
+        from dc_paper_question a JOIN dc_paper_question_topic b on a.full_topic_type_cd = b.full_topic_type_cd
+        GROUP BY b.question_type_nm
+        order by count(*) asc
+    </select>
+
+    <!--最近新增用户-->
+    <select id="recentNewUser" resultType="java.util.Map">
+        SELECT userid, date_format(min(create_time),'%Y/%m/%d %H:%i') as create_time
+        FROM `dc_interface_log`
+        GROUP BY userid
+        ORDER BY min(create_time) desc
+        <if test="size != null and size > 0">
+            limit #{size}
+        </if>
+    </select>
+
+    <!--最近新增题目数量-->
+    <select id="recentNewQuestion" resultType="java.util.Map">
+        select sdl.da as x,ifnull(t.c, 0) as y from (
+            select DATE_FORMAT(create_time, #{dateFormatPattern}) as d, count(*) as c
+            from dc_paper_question a
+            where a.create_time &gt;= #{start} and a.create_time &lt;= #{end}
+            GROUP BY DATE_FORMAT(create_time, #{dateFormatPattern})
+        ) t right join ( select distinct ${sysDateLineColumn} as da from sys_date_line where date_date &gt;= #{start} and date_date &lt;= #{end}) sdl on t.d = sdl.da
+        order by sdl.da asc
+    </select>
+
+    <select id="countRecentRequest" resultType="java.util.Map">
+        select
+            a.date_str as x, IFNULL(t.count, 0) as y
+        from sys_date_line a left join
+            (SELECT
+                DATE_FORMAT( create_time, '%Y-%m-%d' ) as time,
+                count( id ) as count
+            FROM dc_request_log
+            where 1=1
+            <if test="start != null and end != null">
+                and create_time between #{start} and #{end}
+            </if>
+            GROUP BY DATE_FORMAT( create_time, '%Y-%m-%d' )
+            ORDER BY DATE_FORMAT( create_time, '%Y-%m-%d' )
+        ) t on a.date_str = t.time
+        where 1=1
+        <if test="start != null and end != null">
+            and a.date_date between #{start} and #{end}
+        </if>
+        ORDER BY a.date_str asc
+    </select>
+
+
+</mapper>
