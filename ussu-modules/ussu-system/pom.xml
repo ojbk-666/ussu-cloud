@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>cc.ussu</groupId>
         <artifactId>ussu-modules</artifactId>
-        <groupId>cn.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,35 +18,45 @@
     </properties>
 
     <dependencies>
+        <!-- SpringCloud Alibaba Nacos -->
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-datasource</artifactId>
-            <version>1.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
+        <!-- SpringCloud Alibaba Nacos Config -->
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-redis</artifactId>
-            <version>1.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+        <!-- SpringCloud Alibaba Sentinel -->
         <dependency>
-            <groupId>cn.ussu</groupId>
-            <artifactId>ussu-common-log</artifactId>
-            <version>1.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
-        <!-- SpringBoot Web -->
+        <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--swagger-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
-        <dependency>
+        <!-- Swagger UI -->
+        <!--<dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.fox.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-datasource</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-log</artifactId>
+        </dependency>
+        <!--swagger-->
+        <!--<dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>-->
 
     </dependencies>
 
@@ -90,7 +100,7 @@
                             <!--jar包不包含唯一版本标识 -->
                             <useUniqueVersions>false</useUniqueVersions>
                             <!--指定入口类 -->
-                            <mainClass>cn.ussu.modules.system.UssuSystemApplication</mainClass>
+                            <mainClass>cc.ussu.modules.system.UssuSystemApplication</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>${project.build.directory}</outputDirectory>

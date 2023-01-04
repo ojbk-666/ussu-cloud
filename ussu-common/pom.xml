@@ -18,6 +18,7 @@
         <module>ussu-common-log</module>
         <module>ussu-common-datasource</module>
         <module>ussu-common-seata</module>
+        <module>ussu-common-quartz</module>
     </modules>
 
     <properties>

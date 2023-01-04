@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ussu-cloud</artifactId>
-        <groupId>cn.ussu</groupId>
+        <groupId>cc.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,9 +14,10 @@
     <version>1.0</version>
     <modules>
         <module>ussu-system</module>
-        <module>ussu-dczx</module>
         <module>ussu-files</module>
         <module>ussu-code-generator</module>
+        <module>ussu-modules-dczx</module>
+        <module>ussu-modules-job</module>
         <module>ecps-item</module>
         <module>ecps-portal</module>
         <module>ecps-common</module>
@@ -24,6 +25,8 @@
         <module>ecps-member</module>
         <module>ecps-order</module>
         <module>ecps-skill</module>
+        <module>ussu-modules-sheep</module>
+        <!--<module>ussu-modules-test</module>-->
     </modules>
 
     <properties>

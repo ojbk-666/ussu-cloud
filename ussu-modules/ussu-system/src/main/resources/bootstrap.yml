@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 8060
+  port: 9020
 
 # Spring
 spring:
@@ -29,3 +29,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 120MB
+ussu:
+  mapping-prefix:
+    system:

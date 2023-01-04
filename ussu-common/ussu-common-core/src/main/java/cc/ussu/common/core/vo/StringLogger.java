@@ -106,4 +106,7 @@ public class StringLogger<T> {
     protected void callback(String traceId, String msg) {
     }
 
+    protected void finish(String traceId, String allMsg) {
+    }
+
 }

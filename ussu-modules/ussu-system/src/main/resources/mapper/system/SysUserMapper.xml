@@ -1,58 +1,134 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ussu.modules.system.mapper.SysUserMapper">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.system.mapper.SysUserMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.system.entity.SysUser">
-        <id column="id" property="id" />
-        <result column="dept_id" property="deptId" />
-        <result column="account" property="account" />
-        <result column="password" property="password" />
-        <result column="name" property="name" />
-        <result column="nick_name" property="nickName" />
-        <result column="sex" property="sex" />
-        <result column="email" property="email" />
-        <result column="phone" property="phone" />
-        <result column="user_type" property="userType" />
-        <result column="sort" property="sort" />
-        <result column="avatar" property="avatar" />
-        <result column="login_ip" property="loginIp" />
-        <result column="last_login_time" property="lastLoginTime" />
-        <result column="status" property="status" />
-        <result column="source" property="source" />
-        <result column="remark" property="remark" />
-        <result column="create_by" property="createBy" />
-        <result column="create_time" property="createTime" />
-        <result column="update_by" property="updateBy" />
-        <result column="update_time" property="updateTime" />
-        <result column="del_flag" property="delFlag" />
-        <result column="version" property="version" />
+    <resultMap type="cc.ussu.modules.system.entity.SysUser" id="baseResultMap">
+        <id property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="account" column="account"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="sex" column="sex"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="userType" column="user_type"/>
+        <result property="userSort" column="user_sort"/>
+        <result property="avatar" column="avatar"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="disableFlag" column="disable_flag"/>
+        <result property="state" column="state"/>
+        <result property="remark" column="remark"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="version" column="version"/>
+        <result property="ext1" column="ext1"/>
+        <result property="ext2" column="ext2"/>
+        <result property="ext3" column="ext3"/>
+        <result property="ext4" column="ext4"/>
+        <result property="ext5" column="ext5"/>
+        <result property="ext6" column="ext6"/>
     </resultMap>
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, dept_id, account, password, name, nick_name, sex, email, phone, user_type, sort, avatar, login_ip, last_login_time, status, source, remark, create_by, create_time, update_by, update_time, del_flag, version
+
+    <resultMap id="pageListResultMap" type="cc.ussu.modules.system.entity.SysUser" extends="baseResultMap">
+        <collection property="roleNameList" column="id" select="cc.ussu.modules.system.mapper.SysRoleMapper.getRoleNameListByUserId"/>
+    </resultMap>
+
+    <sql id="baseColumn">
+        id,account,dept_id
     </sql>
-    <sql id="Base_Column_List_A">
-        a.id, a.dept_id, a.account, a.password, a.name, a.nick_name, a.sex, a.email, a.phone, a.user_type, a.sort, a.avatar, a.login_ip, a.last_login_time, a.status, a.source, a.remark, a.create_by, a.create_time, a.update_by, a.update_time, a.del_flag, a.version
-    </sql>
-    <!--分页查询-->
-    <select id="findPage" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List_A"/>,sd.name as deptName
-        from
-        sys_user a left join sys_dept sd on a.dept_id = sd.id
-        where a.del_flag = 0
-        <if test="param.deptId != null and param.deptId !=''">
-            and sd.path like concat('%',#{param.deptId},'%')
+
+    <!--分页-->
+    <select id="getPageList" resultMap="pageListResultMap">
+        SELECT a.*
+        , d.name as deptName
+        FROM sys_user a LEFT JOIN sys_dept d on a.dept_id = d.id
+        WHERE a.del_flag = '0'
+        <if test="p.deptId != null and p.deptId != ''">
+            and a.dept_id = #{p.deptId}
         </if>
-        <if test="param.account != null and param.account !=''">
-            and a.account like concat('%',#{param.account},'%')
+        <if test="p.account != null and p.account != ''">
+            and a.account = #{p.account}
         </if>
-        <if test="param.name != null and param.name !=''">
-            and a.name like concat('%',#{param.name},'%')
+        <if test="p.sex != null and p.sex != ''">
+            and a.sex = #{p.sex}
         </if>
-        <if test="param.sex != null and param.sex !=''">
-            and a.sex = #{param.sex}
+        <if test="p.userType != null and p.userType != ''">
+            and a.user_type = #{p.userType}
+        </if>
+        <if test="p.disableFlag != null and p.disableFlag != ''">
+            and a.disable_flag = #{p.disableFlag}
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and a.state = #{p.state}
+        </if>
+        <if test="p.nickName != null and p.nickName != ''">
+            and a.nick_name like concat('%', #{p.nickName}, '%')
+        </if>
+        <if test="p.phone != null and p.phone != ''">
+            and a.phone like concat('%', #{p.phone}, '%')
+        </if>
+        <if test="p.email != null and p.email != ''">
+            and a.email like concat('%', #{p.email}, '%')
         </if>
     </select>
+
+    <select id="getSelectUserList" resultType="cc.ussu.modules.system.entity.SysUser">
+        select
+        a.id,
+        a.account,
+        a.nick_name as nickName,
+        a.sex,
+        a.phone,
+        a.email,
+        a.avatar,
+        d.name as deptName
+        from sys_user a
+        left join sys_dept d on a.dept_id = d.id
+        where a.del_flag = '0' and a.disable_flag = 0
+        <if test="p.account != null and p.account != ''">
+            and a.account like concat('%', #{p.account}, '%')
+        </if>
+        <if test="p.nickName != null and p.nickName != ''">
+            and a.nick_name like concat('%', #{p.nickName}, '%')
+        </if>
+        <if test="p.inIds != null and p.inIds.size > 0">
+            and a.id in (
+            select user_id from sys_user_role where role_id in
+            <foreach collection="p.inIds" item="role" open="(" close=")" separator=",">
+                #{role}
+            </foreach>
+            )
+        </if>
+        <if test="p.exIds != null and p.exIds.size > 0">
+            and a.id not in (
+            select user_id from sys_user_role where role_id in
+            <foreach collection="p.exIds" item="role" open="(" close=")" separator=",">
+                #{role}
+            </foreach>
+            )
+        </if>
+        <if test="p.inCodes != null and p.inCodes.size > 0">
+            and a.id in (
+            select a.user_id from sys_user_role a join sys_role b on a.role_id = b.id where b.role_code in
+            <foreach collection="p.inCodes" item="role" open="(" close=")" separator=",">
+                #{role}
+            </foreach>
+            )
+        </if>
+        <if test="p.exCodes != null and p.exCodes.size > 0">
+            and a.id not in(
+            select a.user_id from sys_user_role a join sys_role b on a.role_id = b.id where b.role_code in
+            <foreach collection="p.exCodes" item="role" open="(" close=")" separator=",">
+                #{role}
+            </foreach>
+            )
+        </if>
+    </select>
+
 
 </mapper>

@@ -1,55 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ussu.modules.system.mapper.SysRoleMapper">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.system.mapper.SysRoleMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.ussu.modules.system.entity.SysRole">
-        <id column="id" property="id" />
-        <result column="role_name" property="roleName" />
-        <result column="role_code" property="roleCode" />
-        <result column="role_desc" property="roleDesc" />
-        <result column="role_sort" property="roleSort" />
-        <result column="status" property="status" />
-        <result column="del_flag" property="delFlag" />
-        <result column="version" property="version" />
-        <result column="data_scope_type" property="dataScopeType" />
-
+    <resultMap type="cc.ussu.modules.system.entity.SysRole" id="baseResultMap">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="roleSort" column="role_sort"/>
+        <result property="disableFlag" column="disable_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, role_name, role_code, role_desc, role_sort, status, del_flag, version, data_scope_type
-    </sql>
-    <sql id="Base_Column_List_A">
-        a.id, a.role_name, a.role_code, a.role_desc, a.role_sort, a.status, a.del_flag, a.version,a.data_scope_type
-    </sql>
-    <select id="findByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List_A"/>
-        FROM sys_role a LEFT JOIN sys_user_role sur ON a.id = sur.role_id
-        WHERE a.del_flag = 0 AND a.status = 1 AND sur.user_id = #{userId}
-    </select>
 
     <!--分页-->
-    <select id="findPage" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
-        from sys_role
-        where del_flag = 0
-        <if test="param.roleName!=null and param.roleName !=''">
-            and role_name like concat('%',#{param.roleName},'%')
-        </if>
-        <if test="param.roleCode!=null and param.roleCode !=''">
-            and role_code like concat('%',#{param.roleCode},'%')
-        </if>
-    </select>
-
-    <!--获取所有-->
-    <select id="findAll" resultMap="BaseResultMap">
-        select * from sys_role where del_flag = 0
-        <if test="param.roleName != null and param.roleName !=''">
-            and role_name like concat('%',#{param.roleName},'%')
-        </if>
-        <if test="param.roleCode != null and param.roleCode !=''">
-            and role_code = roleCode
-        </if>
+    <select id="getRoleNameListByUserId" parameterType="string" resultType="java.lang.String">
+        select role_name from sys_role r join sys_user_role ur on r.id = ur.role_id
+        WHERE r.del_flag = '0' and ur.user_id = #{userId}
     </select>
 
 </mapper>

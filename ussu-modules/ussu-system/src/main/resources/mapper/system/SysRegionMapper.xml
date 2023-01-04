@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.ussu.modules.system.mapper.SysRegionMapper">
+
+    <resultMap type="cc.ussu.modules.system.entity.SysRegion" id="baseResultMap">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="simpleName" column="simple_name"/>
+        <result property="code" column="code"/>
+        <result property="path" column="path"/>
+        <result property="level" column="level"/>
+        <result property="citycode" column="citycode"/>
+        <result property="yzcode" column="yzcode"/>
+        <result property="mername" column="mername"/>
+        <result property="lng" column="lng"/>
+        <result property="lat" column="lat"/>
+        <result property="pinyin" column="pinyin"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <!--获取所有-->
+    <select id="getAll" resultMap="baseResultMap">
+        select a.*
+             ,(select count(1) from sys_region b where b.parent_id = a.id) as hasChildren
+        from sys_region a
+        where a.del_flag = '0'
+    </select>
+
+
+</mapper>
