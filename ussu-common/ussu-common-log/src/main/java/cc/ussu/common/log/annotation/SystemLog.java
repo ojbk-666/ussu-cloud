@@ -31,4 +31,6 @@ public @interface SystemLog {
      */
     String name();
 
+    String serviceName() default "";
+
 }

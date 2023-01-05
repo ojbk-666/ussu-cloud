@@ -1,9 +1,9 @@
 package cc.ussu.common.log.service;
 
-import cc.ussu.common.log.model.vo.LogVo;
+import cc.ussu.system.api.vo.SystemLogVO;
 
 public interface RecordLogService {
 
-    void recordLog(LogVo logVo);
+    void saveLog(SystemLogVO systemLogVO);
 
 }
