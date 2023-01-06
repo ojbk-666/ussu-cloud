@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 操作日志
  */
-@Target({ ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -24,13 +24,16 @@ public @interface SystemLog {
     /**
      * 分组（大类）
      */
-    String group();
+    String group() default "";
 
     /**
      * 名称（小类）
      */
-    String name();
+    String name() default "";
 
+    /**
+     * 服务名
+     */
     String serviceName() default "";
 
 }

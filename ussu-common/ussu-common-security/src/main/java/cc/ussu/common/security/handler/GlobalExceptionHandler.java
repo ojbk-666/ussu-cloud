@@ -6,6 +6,7 @@ import cc.ussu.common.security.exception.PermCheckException;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cc.ussu.common.core.constants.ErrorMsgConstants;
 import cc.ussu.common.core.vo.JsonResult;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -95,6 +96,18 @@ public class GlobalExceptionHandler {
     public JsonResult handleSQLException(SQLException e, HttpServletRequest request) {
         log.error("请求地址'{}',发生SQL异常.", request.getRequestURI(), e);
         return JsonResult.error(e.getSQLState(), e.getMessage());
+    }
+
+    @ExceptionHandler(FeignException.FeignServerException.class)
+    public JsonResult handlerFeignServerException(FeignException.FeignServerException e, HttpServletRequest request) {
+        log.error("请求地址:{},feignServer异常", request.getRequestURI(), e);
+        return JsonResult.error(e.status(), e.getMessage());
+    }
+
+    @ExceptionHandler(FeignException.FeignClientException.class)
+    public JsonResult handlerFeignServerException(FeignException.FeignClientException e, HttpServletRequest request) {
+        log.error("请求地址:{},feignClient异常", request.getRequestURI(), e);
+        return JsonResult.error(e.status(), e.getMessage());
     }
 
     /**

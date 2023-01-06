@@ -8,6 +8,7 @@ import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.system.api.model.LoginUser;
 import cc.ussu.system.api.vo.SystemLogVO;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
@@ -58,11 +59,20 @@ public class SystemLogAspect {
 
     private void saveLog(ProceedingJoinPoint point, Object result) {
         MethodSignature msig = (MethodSignature) point.getSignature();
+        if (msig == null) {
+            return;
+        }
         // 注解信息
         SystemLog annotation = msig.getMethod().getAnnotation(SystemLog.class);
+        SystemLog classAnno = point.getTarget().getClass().getAnnotation(SystemLog.class);
         String group = annotation.group();
         String name = annotation.name();
         String serviceName = annotation.serviceName();
+        if (classAnno != null) {
+            group = StrUtil.blankToDefault(group, classAnno.group());
+            name = StrUtil.blankToDefault(name, classAnno.name());
+            serviceName = StrUtil.blankToDefault(serviceName, classAnno.serviceName());
+        }
         SystemLogVO systemLog = new SystemLogVO()
             .setGroup(group).setName(name)
             .setServiceName(serviceName)

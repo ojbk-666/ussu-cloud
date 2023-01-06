@@ -51,7 +51,7 @@ public class JsonResult<T> implements Serializable {
      * msg {@link #DEFAULT_SUCCESS_MSG}
      */
     public static <T> JsonResult<T> ok() {
-        return restResult(null, SUCCESS_CODE, null);
+        return restResult(null, SUCCESS_CODE, DEFAULT_SUCCESS_MSG);
     }
 
     /**
@@ -60,7 +60,7 @@ public class JsonResult<T> implements Serializable {
      * @param data 成功响应
      */
     public static <T> JsonResult<T> ok(T data) {
-        return restResult(data, SUCCESS_CODE, null);
+        return restResult(data, SUCCESS_CODE, DEFAULT_SUCCESS_MSG);
     }
 
     /**

@@ -1,18 +1,20 @@
 package cc.ussu.common.quartz.util;
 
+import cc.ussu.common.quartz.vo.QuartzTaskVO;
+import cc.ussu.common.quartz.vo.QuartzTriggerVO;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 public class QuartzUtil2 {
 
-    private static Logger log = LoggerFactory.getLogger(QuartzUtil2.class);
     public static final String TASK_NAME = "taskName";
     public static final String JOB_ID = "jobId";
 
@@ -50,7 +52,7 @@ public class QuartzUtil2 {
      *
      * @throws SchedulerException
      */
-    public static void addJobCron(String name, String group, String targetClass, String cron, Map<String, Object> parameter) throws SchedulerException {
+    public static void addJobCron(String name, String group, String targetClass, String cron, String description,Map<String, Object> parameter) throws SchedulerException {
         Scheduler sched = getScheduler(); // 通过SchedulerFactory构建Scheduler对象
         JobKey jobKey = getJobKey(name, group);
         JobDetail jobDetail = JobBuilder.newJob(findJob(targetClass))
@@ -123,7 +125,7 @@ public class QuartzUtil2 {
         sched.deleteJob(getJobKey(name, group)); // 删除任务
     }
 
-    public static void runOnceRightNow(String name, String group, String targetClass) throws SchedulerException {
+    public static void runOnceRightNow(String name, String group, String targetClass, String description) throws SchedulerException {
         Scheduler scheduler = getScheduler();
         JobKey jobKey = getJobKey(name, group);
         if (scheduler.checkExists(jobKey)) {
@@ -135,10 +137,44 @@ public class QuartzUtil2 {
                     .build();
             JobDetail jobDetail = JobBuilder.newJob(findJob(targetClass))
                     .withIdentity(name + "_once")
-                    .withDescription(null)
+                    .withDescription(description)
                     .build();
             scheduler.scheduleJob(jobDetail, trigger);
         }
+    }
+
+    /**
+     * 获取所有定时任务
+     */
+    public static List<QuartzTaskVO> getAllTask() {
+        List<QuartzTaskVO> taskVOS = new ArrayList<>();
+        try {
+            Scheduler scheduler = getScheduler();
+            Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.anyGroup());
+            for (JobKey jobKey : jobKeys) {
+                JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+                String name = jobKey.getName();
+                String group = jobKey.getGroup();
+                String description = jobDetail.getDescription();
+                String jobClassName = jobDetail.getJobClass().getName();
+                QuartzTaskVO taskVO = new QuartzTaskVO().setName(name).setGroup(group)
+                    .setDescription(description).setJobClassName(jobClassName);
+                ArrayList<QuartzTriggerVO> triggerVOS = new ArrayList<>();
+                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+                for (Trigger trigger : triggers) {
+                    TriggerKey key = trigger.getKey();
+                    Date previousFireTime = trigger.getPreviousFireTime();
+                    Date fireTimeAfter = trigger.getFireTimeAfter(new Date());
+                    Date startTime = trigger.getStartTime();
+                    Date endTime = trigger.getEndTime();
+                    taskVO.setPreviousFireTime(previousFireTime).setFireTimeAfter(fireTimeAfter).setStartTime(startTime).setEndTime(endTime);
+                    triggerVOS.add(new QuartzTriggerVO().setName(key.getName()).setGroup(key.getGroup()).setStartTime(startTime).setEndTime(endTime));
+                }
+                taskVOS.add(taskVO.setTriggers(triggerVOS));
+            }
+        } catch (SchedulerException e) {
+        }
+        return taskVOS;
     }
 
 }
