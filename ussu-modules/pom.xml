@@ -14,7 +14,6 @@
     <version>1.0</version>
     <modules>
         <module>ussu-system</module>
-        <module>ussu-files</module>
         <module>ussu-code-generator</module>
         <module>ussu-modules-dczx</module>
         <module>ussu-modules-job</module>
@@ -26,7 +25,7 @@
         <module>ecps-order</module>
         <module>ecps-skill</module>
         <module>ussu-modules-sheep</module>
-        <!--<module>ussu-modules-test</module>-->
+        <module>ussu-modules-files</module>
     </modules>
 
     <properties>

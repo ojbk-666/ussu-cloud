@@ -22,7 +22,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
-        <ussu.version>${version}</ussu.version>
+        <ussu.version>${project.version}</ussu.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -32,6 +32,7 @@
         <spring-boot-admin.version>2.7.5</spring-boot-admin.version>
         <spring-boot.mybatis>2.1.3</spring-boot.mybatis>
         <swagger.version>3.0.0</swagger.version>
+        <swagger.fox.version>3.0.0</swagger.fox.version>
         <tobato.version>1.27.2</tobato.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
@@ -54,7 +55,7 @@
         <alipay-sdk.version>4.13.50.ALL</alipay-sdk.version>
         <alipay-easysdk.version>2.2.0</alipay-easysdk.version>
         <jsoup.version>1.14.3</jsoup.version>
-        <easy-es.version>1.0.0</easy-es.version>
+        <easy-es.version>1.1.1</easy-es.version>
         <httpclient.version>4.5.13</httpclient.version>
         <xxl-job.version>2.3.1</xxl-job.version>
     </properties>
@@ -213,9 +214,29 @@
                 <version>${jsoup.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>7.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>7.6.2</version>
+            </dependency>
+            <dependency>
                 <groupId>cn.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
                 <version>${easy-es.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.elasticsearch</groupId>
+                        <artifactId>elasticsearch</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.elasticsearch.client</groupId>
+                        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -291,6 +312,11 @@
             </dependency>
             <dependency>
                 <groupId>cc.ussu</groupId>
+                <artifactId>ussu-common-swagger</artifactId>
+                <version>${ussu.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.ussu</groupId>
                 <artifactId>ussu-qinglong-support</artifactId>
                 <version>${ussu.version}</version>
             </dependency>
@@ -351,5 +377,23 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <active>dev</active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <active>prod</active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

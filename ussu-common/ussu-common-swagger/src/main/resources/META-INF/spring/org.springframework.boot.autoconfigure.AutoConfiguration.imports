@@ -1,0 +1,3 @@
+cc.ussu.common.swagger.config.SwaggerAutoConfig
+cc.ussu.common.swagger.config.SwaggerWebConfig
+cc.ussu.common.swagger.config.SwaggerBeanPostProcessor
