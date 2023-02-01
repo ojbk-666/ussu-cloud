@@ -19,6 +19,7 @@
         <module>ussu-common-datasource</module>
         <module>ussu-common-seata</module>
         <module>ussu-common-quartz</module>
+        <module>ussu-common-swagger</module>
     </modules>
 
     <properties>
