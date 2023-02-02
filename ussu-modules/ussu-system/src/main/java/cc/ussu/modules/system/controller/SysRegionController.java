@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
@@ -30,13 +31,12 @@ import java.util.stream.Collectors;
  * @author liming
  * @since 2022-01-23 17:45:37
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "省市区管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-region")
 public class SysRegionController extends BaseController {
 
     private static final String PERM_PREFIX = "system:region:";
-    private static final String SYSTEM_LOG_GROUP = "省市区管理";
-
     @Autowired
     private ISysRegionService service;
 
@@ -84,7 +84,7 @@ public class SysRegionController extends BaseController {
     /**
      * 添加
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysRegion p) {
@@ -95,7 +95,7 @@ public class SysRegionController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysRegion p) {
@@ -107,7 +107,7 @@ public class SysRegionController extends BaseController {
     /**
      * 删除
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

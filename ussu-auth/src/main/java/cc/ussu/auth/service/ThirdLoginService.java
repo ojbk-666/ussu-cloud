@@ -1,8 +1,5 @@
 package cc.ussu.auth.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public interface ThirdLoginService<T> {
 
     /**
@@ -10,8 +7,9 @@ public interface ThirdLoginService<T> {
      */
     <R> R login(T t) throws Exception;
 
-    default Map getNewHashMap() {
-        return new HashMap<String, Object>();
-    }
+    /**
+     * 解析三方账号信息
+     */
+    <R> R exchangeThirdAccountInfo(T t) throws Exception;
 
 }

@@ -41,9 +41,10 @@ public class SheepEnvController extends BaseController {
     public Object page(SheepEnv query) {
         String keyword = query.getName();
         LambdaQueryWrapper<SheepEnv> qw = Wrappers.lambdaQuery(SheepEnv.class)
-                .like(StrUtil.isNotBlank(keyword), SheepEnv::getName, keyword)
-                .or(StrUtil.isNotBlank(keyword)).like(StrUtil.isNotBlank(keyword), SheepEnv::getValue, keyword)
-                .or(StrUtil.isNotBlank(keyword)).like(StrUtil.isNotBlank(keyword), SheepEnv::getRemarks, keyword);
+            .orderByAsc(SheepEnv::getDisabled, SheepEnv::getName)
+            .like(StrUtil.isNotBlank(keyword), SheepEnv::getName, keyword)
+            .or(StrUtil.isNotBlank(keyword)).like(StrUtil.isNotBlank(keyword), SheepEnv::getValue, keyword)
+            .or(StrUtil.isNotBlank(keyword)).like(StrUtil.isNotBlank(keyword), SheepEnv::getRemarks, keyword);
         Page<SheepEnv> page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
     }

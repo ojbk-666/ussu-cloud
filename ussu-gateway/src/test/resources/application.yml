@@ -49,10 +49,10 @@ spring:
           filters:
             - StripPrefix=1
         # 文件服务
-        - id: ussu-file
-          uri: lb://ussu-file
+        - id: ussu-files
+          uri: lb://ussu-files
           predicates:
-            - Path=/file/**
+            - Path=/files/**
           filters:
             - StripPrefix=1
         # dczx
@@ -67,6 +67,16 @@ spring:
           uri: lb://ussu-dczx
           predicates:
             - Path=/api/dczx/**
+        - id: ussu-sheep
+          uri: lb://ussu-sheep
+          predicates:
+            - Path=/sheep/**
+          filters:
+            - StripPrefix=1
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:9099
 
 # 安全配置
 security:

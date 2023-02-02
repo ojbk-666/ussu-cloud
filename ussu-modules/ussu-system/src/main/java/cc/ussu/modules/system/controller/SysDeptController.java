@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
@@ -29,12 +30,12 @@ import java.util.List;
  * @author liming
  * @since 2021-12-17 14:53:58
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "部门管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-dept")
 public class SysDeptController extends BaseController {
 
     private static final String PERM_PREFIX = "system:dept:";
-    private static final String SYSTEM_LOG_GROUP = "部门管理";
 
     @Autowired
     private ISysDeptService service;
@@ -110,7 +111,7 @@ public class SysDeptController extends BaseController {
         return JsonResult.ok(service.getById(id));
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysDept p) {
@@ -118,7 +119,7 @@ public class SysDeptController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysDept p) {
@@ -126,7 +127,7 @@ public class SysDeptController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

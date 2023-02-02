@@ -72,21 +72,26 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <!-- Swagger -->
-        <!--<dependency>
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
+        <!--profiles-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

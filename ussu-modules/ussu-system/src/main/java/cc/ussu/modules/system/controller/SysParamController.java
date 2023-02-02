@@ -1,8 +1,11 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.log.annotation.SystemLog;
+import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.modules.system.entity.SysParam;
 import cc.ussu.modules.system.service.ISysParamService;
@@ -25,6 +28,7 @@ import java.util.List;
  * @author liming
  * @since 2021-12-17 14:53:58
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "参数管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-param")
 public class SysParamController extends BaseController {
@@ -60,6 +64,7 @@ public class SysParamController extends BaseController {
     /**
      * 添加
      */
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysParam p) {
@@ -74,6 +79,7 @@ public class SysParamController extends BaseController {
     /**
      * 修改
      */
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysParam p) {
@@ -89,6 +95,7 @@ public class SysParamController extends BaseController {
     /**
      * 删除
      */
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {
@@ -101,6 +108,7 @@ public class SysParamController extends BaseController {
     /**
      * 更改状态
      */
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysParam p) {

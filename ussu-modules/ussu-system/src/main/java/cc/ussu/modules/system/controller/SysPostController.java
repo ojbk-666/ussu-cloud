@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
@@ -30,12 +31,12 @@ import java.util.List;
  * @since 2021-12-31 19:24:31
  */
 @Slf4j
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "岗位管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-post")
 public class SysPostController extends BaseController {
 
     private static final String PERM_PREFIX = "system:post:";
-    public static final String SYSTEM_LOG_GROUP = "岗位管理";
 
     @Autowired
     private ISysPostService service;
@@ -67,7 +68,7 @@ public class SysPostController extends BaseController {
     /**
      * 添加
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysPost p) {
@@ -81,7 +82,7 @@ public class SysPostController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysPost p) {
@@ -96,7 +97,7 @@ public class SysPostController extends BaseController {
     /**
      * 修改状态
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.CHANGE_STATUS)
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysPost p) {
@@ -110,7 +111,7 @@ public class SysPostController extends BaseController {
     /**
      * 删除
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.constants.StrConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
@@ -40,13 +41,12 @@ import java.util.stream.Collectors;
  * @author liming
  * @since 2021-12-17 14:53:58
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "角色管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-role")
 public class SysRoleController extends BaseController {
 
     public static final String PERM_PREFIX = "system:role:";
-    private static final String SYSTEM_LOG_GROUP = "角色管理";
-
     @Autowired
     private ISysRoleService service;
     @Autowired
@@ -82,7 +82,7 @@ public class SysRoleController extends BaseController {
     /**
      * 修改状态
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.CHANGE_STATUS)
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysRole p) {
@@ -95,7 +95,7 @@ public class SysRoleController extends BaseController {
     /**
      * 取消授权用户
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "取消授权用户")
+    @SystemLog(name = "取消授权用户")
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/authUser/cancel")
     public JsonResult cancelAuthUser(@RequestBody RoleAuthUserVO p) {
@@ -110,7 +110,7 @@ public class SysRoleController extends BaseController {
     /**
      * 授权用户
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "授权用户")
+    @SystemLog(name = "授权用户")
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/authUser/confirm")
     public JsonResult confirmAuthUser(@RequestBody RoleAuthUserVO p) {
@@ -150,7 +150,7 @@ public class SysRoleController extends BaseController {
     /**
      * 授权菜单
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "授权菜单")
+    @SystemLog(name = "授权菜单")
     @PermCheck(PERM_PREFIX + "menuIds")
     @PutMapping("/role-menu/{roleId}")
     public JsonResult editRoleMenu(@PathVariable String roleId, @RequestBody Set<String> menuIdList) {
@@ -164,7 +164,7 @@ public class SysRoleController extends BaseController {
     /**
      * 新增
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@RequestBody SysRole p) {
@@ -175,7 +175,7 @@ public class SysRoleController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@RequestBody SysRole p) {
@@ -186,7 +186,7 @@ public class SysRoleController extends BaseController {
     /**
      * 删除
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

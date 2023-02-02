@@ -1,9 +1,9 @@
 package cc.ussu.modules.dczx.entity.vo;
 
 import cn.easyes.annotation.*;
-import cn.easyes.common.constants.Analyzer;
-import cn.easyes.common.enums.FieldType;
-import cn.easyes.common.enums.IdType;
+import cn.easyes.annotation.rely.Analyzer;
+import cn.easyes.annotation.rely.FieldType;
+import cn.easyes.annotation.rely.IdType;
 import cn.hutool.core.date.DatePattern;
 import lombok.Data;
 

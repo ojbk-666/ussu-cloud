@@ -56,8 +56,10 @@
         <alipay-easysdk.version>2.2.0</alipay-easysdk.version>
         <jsoup.version>1.14.3</jsoup.version>
         <easy-es.version>1.1.1</easy-es.version>
+        <elasticsearch.version>7.14.0</elasticsearch.version>
         <httpclient.version>4.5.13</httpclient.version>
         <xxl-job.version>2.3.1</xxl-job.version>
+        <aliyun-sdk-oss.version>3.15.0</aliyun-sdk-oss.version>
     </properties>
 
     <dependencyManagement>
@@ -66,6 +68,16 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -208,35 +220,21 @@
                 <artifactId>alipay-easysdk</artifactId>
                 <version>${alipay-easysdk.version}</version>
             </dependency>
+            <!-- aliyun-sdk-oss -->
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-sdk-oss.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.elasticsearch.client</groupId>
-                <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                <version>7.6.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.elasticsearch</groupId>
-                <artifactId>elasticsearch</artifactId>
-                <version>7.6.2</version>
-            </dependency>
-            <dependency>
                 <groupId>cn.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
                 <version>${easy-es.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.elasticsearch</groupId>
-                        <artifactId>elasticsearch</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.elasticsearch.client</groupId>
-                        <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>

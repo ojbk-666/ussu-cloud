@@ -28,7 +28,7 @@ public class SheepQuartzUtil extends QuartzUtil2 {
         JobKey jobKey = getJobKey(sheepTask);
         JobDetail jobDetail = JobBuilder.newJob(findJob(sheepTask.getTargetClass()))
                 .withIdentity(jobKey)
-                // .withDescription(sysJob.getRemark())
+                .withDescription(sheepTask.getTaskName())
                 .build();
         // 参数
         // if (CollUtil.isNotEmpty(parameter)) {

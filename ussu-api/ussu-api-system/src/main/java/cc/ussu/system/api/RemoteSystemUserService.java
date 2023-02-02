@@ -4,10 +4,7 @@ import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.system.api.model.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -20,7 +17,19 @@ public interface RemoteSystemUserService {
     @GetMapping("/sys-user/get-by-account/{account}")
     JsonResult<LoginUser> getUserByUsername(@PathVariable("account") String account);
 
-    @PostMapping("/sys-user/insertOrUpdateByThird")
-    JsonResult<LoginUser> insertOrUpdateByThird(@RequestBody Map param);
+    @GetMapping("/sys-user/get-by-id/{userId}")
+    JsonResult<Map<String, Object>> getUserById(@PathVariable("userId") String userId);
+
+    @GetMapping("/sys-user/get-by-ext")
+    JsonResult<LoginUser> getUserByExt1(@RequestParam("ext1") String ext1, @RequestParam("detail") boolean detail);
+
+    @GetMapping("/sys-user/get-by-ext")
+    JsonResult<LoginUser> getUserByExt2(@RequestParam("ext2") String ext2, @RequestParam("detail") boolean detail);
+
+    @GetMapping("/sys-user/get-by-ext")
+    JsonResult<LoginUser> getUserByExt3(@RequestParam("ext3")String ext3, @RequestParam("detail") boolean detail);
+
+    @PostMapping("/user/profile/ext")
+    JsonResult updateUserExt(@RequestBody Map<String, Object> map);
 
 }

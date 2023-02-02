@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.constants.StrConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
@@ -55,12 +56,12 @@ import java.util.stream.Collectors;
  * @author liming
  * @since 2021-12-17 14:53:58
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "用户管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-user")
 public class SysUserController extends BaseController {
 
     private static final String PERM_PREFIX = "system:user:";
-    private static final String SYSTEM_LOG_GROUP = "用户管理";
 
     @Autowired
     private ISysUserService service;
@@ -161,7 +162,7 @@ public class SysUserController extends BaseController {
     /**
      * todo 导入
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "导入")
+    @SystemLog(name = "导入")
     @PermCheck(PERM_PREFIX + IMPORT)
     @PostMapping("/import")
     public void importUser(@RequestPart("file") MultipartFile multipartFile) throws IOException {
@@ -220,6 +221,48 @@ public class SysUserController extends BaseController {
         SysUserVO userVO = fillSysUserInfoNoPerms(user);
         LoginUser loginUser = fillLoginUserPerms(userVO);
         return JsonResult.ok(loginUser);
+    }
+
+    /**
+     * 根据用户id查询
+     */
+    @GetMapping("/get-by-id/{userId}")
+    public JsonResult getUserById(@PathVariable String userId) {
+        SysUser user = service.getById(userId);
+        if (user == null) {
+            return JsonResult.error("用户不存在");
+        }
+        return JsonResult.ok(user);
+    }
+
+    /**
+     * 通过指定字段查询单个用户
+     */
+    @GetMapping("/get-by-ext")
+    public JsonResult<LoginUser> getByExt(SysUser query, Boolean detail) {
+        if (detail == null) {
+            detail = true;
+        }
+        SysUser user = service.getOne(Wrappers.lambdaQuery(SysUser.class)
+            .eq(StrUtil.isNotBlank(query.getExt1()), SysUser::getExt1, query.getExt1())
+            .eq(StrUtil.isNotBlank(query.getExt2()), SysUser::getExt2, query.getExt2())
+            .eq(StrUtil.isNotBlank(query.getExt3()), SysUser::getExt3, query.getExt3())
+            .eq(StrUtil.isNotBlank(query.getExt4()), SysUser::getExt4, query.getExt4())
+            .eq(query.getExt5() != null, SysUser::getExt5, query.getExt5())
+            .eq(query.getExt6() != null, SysUser::getExt6, query.getExt6())
+        );
+        if (user == null) {
+            return JsonResult.error("未找到用户");
+        }
+        if (detail) {
+            SysUserVO userVO = fillSysUserInfoNoPerms(user);
+            LoginUser loginUser = fillLoginUserPerms(userVO);
+            return JsonResult.ok(loginUser);
+        } else {
+            LoginUser loginUser = new LoginUser();
+            loginUser.setUser(BeanUtil.toBean(user, SysUserVO.class));
+            return JsonResult.ok(loginUser);
+        }
     }
 
     /**
@@ -286,7 +329,7 @@ public class SysUserController extends BaseController {
     /**
      * 修改状态
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.CHANGE_STATUS)
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysUser p) {
@@ -299,7 +342,7 @@ public class SysUserController extends BaseController {
     /**
      * 修改角色
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "授权角色")
+    @SystemLog(name = "授权角色")
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/authRole")
     public JsonResult authRole(@RequestBody SysUser p) {
@@ -353,7 +396,7 @@ public class SysUserController extends BaseController {
     /**
      * 重置密码
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "重置密码")
+    @SystemLog(name = "重置密码")
     @PermCheck(PERM_PREFIX + "resetPwd")
     @PostMapping("/resetPwd/{ids}")
     public JsonResult resetPwd(@PathVariable String ids) {
@@ -365,7 +408,7 @@ public class SysUserController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@RequestBody SysUser p) {
@@ -373,7 +416,7 @@ public class SysUserController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@RequestBody SysUser p) {
@@ -381,7 +424,7 @@ public class SysUserController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

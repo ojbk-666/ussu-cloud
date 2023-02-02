@@ -167,7 +167,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     .setPath(getRouterPath(menu))
                     .setComponent(getComponent(menu))
                     .setMeta(new RouterMetaVO()
-                            .setTitle(menu.getName())
+                            .setTitle(menu.getTitle())
                             .setIcon(menu.getIcon())
                             .setNoCache(!menu.getCacheFlag())
                             .setLink(menu.getPath()));
@@ -184,14 +184,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                         .setComponent(menu.getComponent())
                         .setName(StrUtil.upperFirst(menu.getPath()))
                         .setMeta(new RouterMetaVO()
-                                .setTitle(menu.getName())
+                                .setTitle(menu.getTitle())
                                 .setIcon(menu.getIcon())
                                 .setNoCache(!menu.getCacheFlag())
                                 .setLink(menu.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             } else if (menu.parentIsZero() && isInnerLink(menu)) {
-                router.setMeta(new RouterMetaVO().setTitle(menu.getName()).setIcon(menu.getIcon()))
+                router.setMeta(new RouterMetaVO().setTitle(menu.getTitle()).setIcon(menu.getIcon()))
                         .setPath("/inner");
                 List<RouterVO> childrenList = new ArrayList<>();
                 RouterVO children = new RouterVO();
@@ -200,7 +200,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                         .setComponent(INNER_LINK)
                         .setName(StrUtil.upperFirst(routerPath))
                         .setMeta(new RouterMetaVO()
-                                .setIcon(menu.getName())
+                                .setIcon(menu.getTitle())
                                 .setIcon(menu.getIcon())
                                 .setLink(menu.getPath()));
                 childrenList.add(children);

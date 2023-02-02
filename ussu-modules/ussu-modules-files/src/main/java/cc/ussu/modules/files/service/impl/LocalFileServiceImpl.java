@@ -1,7 +1,7 @@
 package cc.ussu.modules.files.service.impl;
 
 import cc.ussu.modules.files.properties.LocalUploadProperties;
-import cc.ussu.modules.files.service.SysFileService;
+import cc.ussu.modules.files.service.FileService;
 import cc.ussu.system.api.vo.FileVO;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileTypeUtil;
@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class LocalSysFileServiceImpl implements SysFileService {
+public class LocalFileServiceImpl implements FileService {
 
     @Autowired
     private LocalUploadProperties localUploadProperties;

@@ -17,7 +17,7 @@ import cc.ussu.modules.dczx.service.IDcQuestionOptionService;
 import cc.ussu.modules.dczx.service.IDcRequestLogService;
 import cc.ussu.modules.dczx.util.DczxUtil;
 import cc.ussu.modules.dczx.util.RequestCountUtil;
-import cn.easyes.core.biz.PageInfo;
+import cn.easyes.core.biz.EsPageInfo;
 import cn.easyes.core.conditions.LambdaEsQueryWrapper;
 import cn.easyes.core.toolkit.EsWrappers;
 import cn.hutool.core.collection.CollectionUtil;
@@ -210,7 +210,7 @@ public class RequestRightOptionApiController extends BaseDczxController {
         if (DictUtil.getValueBoolean("dczx", "search_db_from_es", false)) {
             LambdaEsQueryWrapper<DcPaperQuestionVO> qw = EsWrappers.lambdaQuery(DcPaperQuestionVO.class)
                     .sortByScore().match(DcPaperQuestionVO::getQuestionTitle, keyword);
-            PageInfo<DcPaperQuestionVO> pageInfo = esDcPaperQuestionMapper.pageQuery(qw, 1, 20);
+            EsPageInfo<DcPaperQuestionVO> pageInfo = esDcPaperQuestionMapper.pageQuery(qw, 1, 20);
             List<DcPaperQuestionVO> list = pageInfo.getList();
             return JsonResult.ok(list);
         } else {
@@ -245,7 +245,7 @@ public class RequestRightOptionApiController extends BaseDczxController {
         LambdaEsQueryWrapper<DcPaperQuestionVO> qw = EsWrappers.lambdaQuery(DcPaperQuestionVO.class)
                 .sortByScore()
                 .match(DcPaperQuestionVO::getQuestionTitle, keyword);
-        PageInfo<DcPaperQuestionVO> pageInfo = esDcPaperQuestionMapper.pageQuery(qw, 1, 20);
+        EsPageInfo<DcPaperQuestionVO> pageInfo = esDcPaperQuestionMapper.pageQuery(qw, 1, 20);
         List<DcPaperQuestionVO> list = pageInfo.getList();
         return JsonResult.ok(list);
     }

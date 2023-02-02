@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 @Data
-public class GiteeAccessTokenResultVo {
+public class GiteeAccessTokenResultVO {
 
     private String access_token;
     private String token_type;

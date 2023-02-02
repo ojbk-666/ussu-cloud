@@ -54,6 +54,9 @@ public class SysDictType implements Serializable {
     @TableField("disable_flag")
     private String disableFlag;
 
+    @TableField("system_flag")
+    private String systemFlag;
+
     /**
      * 备注信息
      */

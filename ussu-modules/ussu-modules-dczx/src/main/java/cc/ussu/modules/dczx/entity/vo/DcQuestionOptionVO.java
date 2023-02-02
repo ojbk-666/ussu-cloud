@@ -1,7 +1,7 @@
 package cc.ussu.modules.dczx.entity.vo;
 
 import cn.easyes.annotation.IndexField;
-import cn.easyes.common.enums.FieldType;
+import cn.easyes.annotation.rely.FieldType;
 import lombok.Data;
 
 import java.io.Serializable;

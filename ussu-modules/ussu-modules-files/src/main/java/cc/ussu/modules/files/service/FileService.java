@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface SysFileService {
+public interface FileService {
 
     FileVO uploadFile(MultipartFile file, String parentPath) throws IOException;
 

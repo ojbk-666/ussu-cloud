@@ -3,7 +3,7 @@ package cc.ussu.modules.files.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.modules.files.properties.LocalUploadProperties;
-import cc.ussu.modules.files.service.SysFileService;
+import cc.ussu.modules.files.service.FileService;
 import cc.ussu.system.api.vo.FileVO;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class FilesController extends BaseController {
 
     @Autowired
-    private SysFileService sysFileService;
+    private FileService fileService;
     @Autowired
     private LocalUploadProperties localUploadProperties;
 
@@ -37,7 +37,7 @@ public class FilesController extends BaseController {
             if (multipartFile.isEmpty()) {
                 throw new IllegalArgumentException("文件为空");
             }
-            return sysFileService.uploadFile(multipartFile, directory);
+            return fileService.uploadFile(multipartFile, directory);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -49,7 +49,7 @@ public class FilesController extends BaseController {
      */
     @GetMapping("/list")
     public JsonResult<List<FileVO>> list(String directory, String sort, String order) {
-        List<FileVO> fileVOS = sysFileService.listFile(directory, sort, order);
+        List<FileVO> fileVOS = fileService.listFile(directory, sort, order);
         return JsonResult.ok(fileVOS);
     }
 
@@ -113,7 +113,7 @@ public class FilesController extends BaseController {
         String mimeType = FileUtil.extName(multipartFile.getOriginalFilename());
         if (StrUtil.containsAnyIgnoreCase(mimeType, allow)) {
             String parentPath = "tinymce/" + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
-            return JsonResult.ok(sysFileService.uploadFile(multipartFile, parentPath));
+            return JsonResult.ok(fileService.uploadFile(multipartFile, parentPath));
         } else {
             return JsonResult.error("所选文件格式不支持");
         }

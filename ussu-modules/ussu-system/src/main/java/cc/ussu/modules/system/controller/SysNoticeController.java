@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
@@ -20,7 +21,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +38,12 @@ import java.util.Map;
  * @author liming
  * @since 2022-01-18 15:31:26
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "通知公告管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-notice")
 public class SysNoticeController extends BaseController {
 
     private static final String PERM_PREFIX = "system:notice:";
-    private static final String SYSTEM_LOG_GROUP = "通知公告管理";
 
     @Autowired
     private ISysNoticeService noticeService;
@@ -141,7 +141,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 添加
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysNoticeVO p) {
@@ -152,7 +152,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysNoticeVO p) {
@@ -182,7 +182,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 删除
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     // @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {

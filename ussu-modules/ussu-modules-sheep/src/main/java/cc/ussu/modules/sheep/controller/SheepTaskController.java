@@ -10,6 +10,7 @@ import cc.ussu.modules.sheep.common.ISheepTask;
 import cc.ussu.modules.sheep.entity.SheepTask;
 import cc.ussu.modules.sheep.properties.SheepProperties;
 import cc.ussu.modules.sheep.service.ISheepTaskService;
+import cc.ussu.modules.sheep.util.SheepQuartzUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -48,9 +49,10 @@ public class SheepTaskController extends BaseController {
     @GetMapping("/page")
     public Object page(SheepTask query) {
         LambdaQueryWrapper<SheepTask> qw = Wrappers.lambdaQuery(SheepTask.class)
-                .like(StrUtil.isNotBlank(query.getTaskName()), SheepTask::getTaskName, query.getTaskName());
+            .orderByAsc(SheepTask::getDisabled)
+            .like(StrUtil.isNotBlank(query.getTaskName()), SheepTask::getTaskName, query.getTaskName());
         Page<SheepTask> page = service.page(MybatisPlusUtil.getPage(), qw);
-        // page.getRecords().forEach(r -> r.setNextFireTime(SheepQuartzUtil.getNextFireTime(r)));
+        page.getRecords().forEach(r -> r.setNextFireTime(SheepQuartzUtil.getNextFireTime(r)));
         return MybatisPlusUtil.getResult(page);
     }
 

@@ -46,8 +46,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
         if (PathMatcherUtil.match(ignoreWhiteProperties.getWhites(), path)) {
             return chain.filter(exchange);
         }
-        // String token = getRequestToken(request);
-        String token = getToken(request);
+        String token = getRequestToken(request);
+        // String token = getToken(request);
         if (StrUtil.isBlank(token)) {
             return unauthorizedResponse(exchange, "令牌不能为空");
         }
@@ -122,12 +122,22 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String requestToken = headers.getFirst(TokenConstants.AUTHENTICATION);
         if (StrUtil.isBlank(requestToken)) {
             MultiValueMap<String, HttpCookie> cookies = serverHttpRequest.getCookies();
-            HttpCookie cookie = cookies.getFirst(TokenConstants.AUTHENTICATION);
-            String cookieValue = cookie.getValue();
-            if (StrUtil.isNotBlank(cookieValue)) {
-                requestToken = cookieValue;
-                // 重新放入头部
-                headers.add(TokenConstants.AUTHENTICATION, requestToken);
+            if (cookies != null) {
+                HttpCookie cookie = cookies.getFirst(TokenConstants.AUTHENTICATION);
+                if (cookie != null) {
+                    String cookieValue = cookie.getValue();
+                    if (StrUtil.isNotBlank(cookieValue)) {
+                        requestToken = cookieValue;
+                        // 重新放入头部
+                        headers.add(TokenConstants.AUTHENTICATION, requestToken);
+                    }
+                }
+            }
+            if (StrUtil.isBlank(requestToken)) {
+                MultiValueMap<String, String> queryParams = serverHttpRequest.getQueryParams();
+                if (queryParams != null) {
+                    requestToken = queryParams.getFirst(TokenConstants.AUTHENTICATION);
+                }
             }
         }
         if (StrUtil.isNotBlank(requestToken) && requestToken.startsWith(TokenConstants.PREFIX)) {

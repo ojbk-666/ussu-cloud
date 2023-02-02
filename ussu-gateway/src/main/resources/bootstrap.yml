@@ -31,6 +31,7 @@ spring:
       transport:
         # 控制台地址
         dashboard: 127.0.0.1:8718
+        clientIp: 127.0.0.1
       # nacos配置持久化
       datasource:
         ds1:
@@ -40,6 +41,8 @@ spring:
             groupId: DEFAULT_GROUP
             data-type: json
             rule-type: flow
+      log:
+        dir: logs/${spring.application.name}/sentinel
   servlet:
     multipart:
       max-file-size: 100MB
@@ -49,3 +52,8 @@ spring:
 feign:
   httpclient:
     connectionTimeout: 5000
+  sentinel:
+    enabled: true
+logging:
+  file:
+    name: logs/${spring.application.name}/info.log

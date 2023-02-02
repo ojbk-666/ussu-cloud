@@ -1,6 +1,7 @@
 package cc.ussu.modules.system;
 
 import cc.ussu.common.security.annotation.EnableCustomConfig;
+import cn.easyes.starter.register.EsMapperScan;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @EnableFeignClients(basePackages = "cc.ussu")
 @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
-@MapperScan({"cc.ussu.modules.system.**.mapper"})
+@MapperScan({"cc.ussu.modules.system.mapper"})
+@EsMapperScan("cc.ussu.modules.system.es.mapper")
 @EnableCustomConfig
 public class UssuSystemApplication {
 

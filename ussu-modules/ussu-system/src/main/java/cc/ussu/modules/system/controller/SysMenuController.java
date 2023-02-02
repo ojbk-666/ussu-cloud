@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.log.annotation.SystemLog;
@@ -31,12 +32,12 @@ import java.util.stream.Collectors;
  * @author liming
  * @since 2021-12-17 14:53:58
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "菜单管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-menu")
 public class SysMenuController extends BaseController {
 
     private static final String PERM_PREFIX = "system:menu:";
-    private static final String SYSTEM_LOG_GROUP = "菜单管理";
 
     @Autowired
     private ISysMenuService sysMenuService;
@@ -52,7 +53,7 @@ public class SysMenuController extends BaseController {
         LambdaQueryWrapper<SysMenu> qw = Wrappers.lambdaQuery(SysMenu.class)
                 .orderByAsc(SysMenu::getType).orderByAsc(SysMenu::getSort)
                 .eq(StrUtil.isNotBlank(p.getDisableFlag()), SysMenu::getDisableFlag, p.getDisableFlag())
-                .like(StrUtil.isNotBlank(p.getName()), SysMenu::getName, p.getName());
+                .like(StrUtil.isNotBlank(p.getTitle()), SysMenu::getTitle, p.getTitle());
         return JsonResult.ok(sysMenuService.list(qw));
     }
 
@@ -90,7 +91,7 @@ public class SysMenuController extends BaseController {
     /**
      * 更改状态
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.CHANGE_STATUS)
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysMenu p) {
@@ -101,7 +102,7 @@ public class SysMenuController extends BaseController {
     /**
      * 添加
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysMenu p) {
@@ -113,7 +114,7 @@ public class SysMenuController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysMenu p) {
@@ -123,7 +124,7 @@ public class SysMenuController extends BaseController {
         return JsonResult.ok();
     }
 
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult delete(@PathVariable String ids) {

@@ -51,7 +51,7 @@ public class SysMenu implements Serializable {
      */
     @NotBlank(message = "名称不能为空")
     @TableField("name")
-    private String name;
+    private String title;
 
     /**
      * 排序
@@ -60,7 +60,7 @@ public class SysMenu implements Serializable {
     private Integer sort;
 
     /**
-     * 菜单类型（10菜单 20权限）
+     * 菜单类型（10目录 20菜单 30权限）
      */
     @TableField("type")
     private Integer type;
@@ -124,6 +124,12 @@ public class SysMenu implements Serializable {
      */
     @TableField("remarks")
     private String remarks;
+
+    /**
+     * 路由元数据
+     */
+    @TableField("meta")
+    private String meta;
 
     /**
      * 是否删除：1，是；0，否

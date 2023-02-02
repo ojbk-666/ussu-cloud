@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.log.annotation.SystemLog;
@@ -19,6 +20,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "个人中心")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/user/profile")
 public class ProfileController extends BaseController {
@@ -42,8 +45,6 @@ public class ProfileController extends BaseController {
     private ISysMenuService iSysMenuService;
     @Autowired
     private ISysUserService sysUserService;
-
-    private static final String SYSTEM_LOG_GROUP = "个人中心";
 
     /**
      * 获取菜单
@@ -71,9 +72,9 @@ public class ProfileController extends BaseController {
     /**
      * 更新登录用户信息
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "修改个人信息")
+    @SystemLog(name = "修改个人信息")
     @PostMapping("/updateInfo")
-    public void updateUserInfo(@RequestBody SysUser p) {
+    public JsonResult updateUserInfo(@RequestBody SysUser p) {
         p.setId(SecurityUtil.getLoginUser().getUserId());
         // 处理头像
         String avatar = p.getAvatar();
@@ -108,14 +109,15 @@ public class ProfileController extends BaseController {
                 .setUpdateBy(null).setUpdateTime(new Date()).setLoginIp(null).setLastLoginTime(null).setUserSort(null).setUserType(null)
                 .setVersion(null).setState(null).setDelFlag(null);
         sysUserService.updateById(p);
+        return JsonResult.ok();
     }
 
     /**
      * 更新登录用户头像
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "修改头像")
+    @SystemLog(name = "修改头像")
     @PostMapping("/updateAvatar")
-    public void updateUserAvatar(@RequestPart("avatarfile") MultipartFile multipartFile) throws IOException {
+    public JsonResult updateUserAvatar(@RequestPart("avatarfile") MultipartFile multipartFile) throws IOException {
         String userId = SecurityUtil.getLoginUser().getUserId();
         String contentType = multipartFile.getContentType();
         String fileExt = ".png";
@@ -129,14 +131,15 @@ public class ProfileController extends BaseController {
         multipartFile.transferTo(new File(filePath));
         SysUser p = new SysUser().setId(userId).setAvatar(ussuProperties.getImageDomain() + relativePath);
         sysUserService.updateById(p);
+        return JsonResult.ok();
     }
 
     /**
      * 修改登录用户密码
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "修改密码")
+    @SystemLog(name = "修改密码")
     @PostMapping("/resetPwd")
-    public void updatePwd(@RequestBody Map p) {
+    public JsonResult updatePwd(@RequestBody Map p) {
         String oldPassword = MapUtil.getStr(p, "oldPassword");
         String newPassword = MapUtil.getStr(p, "newPassword");
         Assert.notBlank(oldPassword, "旧密码不能为空");
@@ -144,6 +147,27 @@ public class ProfileController extends BaseController {
         SysUser user = sysUserService.getById(SecurityUtil.getLoginUser().getUserId());
         Assert.isTrue(SecurityUtil.matchesPassword(oldPassword, user.getPassword()), "旧密码错误");
         sysUserService.updateById(new SysUser().setId(user.getId()).setPassword(SecurityUtil.encryptPassword(newPassword)));
+        return JsonResult.ok();
+    }
+
+    /**
+     * 更新扩展字段
+     */
+    @PostMapping("/ext")
+    public JsonResult updateExt(@RequestBody Map<String, Object> map) {
+        String userId = SecurityUtil.getUserId();
+        SysUser u = new SysUser().setId(userId);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String k = entry.getKey();
+            if (StrUtil.startWith(k, "ext")) {
+                try {
+                    ReflectUtil.setFieldValue(u, k, entry.getValue());
+                } catch (Exception e) {
+                }
+            }
+        }
+        sysUserService.updateById(u);
+        return JsonResult.ok();
     }
 
 }

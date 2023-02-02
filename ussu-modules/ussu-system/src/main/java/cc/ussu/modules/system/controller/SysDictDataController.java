@@ -1,5 +1,6 @@
 package cc.ussu.modules.system.controller;
 
+import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.constants.StrConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
@@ -32,12 +33,12 @@ import java.util.stream.Collectors;
  * @author liming
  * @since 2021-12-31 20:31:02
  */
+@SystemLog(serviceName = ServiceNameConstants.SERVICE_SYSETM, group = "字典数据管理")
 @RestController
 @RequestMapping("${ussu.mapping-prefix.system}/sys-dict-data")
 public class SysDictDataController extends BaseController {
 
     private static final String PERM_PREFIX = "system:dict-data:";
-    private static final String SYSTEM_LOG_GROUP = "字典数据管理";
 
     @Autowired
     private ISysDictDataService service;
@@ -111,7 +112,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 添加
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.INSERT)
+    @SystemLog(name = SystemLogConstants.INSERT)
     @PermCheck(PERM_PREFIX + ADD)
     @PutMapping({"", "/add"})
     public JsonResult add(@Validated @RequestBody SysDictData p) {
@@ -124,7 +125,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 修改
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.UPDATE)
+    @SystemLog(name = SystemLogConstants.UPDATE)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping({"", "/edit"})
     public JsonResult edit(@Validated @RequestBody SysDictData p) {
@@ -138,7 +139,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 修改状态
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.CHANGE_STATUS)
+    @SystemLog(name = SystemLogConstants.CHANGE_STATUS)
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/changeStatus")
     public JsonResult changeStatus(@RequestBody SysDictData p) {
@@ -152,7 +153,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 刷新缓存
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = "刷新缓存")
+    @SystemLog(name = "刷新缓存")
     @PermCheck(PERM_PREFIX + EDIT)
     @PostMapping("/refresh-cache")
     public JsonResult refreshCache() {
@@ -163,7 +164,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 删除
      */
-    @SystemLog(group = SYSTEM_LOG_GROUP, name = SystemLogConstants.DELETE)
+    @SystemLog(name = SystemLogConstants.DELETE)
     @PermCheck(PERM_PREFIX + DELETE)
     @DeleteMapping({"/{ids}", "/del/{ids}"})
     public JsonResult del(@PathVariable String ids) {
