@@ -18,27 +18,28 @@ public class StringLogger<T> {
     public String newline = StrPool.LF;
 
     public StringLogger() {
-        this.sb = new StringBuffer();
+        this(false, null, null);
     }
 
     public StringLogger(String traceId) {
-        this.sb = new StringBuffer();
-        this.traceId = traceId;
+        this(false, traceId, null);
     }
 
     public StringLogger(boolean debugEnable) {
-        this();
-        this.debugEnable = debugEnable;
+        this(debugEnable, null, null);
     }
 
     public StringLogger(String template, Object... args) {
-        this();
-        this.append(template, args);
+        this(false, null, template, args);
     }
 
     public StringLogger(boolean debugEnable, String traceId, String template, Object... args) {
-        this();
-        this.append(template, args);
+        this.sb = new StringBuffer();
+        this.debugEnable = debugEnable;
+        this.traceId = traceId;
+        if (template != null) {
+            this.append(template, args);
+        }
     }
 
     public StringLogger setTraceId(String traceId) {
