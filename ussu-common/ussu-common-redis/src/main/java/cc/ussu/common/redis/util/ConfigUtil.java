@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class DictUtil {
+public final class ConfigUtil {
 
-    private DictUtil() {}
+    public static final String KEY_PREFIX = "ussu:system:sys-config:";
 
-    public static final String KEY_PREFIX = "ussu:dict:";
+    public ConfigUtil() {
+    }
 
     private static final String getKey(String key) {
         return KEY_PREFIX + key;
@@ -78,6 +79,24 @@ public final class DictUtil {
             return defaultValue;
         }
         return BooleanUtil.toBoolean(v);
+    }
+
+    public static Integer getValueInteger(String group, String key, Integer defaultValue) {
+        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(group));
+        String v = MapUtil.getStr(cacheMap, key);
+        if (StrUtil.isBlank(v)) {
+            return defaultValue;
+        }
+        return Integer.valueOf(v);
+    }
+
+    public static Long getValueLong(String group, String key, Long defaultValue) {
+        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(group));
+        String v = MapUtil.getStr(cacheMap, key);
+        if (StrUtil.isBlank(v)) {
+            return defaultValue;
+        }
+        return Long.valueOf(v);
     }
 
     /**
