@@ -1,7 +1,7 @@
 package cc.ussu.gateway.util;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.core.vo.JsonResult;
-import com.alibaba.fastjson2.JSON;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ public class ServletUtils {
         response.setStatusCode(status);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
         JsonResult<?> result = JsonResult.error(code, value.toString());
-        DataBuffer dataBuffer = response.bufferFactory().wrap(JSON.toJSONString(result).getBytes());
+        DataBuffer dataBuffer = response.bufferFactory().wrap(JsonUtils.toJsonStr(result).getBytes());
         return response.writeWith(Mono.just(dataBuffer));
     }
 

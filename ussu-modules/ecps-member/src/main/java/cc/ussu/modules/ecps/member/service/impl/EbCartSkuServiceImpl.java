@@ -1,5 +1,6 @@
 package cc.ussu.modules.ecps.member.service.impl;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.modules.ecps.item.entity.EbItem;
 import cc.ussu.modules.ecps.item.entity.EbSku;
@@ -12,7 +13,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -99,7 +99,7 @@ public class EbCartSkuServiceImpl extends ServiceImpl<EbCartSkuMapper, EbCartSku
                     .setSku(sku.getSku())
                     .setSkuName(sku.getSkuName())
                     .setSkuImg(sku.getSkuImg())
-                    .setSkuSpec(JSON.toJSONString(skuSpec))
+                    .setSkuSpec(JsonUtils.toJsonString(skuSpec))
                     .setMarketPrice(sku.getMarketPrice())
                     .setPrice(sku.getSkuPrice())
                     .setQuantity(1)

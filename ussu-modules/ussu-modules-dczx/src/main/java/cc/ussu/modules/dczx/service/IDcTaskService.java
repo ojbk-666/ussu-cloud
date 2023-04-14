@@ -4,6 +4,8 @@ import cc.ussu.modules.dczx.entity.DcTask;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * <p>
@@ -14,6 +16,8 @@ import java.util.List;
  * @since 2022-09-01 15:52:07
  */
 public interface IDcTaskService extends IService<DcTask> {
+
+    Map<String, Future<?>> getRunningTaskMap();
 
     /**
      * 提交任务
@@ -45,19 +49,11 @@ public interface IDcTaskService extends IService<DcTask> {
      */
     void runTask(DcTask task);
 
+    void stopTask(String taskId);
+
     /**
      * 删除
      */
     void del(List<String> idList);
-
-    /**
-     * 暂停标记初始化
-     */
-    void taskPauseLockInit(String taskId);
-
-    /**
-     * 标记为暂停
-     */
-    void markTaskPause(String taskId);
 
 }

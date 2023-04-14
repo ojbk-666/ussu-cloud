@@ -1,11 +1,11 @@
 package cc.ussu.modules.dczx.service.impl;
 
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.modules.dczx.constants.DczxConstants;
-import cc.ussu.modules.dczx.es.mapper.ESDcPaperQuestionMapper;
 import cc.ussu.modules.dczx.entity.DcPaperQuestion;
 import cc.ussu.modules.dczx.entity.vo.DcPaperQuestionVO;
+import cc.ussu.modules.dczx.es.mapper.ESDcPaperQuestionMapper;
 import cc.ussu.modules.dczx.mapper.DcPaperQuestionMapper;
 import cc.ussu.modules.dczx.service.IDcPaperQuestionService;
 import cc.ussu.modules.dczx.service.IDcQuestionOptionService;
@@ -80,7 +80,7 @@ public class DcPaperQuestionServiceImpl extends ServiceImpl<DcPaperQuestionMappe
         if (CollUtil.isEmpty(questionIdsList)) {
             return new ArrayList<>();
         }
-        if (DictUtil.getValueBoolean("dczx", DczxConstants.PARAM_KEY_REQUEST_RIGHT_OPTION_FROM_ES)) {
+        if (ConfigUtil.getValueBoolean("dczx", DczxConstants.PARAM_KEY_REQUEST_RIGHT_OPTION_FROM_ES)) {
             // 走ElasticSearch
             return esDcPaperQuestionMapper.selectBatchIds(questionIdsList);
         } else {

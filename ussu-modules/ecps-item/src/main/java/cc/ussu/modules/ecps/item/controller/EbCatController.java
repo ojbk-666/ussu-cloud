@@ -30,7 +30,7 @@ public class EbCatController extends BaseAdminController {
     private IEbCatService ebCatService;
 
     @GetMapping
-    public Object findPage() {
+    public JsonResult findPage() {
         Page page = ebCatService.page(MybatisPlusUtil.getPage());
         return MybatisPlusUtil.getResult(page);
     }

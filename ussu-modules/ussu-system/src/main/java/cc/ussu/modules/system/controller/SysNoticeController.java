@@ -4,6 +4,7 @@ import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
@@ -54,7 +55,7 @@ public class SysNoticeController extends BaseController {
      * 获取个人消息分页
      */
     @GetMapping("/notice")
-    public Object noticePage(SysNotice p) {
+    public JsonResult<Map<String, Object>> noticePage(SysNotice p) {
         String userId = SecurityUtil.getLoginUser().getUserId();
         LambdaQueryWrapper<SysNotice> qw = Wrappers.lambdaQuery(SysNotice.class)
                 .orderByDesc(SysNotice::getCreateTime)
@@ -66,10 +67,11 @@ public class SysNoticeController extends BaseController {
                         .or(w2 -> w2.eq(SysNotice::getNoticeType, SysNotice.NOTICE_TYPE_NOTICE)
                                 .eq(SysNotice::getUserId, userId)));
         IPage<SysNotice> page = noticeService.page(MybatisPlusUtil.getPage(), qw);
-        Map<String, Object> result = new HashMap<>();
-        result.put(MybatisPlusUtil.COUNT, page.getTotal());
-        result.put(MybatisPlusUtil.TOTAL, page.getTotal());
-        result.put(MybatisPlusUtil.LIST, page.getRecords());
+        // Map<String, Object> result = new HashMap<>();
+        PageInfoVO<SysNotice> pageInfoVO = new PageInfoVO<>();
+        pageInfoVO.setTotal(page.getTotal()).setList(page.getRecords());
+        // result.put(MybatisPlusUtil.TOTAL, page.getTotal());
+        // result.put(MybatisPlusUtil.LIST, page.getRecords());
         // 未读
         Map<String, Long> unRead = new HashMap<>();
         long cn = noticeService.countUnReadNotice(userId);
@@ -78,7 +80,7 @@ public class SysNoticeController extends BaseController {
         unRead.put("2", ca);
         unRead.put("all", cn + ca);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", result);
+        map.put("result", pageInfoVO);
         map.put("unRead", unRead);
         return JsonResult.ok(map);
     }
@@ -88,7 +90,7 @@ public class SysNoticeController extends BaseController {
      */
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page(SysNotice p) {
+    public JsonResult<PageInfoVO<SysNotice>> page(SysNotice p) {
         LambdaQueryWrapper<SysNotice> qw = Wrappers.lambdaQuery(SysNotice.class)
                 .orderByDesc(SysNotice::getCreateTime)
                 .eq(StrUtil.isNotBlank(p.getNoticeType()), SysNotice::getNoticeType, p.getNoticeType())

@@ -40,7 +40,7 @@ public class EbBrandController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbBrand ebBrand) {
+    public JsonResult page(EbBrand ebBrand) {
         LambdaQueryWrapper<EbBrand> qw = new LambdaQueryWrapper<>();
         qw.orderByAsc(EbBrand::getBrandSort)
                 .orderByDesc(EbBrand::getBrandId)
@@ -72,8 +72,8 @@ public class EbBrandController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{brandId}")
-    public Object detail(@PathVariable Integer brandId) {
-        return brandService.detail(brandId);
+    public JsonResult detail(@PathVariable Integer brandId) {
+        return JsonResult.ok(brandService.detail(brandId));
     }
 
     /**

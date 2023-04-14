@@ -1,5 +1,6 @@
 package cc.ussu.modules.ecps.skill.service.impl;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.modules.ecps.common.constants.ConstantsEcps;
@@ -22,7 +23,6 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -147,7 +147,7 @@ public class EbSeckillSessionServiceImpl extends ServiceImpl<EbSeckillSessionMap
                             .setEndTime(seckillSession.getEndTime().getTime())
                             .setRandomCode(UUID.randomUUID().toString(true));
                     // redisService.setCacheMapValue(SKILL_SKU, relation.getSkuId().toString(), relation);
-                    ops.put(relation.getSkuId().toString(), JSON.toJSONString(relation));
+                    ops.put(relation.getSkuId().toString(), JsonUtils.toJSONString(relation));
                     // 3.信号量 key是randomCode value是秒杀库存
                     String stockKey = SKILL_STOCK_PREFIX + relation.getRandomCode();
                     if (!redisService.hasKey(stockKey)) {
@@ -195,7 +195,7 @@ public class EbSeckillSessionServiceImpl extends ServiceImpl<EbSeckillSessionMap
         if (StrUtil.isBlank(s)) {
             return JsonResult.error(NOT);
         }
-        EbSessionSkuRelation relation = JSON.parseObject(s, EbSessionSkuRelation.class);
+        EbSessionSkuRelation relation = JsonUtils.parseObject(s, EbSessionSkuRelation.class);
         // 对比随机码
         if (!randomCode.equals(relation.getRandomCode())) {
             return JsonResult.error(NOT);
@@ -212,7 +212,7 @@ public class EbSeckillSessionServiceImpl extends ServiceImpl<EbSeckillSessionMap
         if (semaphore.tryAcquire(num)) {
             // 库存扣减成功 准备向mq中存放消息。构建秒杀订单的类。转换成json，向mq发送json。
             EbOrder skillOrder = createSkillOrder(relation, num);
-            String skillOrderStr = JSON.toJSONString(skillOrder);
+            String skillOrderStr = JsonUtils.toJSONString(skillOrder);
             // 把mq换成同步的方式
             Boolean invoke = rabbitTemplate.invoke(opss -> {
                 // 发送消息

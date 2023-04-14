@@ -2,7 +2,7 @@ package cc.ussu.modules.sheep.common;
 
 import cc.ussu.common.core.condition.DevEnvCondition;
 import cc.ussu.common.redis.service.RedisService;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.modules.sheep.properties.SheepProperties;
 import cc.ussu.modules.sheep.service.ISheepEnvService;
 import cc.ussu.modules.sheep.service.ISheepTaskService;
@@ -37,7 +37,7 @@ public interface ISheepTask<P> {
 
     default boolean debugEnable() {
         return ArrayUtil.contains(SpringUtil.getBean(Environment.class).getActiveProfiles(), DevEnvCondition.ENV_NAME)
-                || DictUtil.getValueBoolean("sheep", "task:debugLog");
+                || ConfigUtil.getValueBoolean("sheep", "task:debugLog");
     }
 
     /**

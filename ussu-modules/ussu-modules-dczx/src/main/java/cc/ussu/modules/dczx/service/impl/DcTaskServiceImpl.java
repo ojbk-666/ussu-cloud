@@ -1,10 +1,10 @@
 package cc.ussu.modules.dczx.service.impl;
 
 import cc.ussu.common.redis.service.RedisService;
-import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.modules.dczx.constants.DczxConstants;
 import cc.ussu.modules.dczx.entity.*;
 import cc.ussu.modules.dczx.entity.vo.RunningTaskDTO;
+import cc.ussu.modules.dczx.exception.LoginFailedException;
 import cc.ussu.modules.dczx.mapper.DcTaskMapper;
 import cc.ussu.modules.dczx.model.vo.DczxLoginResultVo;
 import cc.ussu.modules.dczx.model.vo.StudyPlanVO;
@@ -15,6 +15,7 @@ import cc.ussu.modules.dczx.thread.AutoFinishHomeworkThread;
 import cc.ussu.modules.dczx.thread.AutoWatchVideoTaskThread;
 import cc.ussu.modules.dczx.util.DczxUtil;
 import cc.ussu.modules.dczx.util.VideoUtil;
+import cc.ussu.common.security.util.SecurityUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
@@ -24,6 +25,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.dynamic.datasource.annotation.Slave;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
@@ -64,6 +69,9 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
 
     private ReentrantLock lock = new ReentrantLock();
 
+    @Getter
+    private Map<String, Future<?>> runningTaskMap = new ConcurrentHashMap<>();
+
     /**
      * 提交任务
      */
@@ -75,6 +83,8 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         Assert.notNull(trusteeship, "未找到该账号");
         String dcUsername = trusteeship.getUsername();
         task.setDcUsername(dcUsername);
+        // 尝试登录 验证账号密码是否匹配
+        this.getLoginCookie(dcUsername, trusteeship.getPassword());
         String taskType = task.getTaskType();
         Date now = new Date();
         if (saveTask) {
@@ -111,7 +121,7 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         }
     }
 
-    private DczxLoginResultVo getLoginCookie(String username, String password) {
+    private DczxLoginResultVo getLoginCookie(String username, String password) throws LoginFailedException {
         DczxLoginResultVo loginResultVo = redisService.getCacheObject(DczxConstants.CACHE_JSESSIONID_PREFIX + username);
         if (loginResultVo == null) {
             synchronized (this) {
@@ -218,9 +228,9 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         }
         if (CollUtil.isNotEmpty(runningTaskDTOList)) {
             AutoWatchVideoTaskThread thread = new AutoWatchVideoTaskThread(runningTaskDTOList, trusteeship);
-            threadPoolTaskExecutor.submit(thread);
+            Future<?> submit = threadPoolTaskExecutor.submit(thread);
+            getRunningTaskMap().put(task.getId(), submit);
         }
-        taskPauseLockInit(task.getId());
     }
 
     @Override
@@ -238,8 +248,8 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         DczxLoginResultVo loginResultVo = getLoginCookie(trusteeship.getUsername(), trusteeship.getPassword());
         // 提交任务
         AutoFinishHomeworkThread autoFinishHomeworkThread = new AutoFinishHomeworkThread(loginResultVo, studyPlanVO, task.getId(), trusteeship);
-        threadPoolTaskExecutor.submit(autoFinishHomeworkThread);
-        taskPauseLockInit(task.getId());
+        Future<?> submit = threadPoolTaskExecutor.submit(autoFinishHomeworkThread);
+        getRunningTaskMap().put(task.getId(), submit);
     }
 
     @Override
@@ -257,8 +267,8 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         DczxLoginResultVo loginResultVo = getLoginCookie(trusteeship.getUsername(), trusteeship.getPassword());
         // 提交任务
         AutoFinishCompHomeworkThread autoFinishHomeworkThread = new AutoFinishCompHomeworkThread(loginResultVo, studyPlanVO, task.getId(), trusteeship);
-        threadPoolTaskExecutor.submit(autoFinishHomeworkThread);
-        taskPauseLockInit(task.getId());
+        Future<?> submit = threadPoolTaskExecutor.submit(autoFinishHomeworkThread);
+        getRunningTaskMap().put(task.getId(), submit);
     }
 
     /**
@@ -280,24 +290,27 @@ public class DcTaskServiceImpl extends ServiceImpl<DcTaskMapper, DcTask> impleme
         }
     }
 
+    @Override
+    public void stopTask(String taskId) {
+        Future<?> future = getRunningTaskMap().get(taskId);
+        if (future != null) {
+            future.cancel(true);
+        }
+    }
+
     /**
      * 删除
      */
     @Transactional
     @Override
     public void del(List<String> idList) {
-        CollUtil.removeBlank(idList);
+        List<String> ids = CollUtil.removeBlank(idList);
+        if (CollUtil.isNotEmpty(ids)) {
+            for (String taskId : ids) {
+                stopTask(taskId);
+            }
+        }
         super.removeByIds(idList);
-    }
-
-    @Override
-    public void taskPauseLockInit(String taskId) {
-        redisService.setCacheObject(DczxConstants.THREAD_TASK_PARSE_KEY_PREFIX + taskId, false, 60L * 5);
-    }
-
-    @Override
-    public void markTaskPause(String taskId) {
-        redisService.setCacheObject(DczxConstants.THREAD_TASK_PARSE_KEY_PREFIX + taskId, true, 60L * 5);
     }
 
 }

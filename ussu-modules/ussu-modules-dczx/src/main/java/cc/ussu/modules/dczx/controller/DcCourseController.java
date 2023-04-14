@@ -5,6 +5,7 @@ import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.vo.SelectVO;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.modules.dczx.entity.DcCourse;
 import cc.ussu.modules.dczx.entity.DcInterfaceLog;
 import cc.ussu.modules.dczx.entity.vo.DcCourseVO;
@@ -44,7 +45,7 @@ public class DcCourseController extends BaseController {
      * 分页查询
      */
     @GetMapping("/page")
-    public Object list(DcCourse p) {
+    public JsonResult<PageInfoVO<DcCourseVO>> list(DcCourse p) {
         LambdaQueryWrapper<DcCourse> qw = Wrappers.lambdaQuery(DcCourse.class);
         qw.eq(StrUtil.isNotBlank(p.getCourseId()), DcCourse::getCourseId, p.getCourseId())
                 .like(StrUtil.isNotBlank(p.getCourseName()), DcCourse::getCourseName, p.getCourseName());

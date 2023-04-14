@@ -1,5 +1,6 @@
 package cc.ussu.modules.ecps.search.controller;
 
+import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.modules.ecps.item.model.param.SearchParam;
 import cc.ussu.modules.ecps.search.service.ItemIndexService;
@@ -16,7 +17,7 @@ public class ItemIndexController extends BaseController {
     private ItemIndexService itemService;
 
     @GetMapping
-    public Object searchSku(SearchParam searchParam) {
+    public JsonResult searchSku(SearchParam searchParam) {
         itemService.search(searchParam);
         return null;
     }

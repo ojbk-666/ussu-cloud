@@ -1,12 +1,13 @@
 package cc.ussu.modules.dczx.controller;
 
 import cc.ussu.common.core.vo.JsonResult;
-import cc.ussu.common.core.vo.SelectGroupVO;
+import cc.ussu.common.core.vo.SelectVO;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.PageHelperUtil;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.redis.service.RedisService;
+import cc.ussu.common.redis.util.DictUtil;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.modules.dczx.constants.DczxConstants;
@@ -50,7 +51,7 @@ public class DcTaskController extends BaseController {
      */
     @PermCheck("dczx:dc-task:select")
     @GetMapping("/page")
-    public Object page(DcTaskVO query) {
+    public JsonResult page(DcTaskVO query) {
         if (SecurityUtil.isNotSuperAdmin()) {
             query.setCreateBy(SecurityUtil.getLoginUser().getUserId());
         }
@@ -67,10 +68,9 @@ public class DcTaskController extends BaseController {
     /**
      * 获取可选课程
      */
-    @PermCheck({"dczx:dc-task:add", "dczx:dc-task:delete"})
-    @GetMapping("/course/select")
-    public JsonResult<List<SelectGroupVO>> getSelectGroupList() {
-        return null;
+    @GetMapping("/select/task-type")
+    public JsonResult<List<SelectVO>> getSelectGroupList() {
+        return JsonResult.ok(DictUtil.getSelectVOList("dczx_task_type"));
     }
 
     /**
@@ -143,11 +143,12 @@ public class DcTaskController extends BaseController {
     @SystemLog(group = SYSTEM_LOG_GROUP, name = "暂停任务")
     @PostMapping("/pause/{taskId}")
     public JsonResult pauseTask(@PathVariable String taskId) {
-        DcTask one = service.getOne(Wrappers.lambdaQuery(DcTask.class).eq(DcTask::getId, taskId)
+        /*DcTask one = service.getOne(Wrappers.lambdaQuery(DcTask.class).eq(DcTask::getId, taskId)
             .eq(SecurityUtil.isNotSuperAdmin(), DcTask::getCreateBy, SecurityUtil.getLoginUser().getUserId()));
         if (DczxConstants.TASK_STATUS_DOING.equals(one.getStatus())) {
             service.markTaskPause(taskId);
-        }
+        }*/
+        service.stopTask(taskId);
         return JsonResult.ok();
     }
 

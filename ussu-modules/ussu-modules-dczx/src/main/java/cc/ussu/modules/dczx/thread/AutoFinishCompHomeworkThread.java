@@ -1,7 +1,6 @@
 package cc.ussu.modules.dczx.thread;
 
 import cc.ussu.common.core.vo.StringLogger;
-import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.modules.dczx.constants.DczxConstants;
 import cc.ussu.modules.dczx.entity.DcPaperQuestionTopic;
 import cc.ussu.modules.dczx.entity.DcTask;
@@ -9,7 +8,6 @@ import cc.ussu.modules.dczx.entity.DcTrusteeship;
 import cc.ussu.modules.dczx.entity.vo.DcPaperQuestionVO;
 import cc.ussu.modules.dczx.entity.vo.DcQuestionOptionVO;
 import cc.ussu.modules.dczx.exception.InitExamListmcapiException;
-import cc.ussu.modules.dczx.exception.TaskPausedException;
 import cc.ussu.modules.dczx.exception.homework.InitWorkListmcapiException;
 import cc.ussu.modules.dczx.exception.homework.ShowExamPapermcapiException;
 import cc.ussu.modules.dczx.model.vo.*;
@@ -92,7 +90,6 @@ public class AutoFinishCompHomeworkThread extends Thread {
                         .setProgress(progress).setTaskLog(sb.toString()));
                 return;
             }
-            checkPauseTask();
             // 已完成几次
             int doCount = Integer.parseInt(examVo.getDO_COUNT());
             if (doCount >= compHomeworkMaxCount) {
@@ -123,7 +120,6 @@ public class AutoFinishCompHomeworkThread extends Thread {
             b:
             for (int i = 0; i < newHomeworkPAPERQuestions.size(); i++) {
                 PaperQuestion paperQuestion = newHomeworkPAPERQuestions.get(i);
-                checkPauseTask();
                 String topicName = paperQuestion.getQUESTION_TYPE_NM(); // 题型
                 List<TopicTrunk> topicTrunks = paperQuestion.getTOPIC_TRUNK();
                 if (CollUtil.isEmpty(topicTrunks)) {
@@ -135,9 +131,9 @@ public class AutoFinishCompHomeworkThread extends Thread {
                 // 做题
                 sb.info("正在做第 {} 题：{} -> {}", (i+1), topicName, questionTitle);
                 extracted(sb, paperid, paperQuestion, dcQuestions);
-                checkPauseTask();
                 long sleepTime = RandomUtil.randomLong(2000, 4500);
                 sb.info("等待 {} 秒", (sleepTime / 1000F));
+                Thread.sleep(sleepTime);
                 // 进度
                 int count = 100 / newHomeworkQuestionCount;
                 progress = count * i;
@@ -151,7 +147,6 @@ public class AutoFinishCompHomeworkThread extends Thread {
                 sb.info("综合作业答案提交成功");
             }
             sb.newline();
-            checkPauseTask();
             updateStatus = DczxConstants.TASK_STATUS_FINISHED;
             progress = 100;
             // 发送通知
@@ -164,9 +159,9 @@ public class AutoFinishCompHomeworkThread extends Thread {
         } catch (ShowExamPapermcapiException e) {
             updateStatus = DczxConstants.TASK_STATUS_ERROR;
             reason = e.getMessage();
-        } catch (TaskPausedException e) {
+        } catch (InterruptedException e) {
             updateStatus = DczxConstants.TASK_STATUS_ERROR;
-            reason = e.getMessage();
+            reason = "任务被暂停";
         } catch (Exception e) {
             updateStatus = DczxConstants.TASK_STATUS_ERROR;
             reason = e.getMessage();
@@ -176,20 +171,20 @@ public class AutoFinishCompHomeworkThread extends Thread {
                     .setReason(reason).setTaskLog(sb.toString()));
         }
         // 下一个
-        if (!pauseTask()) {
-            DcTask notStartOne = taskService.getOne(Wrappers.lambdaQuery(DcTask.class)
+        // if (!pauseTask()) {
+        DcTask notStartOne = taskService.getOne(Wrappers.lambdaQuery(DcTask.class)
                 .orderByAsc(DcTask::getCreateTime)
                 .eq(DcTask::getDcUsername, trusteeship.getUsername())
                 .eq(DcTask::getTaskType, DcTask.TYPE_COMP_HOMEWORK)
                 .eq(DcTask::getStatus, DczxConstants.TASK_STATUS_NOT_START)
                 .last(" limit 1 "));
-            if (notStartOne != null) {
-                taskService.runTask(notStartOne);
-            } else {
-                // 没有任务了
-                sendAllTaskFinishedNotice(taskInfo);
-            }
+        if (notStartOne != null) {
+            taskService.runTask(notStartOne);
+        } else {
+            // 没有任务了
+            sendAllTaskFinishedNotice(taskInfo);
         }
+        // }
     }
 
     /**
@@ -200,7 +195,7 @@ public class AutoFinishCompHomeworkThread extends Thread {
             String reciever = trusteeship.getSendNoticeId();
             String noticeTitle = StrUtil.format("账号 {} {} 任务完成", taskInfo.getDcUsername(), courseName);
             String noticeContent = StrUtil.format("您于 {} 提交的账号 {} 的 {} 刷综合作业任务 已完成",
-                DateUtil.formatDateTime(trusteeship.getCreateTime()), taskInfo.getDcUsername(), courseName);
+                    DateUtil.formatDateTime(trusteeship.getCreateTime()), taskInfo.getDcUsername(), courseName);
             SendNoticeAfterTaskFinished send = null;
             if (DcTrusteeship.NOTICE_METHOD_NOTICE.equals(trusteeship.getSendNoticeMethod())) {
                 // 站内信
@@ -219,23 +214,6 @@ public class AutoFinishCompHomeworkThread extends Thread {
     private void sendAllTaskFinishedNotice(DcTask taskInfo) {
         if (BooleanUtil.isTrue(trusteeship.getSendNoticeFlag()) && DcTrusteeship.NOTICE_TYPE_ALL_TASK.equals(trusteeship.getSendNoticeType())) {
 
-        }
-    }
-
-    /**
-     * 检测是否暂停
-     */
-    private boolean pauseTask() {
-        Object b = SpringUtil.getBean(RedisService.class).getCacheObject(DczxConstants.THREAD_TASK_PARSE_KEY_PREFIX + taskId);
-        if (b == null) {
-            return false;
-        }
-        return (boolean) b;
-    }
-
-    private void checkPauseTask() {
-        if (pauseTask()) {
-            throw new TaskPausedException();
         }
     }
 

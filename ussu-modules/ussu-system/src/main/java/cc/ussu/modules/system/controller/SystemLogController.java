@@ -3,6 +3,7 @@ package cc.ussu.modules.system.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.modules.system.es.domain.SystemLog;
 import cc.ussu.modules.system.es.service.ESSystemLogService;
 import cc.ussu.system.api.vo.SystemLogVO;
@@ -24,7 +25,7 @@ public class SystemLogController extends BaseController {
      * 查询日志分页
      */
     @GetMapping("/page")
-    public Object page(SystemLog query) {
+    public JsonResult<PageInfoVO<SystemLog>> page(SystemLog query) {
         EsPageInfo<SystemLog> pageInfo = systemLogService.findPage(query);
         return MybatisPlusUtil.getResult(pageInfo.getTotal(), pageInfo.getList());
     }

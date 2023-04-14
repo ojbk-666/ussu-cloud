@@ -1,7 +1,9 @@
 package cc.ussu.modules.sheep.controller;
 
+import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.modules.sheep.entity.JdDayBeans;
 import cc.ussu.modules.sheep.service.IJdDayBeansService;
@@ -33,7 +35,7 @@ public class JdDayBeansController extends BaseController {
      */
     @PermCheck("jd:jd-day-beans:select")
     @GetMapping("/page")
-    public Object page() {
+    public JsonResult<PageInfoVO<JdDayBeans>> page() {
         LambdaQueryWrapper<JdDayBeans> qw = Wrappers.lambdaQuery(JdDayBeans.class);
         Page<JdDayBeans> page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);

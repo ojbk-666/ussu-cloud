@@ -3,6 +3,7 @@ package cc.ussu.modules.system.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.modules.system.entity.SysLoginLog;
 import cc.ussu.modules.system.service.ISysLoginLogService;
@@ -39,7 +40,7 @@ public class SysLoginLogController extends BaseController {
 
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page(SysLoginLog p) {
+    public JsonResult<PageInfoVO<SysLoginLog>> page(SysLoginLog p) {
         LambdaQueryWrapper<SysLoginLog> qw = Wrappers.lambdaQuery(SysLoginLog.class)
             .orderByDesc(SysLoginLog::getCreateTime)
             .like(StrUtil.isNotBlank(p.getLoginIp()), SysLoginLog::getLoginIp, p.getLoginIp())

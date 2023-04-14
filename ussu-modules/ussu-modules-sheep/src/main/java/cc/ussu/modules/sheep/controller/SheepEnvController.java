@@ -3,6 +3,7 @@ package cc.ussu.modules.sheep.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.modules.sheep.entity.SheepEnv;
 import cc.ussu.modules.sheep.service.ISheepEnvService;
@@ -38,7 +39,7 @@ public class SheepEnvController extends BaseController {
      */
     @PermCheck("sheep:sheep-env:select")
     @GetMapping("/page")
-    public Object page(SheepEnv query) {
+    public JsonResult<PageInfoVO<SheepEnv>> page(SheepEnv query) {
         String keyword = query.getName();
         LambdaQueryWrapper<SheepEnv> qw = Wrappers.lambdaQuery(SheepEnv.class)
             .orderByAsc(SheepEnv::getDisabled, SheepEnv::getName)

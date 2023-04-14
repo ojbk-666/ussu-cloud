@@ -32,7 +32,7 @@ public class EbParaValueController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbParaValue p) {
+    public JsonResult page(EbParaValue p) {
         LambdaQueryWrapper<EbParaValue> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -47,8 +47,8 @@ public class EbParaValueController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult<EbParaValue> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

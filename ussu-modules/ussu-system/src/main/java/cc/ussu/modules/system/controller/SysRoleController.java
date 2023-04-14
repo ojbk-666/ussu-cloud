@@ -61,7 +61,7 @@ public class SysRoleController extends BaseController {
      */
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page(SysRole p) {
+    public JsonResult page(SysRole p) {
         LambdaQueryWrapper<SysRole> qw = Wrappers.lambdaQuery(SysRole.class)
                 .eq(StrUtil.isNotBlank(p.getDisableFlag()), SysRole::getDisableFlag, p.getDisableFlag())
                 .like(StrUtil.isNotBlank(p.getRoleName()), SysRole::getRoleName, p.getRoleName())

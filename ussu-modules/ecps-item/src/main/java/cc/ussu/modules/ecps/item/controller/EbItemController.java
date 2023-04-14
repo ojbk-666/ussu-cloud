@@ -3,6 +3,7 @@ package cc.ussu.modules.ecps.item.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseAdminController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.modules.ecps.item.entity.EbBrand;
 import cc.ussu.modules.ecps.item.entity.EbItem;
 import cc.ussu.modules.ecps.item.service.IEbBrandService;
@@ -34,7 +35,7 @@ public class EbItemController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbItem p) {
+    public JsonResult<PageInfoVO<EbItem>> page(EbItem p) {
         LambdaQueryWrapper<EbItem> qw = new LambdaQueryWrapper<>();
         qw.eq(p.getCatId() != null, EbItem::getCatId, p.getCatId())
                 .eq(p.getBrandId() != null, EbItem::getBrandId, p.getBrandId())
@@ -56,8 +57,8 @@ public class EbItemController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id, true);
+    public JsonResult<EbItem> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id, true));
     }
 
     /**

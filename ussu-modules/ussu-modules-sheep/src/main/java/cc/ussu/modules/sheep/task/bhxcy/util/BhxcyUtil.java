@@ -1,9 +1,9 @@
 package cc.ussu.modules.sheep.task.bhxcy.util;
 
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.modules.sheep.task.bhxcy.constants.BhxcyConstants;
 import cc.ussu.modules.sheep.task.bhxcy.constants.GlobalData;
 import cc.ussu.modules.sheep.task.bhxcy.vo.BhxcyBaseParam;
-import cc.ussu.common.redis.util.DictUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class BhxcyUtil {
 
     private static final GlobalData getGlobalData() {
-        return JSONUtil.toBean(DictUtil.getValue("sheep", BhxcyConstants.PARAM_KEY_GLOBAL_DATA, "{}"), GlobalData.class);
+        return JSONUtil.toBean(ConfigUtil.getValue("sheep", BhxcyConstants.PARAM_KEY_GLOBAL_DATA, "{}"), GlobalData.class);
     }
 
     public static BhxcyBaseParam formatToParam(String urlstr) {

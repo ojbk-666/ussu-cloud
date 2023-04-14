@@ -78,7 +78,7 @@ public class SysMenuController extends BaseController {
      */
     // @PermCheck(PERM_PREFIX + SELECT)
     // @GetMapping("/roleMenuTreeselect/{roleId}")
-    public Object roleMenuTreeselect(@PathVariable String roleId) {
+    public JsonResult<Map<String, Object>> roleMenuTreeselect(@PathVariable String roleId) {
         // 获取角色对应菜单
         List<SysRoleMenu> roleMenuList = sysRoleMenuService.list(Wrappers.lambdaQuery(SysRoleMenu.class).eq(SysRoleMenu::getRoleId, roleId));
         JsonResult<List<SysMenu>> jr = treeselect();

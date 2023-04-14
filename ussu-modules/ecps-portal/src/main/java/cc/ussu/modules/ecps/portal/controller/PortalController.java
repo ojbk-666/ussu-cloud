@@ -1,5 +1,6 @@
 package cc.ussu.modules.ecps.portal.controller;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.common.security.util.SecurityUtil;
@@ -25,7 +26,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -206,7 +206,7 @@ public class PortalController extends BasePortalController {
             List<String> tempList = ops.multiGet(skuIdList.stream().map(i -> i.toString()).collect(Collectors.toList()));
             List<EbSessionSkuRelation> relationList = new LinkedList<>();
             for (String s : tempList) {
-                relationList.add(JSON.parseObject(s, EbSessionSkuRelation.class));
+                relationList.add(JsonUtils.parseObject(s, EbSessionSkuRelation.class));
             }
             model.addAttribute("relationList", relationList);
         }
@@ -217,7 +217,7 @@ public class PortalController extends BasePortalController {
     public ModelAndView toSkillDetails(Integer skuId, Model model) {
         BoundHashOperations<String, String, String> ops = stringRedisTemplate.boundHashOps(ConstantsEcps.CACHE_SKILL_SKU);
         String s = ops.get(skuId.toString());
-        EbSessionSkuRelation relation = JSON.parseObject(s, EbSessionSkuRelation.class);
+        EbSessionSkuRelation relation = JsonUtils.parseObject(s, EbSessionSkuRelation.class);
         model.addAttribute("relation", relation);
         model.addAttribute("skuDetail", relation.getEbSku());
         Integer stock = redisService.getCacheObject(ConstantsEcps.CACHE_SKILL_STOCK_PREFIX + relation.getRandomCode());

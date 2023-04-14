@@ -5,6 +5,7 @@ import cc.ussu.common.core.constants.StrConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
@@ -50,7 +51,7 @@ public class SysDictDataController extends BaseController {
      */
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page(String keyword, String dictType) {
+    public JsonResult<PageInfoVO<SysDictData>> page(String keyword, String dictType) {
         LambdaQueryWrapper<SysDictData> qw = Wrappers.lambdaQuery(SysDictData.class)
             .orderByAsc(SysDictData::getCreateTime)
             .orderByAsc(SysDictData::getDictType)

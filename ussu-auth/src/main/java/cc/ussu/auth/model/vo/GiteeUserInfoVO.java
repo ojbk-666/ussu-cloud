@@ -1,5 +1,6 @@
 package cc.ussu.auth.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -17,6 +18,7 @@ public class GiteeUserInfoVO {
     /**
      * 头像 avatar_url
      */
+    @JsonProperty("avatar_url")
     private String avatar_url;
     /**
      * 邮箱

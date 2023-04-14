@@ -20,13 +20,42 @@ public interface ISysConfigService extends IService<SysConfig> {
      */
     void refreshCache();
 
+    /**
+     * 通过分组编码查询分组信息
+     */
     SysConfigGroupVO getByGroupCode(String groupCode);
 
+    /**
+     * 检查分组编码是否存在
+     *
+     * @return 是否存在
+     */
+    boolean existGroupByGroupCode(String groupCode, String id);
+
+    /**
+     * 检查分组下编码是否存在
+     *
+     * @return 是否存在
+     */
+    boolean existDataByGroupCodeAndCode(String groupCode, String code, String id);
+
+    /**
+     * 添加分组
+     */
     void addGroup(SysConfigGroupVO vo);
 
+    /**
+     * 修改分组
+     */
     void editGroup(SysConfigGroupVO vo);
 
+    /**
+     * 添加数据
+     */
     void addData(SysConfigVO vo);
 
+    /**
+     * 修改数据
+     */
     void editData(SysConfigVO vo);
 }

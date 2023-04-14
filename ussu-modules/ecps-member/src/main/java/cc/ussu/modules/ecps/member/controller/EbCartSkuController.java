@@ -33,7 +33,7 @@ public class EbCartSkuController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbCartSku p) {
+    public JsonResult page(EbCartSku p) {
         LambdaQueryWrapper<EbCartSku> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -43,8 +43,8 @@ public class EbCartSkuController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult<EbCartSku> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

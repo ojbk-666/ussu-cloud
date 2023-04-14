@@ -2,7 +2,7 @@ package cc.ussu.modules.dczx.controller;
 
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.modules.dczx.constants.DczxConstants;
 import cc.ussu.modules.dczx.entity.DcCourse;
@@ -27,7 +27,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -155,7 +158,7 @@ public class DcStatisticController extends BaseController {
      */
     @GetMapping("/recent-request-count")
     public Object recentRequestCount () {
-        String v = DictUtil.getValue("dczx", "request-count:statistic-num", "12");
+        String v = ConfigUtil.getValue("dczx", "request-count:statistic-num", "12");
         int offset = -Integer.parseInt(v);
         Date now = new Date();
         Date start = DateUtil.offsetDay(now, offset);

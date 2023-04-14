@@ -1,6 +1,5 @@
 package cc.ussu.modules.dczx.thread;
 
-import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.modules.dczx.constants.DczxConstants;
 import cc.ussu.modules.dczx.entity.DcTask;
 import cc.ussu.modules.dczx.entity.DcTaskVideo;
@@ -80,9 +79,9 @@ public class AutoWatchVideoTaskThread extends Thread {
                                 // 完成
                                 sb.log("视频任务 {} 已完成,跳过 ", divisionCourseTitle);
                             } else {
-                                if (parseTaskFlag = pauseTask(taskId)) {
-                                    break a;
-                                }
+                                // if (parseTaskFlag = pauseTask(taskId)) {
+                                //     break a;
+                                // }
                                 if (dcTaskVideo == null) {
                                     sb.log("未找到该视频 {}", divisionCourseTitle);
                                     continue a;
@@ -99,9 +98,9 @@ public class AutoWatchVideoTaskThread extends Thread {
                                         if (i != count - 1) {
                                             Thread.sleep(pauseTime);
                                         }
-                                        if (i % 11 == 0 && (parseTaskFlag = pauseTask(taskId))) {
-                                            break a;
-                                        }
+                                        // if (i % 11 == 0 && (parseTaskFlag = pauseTask(taskId))) {
+                                        //     break a;
+                                        // }
                                         int progress = start + (i * 5);
                                         if (progress <= duration) {
                                             VideoUtil.updateVideoProgress(dcTaskVideo, progress, item.getCookieStr());
@@ -121,9 +120,9 @@ public class AutoWatchVideoTaskThread extends Thread {
                             if (divisionCourse.isTextDone()) {
                                 sb.info("浏览课件 {} 任务已完成,跳过 ", divisionCourseTitle);
                             } else {
-                                if (parseTaskFlag = pauseTask(taskId)) {
-                                    break;
-                                }
+                                // if (parseTaskFlag = pauseTask(taskId)) {
+                                //     break;
+                                // }
                                 updateTaskProgress = true;
                                 Thread.sleep(pauseTime);
                                 VideoUtil.showViewPage(divisionCourse.getGoStudyParam(), item.getCookieStr());
@@ -160,10 +159,10 @@ public class AutoWatchVideoTaskThread extends Thread {
                         taskService.updateById(updateTaskEntity);
                     }
                 }
-            } catch (TaskPausedException e) {
-                sb.info(e.getMessage());
+            } catch (InterruptedException e) {
+                sb.info("任务被暂停");
                 updateStatus = DczxConstants.TASK_STATUS_ERROR;
-                reason = e.getMessage();
+                reason = "任务被暂停";
             } catch (Exception e) {
                 e.printStackTrace();
                 sb.info(e.getMessage());
@@ -174,18 +173,18 @@ public class AutoWatchVideoTaskThread extends Thread {
                 taskService.updateById(new DcTask().setId(taskId).setStatus(updateStatus).setReason(reason).setTaskLog(sb.toString()));
             }
             // 下一个循环
-            if (!pauseTask(taskId)) {
-                DcTask notStartOne = taskService.getOne(Wrappers.lambdaQuery(DcTask.class).orderByAsc(DcTask::getCreateTime)
+            // if (!pauseTask(taskId)) {
+            DcTask notStartOne = taskService.getOne(Wrappers.lambdaQuery(DcTask.class).orderByAsc(DcTask::getCreateTime)
                     .eq(DcTask::getDcUsername, dcUsername)
                     .eq(DcTask::getTaskType, DcTask.TYPE_VIDEO)
                     .eq(DcTask::getStatus, DczxConstants.TASK_STATUS_NOT_START)
                     .last(" limit 1 "));
-                if (notStartOne != null) {
-                    taskService.runTask(notStartOne);
-                } else {
-                    // 没有任务了
-                }
+            if (notStartOne != null) {
+                taskService.runTask(notStartOne);
+            } else {
+                // 没有任务了
             }
+            // }
             // 更新日志
             updateTaskLog(taskId, sb.toString());
             // 更新课程计划
@@ -202,18 +201,6 @@ public class AutoWatchVideoTaskThread extends Thread {
 
     private IDcTaskService getTaskService() {
         return SpringUtil.getBean(IDcTaskService.class);
-    }
-
-    private RedisService getRedisService() {
-        return SpringUtil.getBean(RedisService.class);
-    }
-
-    private boolean pauseTask(String taskId) {
-        Object b = getRedisService().getCacheObject(DczxConstants.THREAD_TASK_PARSE_KEY_PREFIX + taskId);
-        if (b == null) {
-            return false;
-        }
-        return (boolean) b;
     }
 
     /**

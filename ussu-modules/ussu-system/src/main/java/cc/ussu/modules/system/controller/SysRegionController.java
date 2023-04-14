@@ -4,6 +4,7 @@ import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
@@ -45,7 +46,7 @@ public class SysRegionController extends BaseController {
      */
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page() {
+    public JsonResult<PageInfoVO<SysRegion>> page() {
         LambdaQueryWrapper<SysRegion> qw = Wrappers.lambdaQuery(SysRegion.class);
         Page<SysRegion> page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);

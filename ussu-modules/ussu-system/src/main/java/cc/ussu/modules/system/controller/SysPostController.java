@@ -4,6 +4,7 @@ import cc.ussu.common.core.constants.ServiceNameConstants;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
@@ -46,7 +47,7 @@ public class SysPostController extends BaseController {
      */
     @PermCheck(PERM_PREFIX + SELECT)
     @GetMapping("/page")
-    public Object page(SysPost p) {
+    public JsonResult<PageInfoVO<SysPost>> page(SysPost p) {
         LambdaQueryWrapper<SysPost> qw = Wrappers.lambdaQuery(SysPost.class)
                 .orderByAsc(SysPost::getPostSort)
                 .eq(StrUtil.isNotBlank(p.getDisableFlag()), SysPost::getDisableFlag, p.getDisableFlag())

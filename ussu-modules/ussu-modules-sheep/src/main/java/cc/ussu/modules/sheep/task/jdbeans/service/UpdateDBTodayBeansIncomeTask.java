@@ -8,7 +8,6 @@ import cc.ussu.modules.sheep.service.IJdDayBeansService;
 import cc.ussu.modules.sheep.task.jd.constants.JdConstants;
 import cc.ussu.modules.sheep.task.jd.exception.JdCookieExpiredException;
 import cc.ussu.modules.sheep.task.jd.vo.JdCookieVO;
-import cc.ussu.modules.sheep.task.jdbeans.vo.JdDetailResponseVo;
 import cc.ussu.modules.sheep.task.jdbeans.vo.TodayBeanVO;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -98,7 +97,6 @@ public class UpdateDBTodayBeansIncomeTask extends SheepQuartzJobBean<String> {
         checkStop();
         TodayBeanVO todayBeanVo = beansService.todayBean2(jdCookieVO.toString());
         loggerThreadLocal.get().info("今日收入 {} 豆,支出 {} 豆", todayBeanVo.getIncome().toString(), todayBeanVo.getOut().toString());
-        List<JdDetailResponseVo.DetailList> incomeList = todayBeanVo.getIncomeList();
         jdDayBeansService.updateRecentBeans(todayBeanVo, jdCookieVO.getPt_pin());
     }
 

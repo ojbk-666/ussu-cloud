@@ -36,7 +36,7 @@ public class EbFeatureController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbFeature p) {
+    public JsonResult page(EbFeature p) {
         LambdaQueryWrapper<EbFeature> qw = new LambdaQueryWrapper<>();
         qw.orderByAsc(EbFeature::getFeatureSort, EbFeature::getCatId)
                 .orderByDesc(EbFeature::getFeatureId)
@@ -64,8 +64,8 @@ public class EbFeatureController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult<EbFeature> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

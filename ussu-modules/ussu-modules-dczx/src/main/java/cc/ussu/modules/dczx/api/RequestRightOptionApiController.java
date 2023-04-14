@@ -3,7 +3,7 @@ package cc.ussu.modules.dczx.api;
 import cc.ussu.common.core.util.HttpContextHolder;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.log.annotation.SystemLog;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.modules.dczx.base.BaseDczxController;
 import cc.ussu.modules.dczx.constants.DczxConstants;
 import cc.ussu.modules.dczx.entity.DcInterfaceLog;
@@ -202,12 +202,12 @@ public class RequestRightOptionApiController extends BaseDczxController {
     // @Operation(summary = "精确搜索")
     @SystemLog(saveResult = false, group = SYSTEM_LOG_GROUP, name = "精确搜索")
     @GetMapping("/searchDb")
-    public Object findQuestion(String keyword) {
+    public JsonResult<? extends List> findQuestion(String keyword) {
         RequestCountUtil.count();
         saveRequestLog(keyword);
         Map<String, Object> map = new HashMap<>();
         map.put("questionTitle", keyword);
-        if (DictUtil.getValueBoolean("dczx", "search_db_from_es", false)) {
+        if (ConfigUtil.getValueBoolean("dczx", "search_db_from_es", false)) {
             LambdaEsQueryWrapper<DcPaperQuestionVO> qw = EsWrappers.lambdaQuery(DcPaperQuestionVO.class)
                     .sortByScore().match(DcPaperQuestionVO::getQuestionTitle, keyword);
             EsPageInfo<DcPaperQuestionVO> pageInfo = esDcPaperQuestionMapper.pageQuery(qw, 1, 20);
@@ -236,8 +236,8 @@ public class RequestRightOptionApiController extends BaseDczxController {
     // @Operation(summary = "模糊搜索")
     @SystemLog(saveResult = false, group = SYSTEM_LOG_GROUP, name = "模糊搜索")
     @GetMapping("/searchEs")
-    public Object searchQuestion(@RequestParam String keyword) {
-        if (!DictUtil.getValueBoolean("dczx", DczxConstants.PARAM_KEY_REQUEST_RIGHT_OPTION_FROM_ES)) {
+    public JsonResult<? extends List> searchQuestion(@RequestParam String keyword) {
+        if (!ConfigUtil.getValueBoolean("dczx", DczxConstants.PARAM_KEY_REQUEST_RIGHT_OPTION_FROM_ES)) {
             return findQuestion(keyword);
         }
         RequestCountUtil.count();

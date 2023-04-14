@@ -3,6 +3,7 @@ package cc.ussu.modules.ecps.item.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseAdminController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.modules.ecps.item.entity.EbFeature;
 import cc.ussu.modules.ecps.item.entity.EbFeatureGroup;
 import cc.ussu.modules.ecps.item.service.IEbFeatureGroupService;
@@ -39,7 +40,7 @@ public class EbFeatureGroupController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbFeatureGroup p) {
+    public JsonResult<PageInfoVO<EbFeatureGroup>> page(EbFeatureGroup p) {
         LambdaQueryWrapper<EbFeatureGroup> qw = new LambdaQueryWrapper<>();
         qw.orderByAsc(EbFeatureGroup::getGroupSort)
                 .orderByDesc(EbFeatureGroup::getGroupId)
@@ -86,8 +87,8 @@ public class EbFeatureGroupController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult<EbFeatureGroup> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

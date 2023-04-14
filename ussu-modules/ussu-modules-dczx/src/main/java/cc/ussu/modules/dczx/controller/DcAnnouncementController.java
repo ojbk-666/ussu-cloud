@@ -3,6 +3,7 @@ package cc.ussu.modules.dczx.controller;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
 import cc.ussu.common.security.annotation.PermCheck;
@@ -40,7 +41,7 @@ public class DcAnnouncementController extends BaseController {
      */
     @PermCheck("dczx:dc-announcement:select")
     @GetMapping("/page")
-    public Object page() {
+    public JsonResult<PageInfoVO<DcAnnouncement>> page() {
         LambdaQueryWrapper<DcAnnouncement> qw = Wrappers.lambdaQuery(DcAnnouncement.class);
         Page<DcAnnouncement> page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);

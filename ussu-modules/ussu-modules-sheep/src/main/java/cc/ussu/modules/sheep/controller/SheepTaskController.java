@@ -5,6 +5,7 @@ import cc.ussu.common.core.vo.SelectGroupVO;
 import cc.ussu.common.core.vo.SelectVO;
 import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
+import cc.ussu.common.datasource.vo.PageInfoVO;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.modules.sheep.common.ISheepTask;
 import cc.ussu.modules.sheep.entity.SheepTask;
@@ -47,7 +48,7 @@ public class SheepTaskController extends BaseController {
      */
     @PermCheck("sheep:sheep-task:select")
     @GetMapping("/page")
-    public Object page(SheepTask query) {
+    public JsonResult<PageInfoVO<SheepTask>> page(SheepTask query) {
         LambdaQueryWrapper<SheepTask> qw = Wrappers.lambdaQuery(SheepTask.class)
             .orderByAsc(SheepTask::getDisabled)
             .like(StrUtil.isNotBlank(query.getTaskName()), SheepTask::getTaskName, query.getTaskName());

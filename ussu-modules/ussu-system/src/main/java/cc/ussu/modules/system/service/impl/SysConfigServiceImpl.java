@@ -10,6 +10,7 @@ import cc.ussu.modules.system.mapper.SysConfigMapper;
 import cc.ussu.modules.system.service.ISysConfigService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.Master;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -62,10 +63,30 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         return BeanUtil.toBean(sysConfig, SysConfigGroupVO.class);
     }
 
+    /**
+     * 检查分组编码是否存在
+     */
+    @Override
+    public boolean existGroupByGroupCode(String groupCode, String id) {
+        return super.count(Wrappers.lambdaQuery(SysConfig.class).eq(SysConfig::getGroupFlag, StrConstants.CHAR_TRUE)
+                .eq(SysConfig::getGroupCode, groupCode).ne(StrUtil.isNotBlank(id), SysConfig::getId, id)) > 0;
+    }
+
+    /**
+     * 检查分组下编码是否存在
+     */
+    @Override
+    public boolean existDataByGroupCodeAndCode(String groupCode, String code, String id) {
+        return super.count(Wrappers.lambdaQuery(SysConfig.class).eq(SysConfig::getGroupFlag, StrConstants.CHAR_FALSE)
+                .eq(SysConfig::getGroupCode, groupCode).eq(SysConfig::getCode, code)
+                .ne(StrUtil.isNotBlank(id), SysConfig::getId, id)) > 0;
+    }
+
     @Transactional
     @Override
     public void addGroup(SysConfigGroupVO vo) {
         SysConfig sysConfig = BeanUtil.toBean(vo, SysConfig.class);
+        Assert.isFalse(existGroupByGroupCode(sysConfig.getGroupCode(), null), "分组编码已存在");
         sysConfig.setGroupFlag(StrConstants.CHAR_TRUE).setDisableFlag(StrConstants.CHAR_FALSE);
         super.save(sysConfig);
     }
@@ -75,6 +96,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
     public void editGroup(SysConfigGroupVO vo) {
         Assert.notBlank(vo.getId(), "id不能为空");
         SysConfig sysConfig = BeanUtil.toBean(vo, SysConfig.class);
+        Assert.isFalse(existGroupByGroupCode(sysConfig.getGroupCode(), sysConfig.getId()), "分组编码已存在");
         sysConfig.setGroupFlag(StrConstants.CHAR_TRUE);
         super.updateById(sysConfig);
     }
@@ -85,6 +107,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         SysConfig sysConfig = BeanUtil.toBean(vo, SysConfig.class);
         String groupCode = vo.getGroupCode();
         SysConfigGroupVO group = getByGroupCode(groupCode);
+        Assert.isFalse(existDataByGroupCodeAndCode(sysConfig.getGroupCode(), sysConfig.getCode(), null), "编码已存在");
         sysConfig.setGroupFlag(StrConstants.CHAR_FALSE).setDisableFlag(StrConstants.CHAR_FALSE).setGroupName(group.getGroupName());
         super.save(sysConfig);
     }
@@ -95,6 +118,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         Assert.notBlank(vo.getId(), "id不能为空");
         SysConfig sysConfig = BeanUtil.toBean(vo, SysConfig.class);
         SysConfigGroupVO group = getByGroupCode(sysConfig.getGroupCode());
+        Assert.isFalse(existDataByGroupCodeAndCode(sysConfig.getGroupCode(), sysConfig.getCode(), sysConfig.getId()), "编码已存在");
         sysConfig.setGroupFlag(StrConstants.CHAR_FALSE).setGroupName(group.getGroupName());
         super.updateById(sysConfig);
     }

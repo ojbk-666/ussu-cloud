@@ -43,4 +43,14 @@ public class TodayBeanVO {
      */
     private BigDecimal outYesterday;
 
+    /**
+     * 今日收入明细
+     */
+    private List<JdDetailResponseVo.DetailList> todayDetailList;
+
+    /**
+     * 昨日收入明细
+     */
+    private List<JdDetailResponseVo.DetailList> yesterdayDetailList;
+
 }

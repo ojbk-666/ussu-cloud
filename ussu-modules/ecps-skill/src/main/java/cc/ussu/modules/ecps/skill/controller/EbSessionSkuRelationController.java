@@ -29,7 +29,7 @@ public class EbSessionSkuRelationController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbSessionSkuRelation p) {
+    public JsonResult page(EbSessionSkuRelation p) {
         LambdaQueryWrapper<EbSessionSkuRelation> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -39,8 +39,8 @@ public class EbSessionSkuRelationController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

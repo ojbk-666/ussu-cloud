@@ -1,5 +1,6 @@
 package cc.ussu.modules.sheep.service.impl;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.modules.sheep.entity.JdDayBeans;
 import cc.ussu.modules.sheep.mapper.JdDayBeansMapper;
 import cc.ussu.modules.sheep.service.IJdDayBeansService;
@@ -54,6 +55,7 @@ public class JdDayBeansServiceImpl extends ServiceImpl<JdDayBeansMapper, JdDayBe
             BigDecimal incomeYesterday = todayBeanVo.getIncomeYesterday();
             BigDecimal outYesterday = todayBeanVo.getOutYesterday();
             JdDayBeans jdDayBeans = new JdDayBeans().setIncomeBean(income.intValue()).setOutBean(out.intValue()).setJdUserId(pin);
+            jdDayBeans.setDetails(JsonUtils.toJsonString(todayBeanVo.getTodayDetailList()));
             // 更新今日记录
             JdDayBeans todayRecord = getTodayRecord(pin);
             if (todayRecord == null) {
@@ -65,6 +67,7 @@ public class JdDayBeansServiceImpl extends ServiceImpl<JdDayBeansMapper, JdDayBe
             // 昨日记录更新
             if (0 != incomeYesterday.intValue()) {
                 JdDayBeans jdDayBeansYesterday = new JdDayBeans().setIncomeBean(incomeYesterday.intValue()).setOutBean(outYesterday.intValue()).setJdUserId(pin);
+                jdDayBeansYesterday.setDetails(JsonUtils.toJsonString(todayBeanVo.getYesterdayDetailList()));
                 JdDayBeans yesterdayRecord = getYesterdayRecord(pin);
                 if (yesterdayRecord == null) {
                     // 新增

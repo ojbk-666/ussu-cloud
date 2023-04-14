@@ -1,6 +1,6 @@
 package cc.ussu.modules.system.service.impl;
 
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.common.security.util.SecurityUtil;
 import cc.ussu.modules.system.entity.SysUser;
 import cc.ussu.modules.system.entity.SysUserPost;
@@ -64,7 +64,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // Assert.notBlank(p.getAccount(), "用户名不能为空");
         // Assert.notBlank(p.getName(), "昵称不能为空");
         Assert.isFalse(checkExistAccount(p), "用户名已存在");
-        String defaultPassword = DictUtil.getValue("system",  DEFAULT_PASSWORD_PARAM_KEY, DEFAULT_PASSWORD_IF_PARAM_NULL);
+        String defaultPassword = ConfigUtil.getValue("system",  DEFAULT_PASSWORD_PARAM_KEY, DEFAULT_PASSWORD_IF_PARAM_NULL);
         p.setPassword(SecurityUtil.encryptPassword(StrUtil.isBlank(p.getPassword()) ? defaultPassword : p.getPassword()));
         super.save(p);
         if (CollUtil.isNotEmpty(p.getRoleIds())) {
@@ -136,7 +136,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 验证账号重复
         List<SysUser> exists = super.list(Wrappers.lambdaQuery(SysUser.class).select(SysUser::getAccount).in(SysUser::getAccount, accountList));
         Assert.isTrue(exists.size() == 0, "以下账号已存在：{}", exists.stream().map(SysUser::getAccount).collect(Collectors.joining(StrUtil.COMMA)));
-        String defaultPassword = DictUtil.getValue("system", DEFAULT_PASSWORD_PARAM_KEY, DEFAULT_PASSWORD_IF_PARAM_NULL);
+        String defaultPassword = ConfigUtil.getValue("system", DEFAULT_PASSWORD_PARAM_KEY, DEFAULT_PASSWORD_IF_PARAM_NULL);
         String pwd = SecurityUtil.encryptPassword(defaultPassword);
         String remark = SecurityUtil.getLoginUser().getAccount() + "于" + DateUtil.now() + "导入";
         for (SysUser user : sysUserList) {

@@ -2,7 +2,7 @@ package cc.ussu.modules.dczx.api;
 
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.common.core.web.controller.BaseController;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.modules.dczx.controller.DcStatisticController;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,18 @@ public class ScriptableApiController extends BaseController {
     private DcStatisticController dcStatisticController;
 
     private String getAppSecret() {
-        return DictUtil.getValue("dczx", "scriptable:secret");
+        return ConfigUtil.getValue("dczx", "scriptable:secret");
     }
 
     /**
      * 小组件统计接口
      */
     @GetMapping("/statistic")
-    public Object statistic(String s) {
+    public JsonResult statistic(String s) {
         if (!StrUtil.equals(getAppSecret(), s)) {
             return JsonResult.error("appSecret invalid");
         }
-        return dcStatisticController.countNum();
+        return JsonResult.ok(dcStatisticController.countNum());
     }
 
 }

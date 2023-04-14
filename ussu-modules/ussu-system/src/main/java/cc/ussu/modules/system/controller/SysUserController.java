@@ -7,7 +7,7 @@ import cc.ussu.common.core.web.controller.BaseController;
 import cc.ussu.common.datasource.util.MybatisPlusUtil;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.constants.SystemLogConstants;
-import cc.ussu.common.redis.util.DictUtil;
+import cc.ussu.common.redis.util.ConfigUtil;
 import cc.ussu.common.security.annotation.PermCheck;
 import cc.ussu.common.security.auth.AuthLogic;
 import cc.ussu.common.security.util.SecurityUtil;
@@ -402,7 +402,7 @@ public class SysUserController extends BaseController {
     public JsonResult resetPwd(@PathVariable String ids) {
         List<String> idList = CollUtil.removeBlank(StrUtil.split(ids, StrUtil.COMMA));
         Assert.notEmpty(idList, "id不能为空");
-        String password = DictUtil.getValue("system", "ussu:defaultPassword", "admin");
+        String password = ConfigUtil.getValue("system", "ussu:defaultPassword", "admin");
         String md5Password = MD5.create().digestHex(password, CharsetUtil.CHARSET_UTF_8);
         service.update(new SysUser().setPassword(SecurityUtil.encryptPassword(md5Password)), Wrappers.lambdaQuery(SysUser.class).in(SysUser::getId, idList));
         return JsonResult.ok();

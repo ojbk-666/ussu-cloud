@@ -34,7 +34,7 @@ public class EbShipAddrController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbShipAddr p) {
+    public JsonResult page(EbShipAddr p) {
         LambdaQueryWrapper<EbShipAddr> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -44,7 +44,7 @@ public class EbShipAddrController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
+    public JsonResult<EbShipAddr> detail(@PathVariable Integer id) {
         EbShipAddr one = service.getOne(Wrappers.lambdaQuery(EbShipAddr.class).eq(EbShipAddr::getShipAddrId, id)
                 .eq(!SecurityUtil.isSuperAdmin(), EbShipAddr::getEbUserId, SecurityUtil.getUserId()));
         return JsonResult.ok(one);

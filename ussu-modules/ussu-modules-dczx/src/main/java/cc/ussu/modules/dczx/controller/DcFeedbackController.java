@@ -34,7 +34,7 @@ public class DcFeedbackController {
 
     @PermCheck("dczx:dc-feedback:select")
     @GetMapping("/page")
-    public Object page(DcFeedback p) {
+    public JsonResult page(DcFeedback p) {
         LambdaQueryWrapper<DcFeedback> qw = Wrappers.lambdaQuery(DcFeedback.class)
                 .orderByDesc(DcFeedback::getCreateTime)
                 .eq(SecurityUtil.isNotSuperAdmin(), DcFeedback::getCreateBy, SecurityUtil.getLoginUser().getUserId())

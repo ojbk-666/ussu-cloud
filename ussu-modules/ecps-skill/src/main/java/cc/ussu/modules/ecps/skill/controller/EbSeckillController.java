@@ -29,7 +29,7 @@ public class EbSeckillController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbSeckill p) {
+    public JsonResult page(EbSeckill p) {
         LambdaQueryWrapper<EbSeckill> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -39,8 +39,8 @@ public class EbSeckillController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id);
+    public JsonResult detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id));
     }
 
     /**

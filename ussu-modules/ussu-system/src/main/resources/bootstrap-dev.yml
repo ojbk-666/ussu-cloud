@@ -9,6 +9,9 @@ spring:
     name: ussu-system
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    mapper:
+      use-getters-as-setters: false
   cloud:
     nacos:
       discovery:

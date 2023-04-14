@@ -1,11 +1,12 @@
 package cc.ussu.gateway.filter;
 
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.gateway.properties.CaptchaProperties;
 import cc.ussu.gateway.service.ValidateCodeService;
 import cc.ussu.gateway.util.ServletUtils;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -44,8 +45,8 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object> {
             }
             try {
                 String rspStr = resolveBodyFromRequest(request);
-                JSONObject obj = JSONObject.parseObject(rspStr);
-                validateCodeService.check(obj.getString(UUID), obj.getString(CODE));
+                ObjectNode obj = JsonUtils.parseObject(rspStr);
+                validateCodeService.check(obj.get(UUID).asText(), obj.get(CODE).asText());
             } catch (Exception e) {
                 return ServletUtils.webFluxResponseWriter(exchange.getResponse(), e.getMessage());
             }

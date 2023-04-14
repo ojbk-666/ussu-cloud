@@ -36,7 +36,7 @@ public class EbSkuController extends BaseAdminController {
      * 分页
      */
     @GetMapping
-    public Object page(EbSku p) {
+    public JsonResult page(EbSku p) {
         LambdaQueryWrapper<EbSku> qw = new LambdaQueryWrapper<>();
         IPage page = service.page(MybatisPlusUtil.getPage(), qw);
         return MybatisPlusUtil.getResult(page);
@@ -63,8 +63,8 @@ public class EbSkuController extends BaseAdminController {
      * 详情
      */
     @GetMapping("/{id}")
-    public Object detail(@PathVariable Integer id) {
-        return service.detail(id, false);
+    public JsonResult<EbSku> detail(@PathVariable Integer id) {
+        return JsonResult.ok(service.detail(id, false));
     }
 
     @GetMapping("/detail2/{skuId}")

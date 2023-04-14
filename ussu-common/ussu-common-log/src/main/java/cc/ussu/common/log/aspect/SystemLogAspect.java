@@ -2,6 +2,7 @@ package cc.ussu.common.log.aspect;
 
 import cc.ussu.common.core.constants.SecurityConstants;
 import cc.ussu.common.core.util.HttpContextHolder;
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.log.annotation.SystemLog;
 import cc.ussu.common.log.service.RecordLogService;
 import cc.ussu.common.security.util.SecurityUtil;
@@ -11,7 +12,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.Header;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -91,7 +91,7 @@ public class SystemLogAspect {
         // 结果
         if (result != null && annotation.saveResult()) {
             try {
-                String s = JSONUtil.toJsonStr(result);
+                String s = JsonUtils.toJsonStr(result);
                 systemLog.setResult(s);
             } catch (Exception e) {
                 systemLog.setResult(result.toString());
@@ -101,7 +101,7 @@ public class SystemLogAspect {
         Object[] args = point.getArgs();
         if (ArrayUtil.isNotEmpty(args) && annotation.saveParam()) {
             try {
-                String s = JSONUtil.toJsonStr(args);
+                String s = JsonUtils.toJsonStr(args);
                 systemLog.setParams(s);
             } catch (Exception e) {
                 systemLog.setParams(args.toString());

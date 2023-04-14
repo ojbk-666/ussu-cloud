@@ -280,16 +280,22 @@ public class JdBeansServiceImpl implements JdBeansService {
         BigDecimal incomeYesterday = new BigDecimal(0);
         // 昨日支出
         BigDecimal outYesterday = new BigDecimal(0);
+        // 明细
+        List<JdDetailResponseVo.DetailList> todayDetailList = new LinkedList<>();
+        List<JdDetailResponseVo.DetailList> yesterdayDetailList = new LinkedList<>();
         String today = DateUtil.formatDate(new Date());
         String yesterday = DateUtil.formatDate(DateUtil.yesterday());
+        a:
         while (page <= 10) {
             List<JdDetailResponseVo.DetailList> list = getJingBeanDetail2(cookie, page);
             if (CollUtil.isEmpty(list)) {
                 break;
             }
+            b:
             for (JdDetailResponseVo.DetailList item : list) {
                 String formatDate = DateUtil.formatDate(item.getDate());
                 if (today.equals(formatDate)) {
+                    todayDetailList.add(item);
                     if (item.getAmount() > 0) {
                         income = NumberUtil.add(income, item.getAmount());
                         incomeList.add(item);
@@ -298,19 +304,21 @@ public class JdBeansServiceImpl implements JdBeansService {
                         outList.add(item);
                     }
                 } else if (yesterday.equals(formatDate)) {
+                    yesterdayDetailList.add(item);
                     if (item.getAmount() > 0) {
                         incomeYesterday = NumberUtil.add(incomeYesterday, item.getAmount());
                     } else {
                         outYesterday = NumberUtil.add(outYesterday, -item.getAmount());
                     }
                 } else {
-                    break;
+                    break a;
                 }
             }
             page++;
         }
         return new TodayBeanVO().setIncome(income).setOut(out).setIncomeList(incomeList).setOutList(outList)
-                .setIncomeYesterday(incomeYesterday).setOutYesterday(outYesterday);
+            .setIncomeYesterday(incomeYesterday).setOutYesterday(outYesterday)
+            .setTodayDetailList(todayDetailList).setYesterdayDetailList(yesterdayDetailList);
     }
 
     public static void main(String[] args) {

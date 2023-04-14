@@ -59,4 +59,10 @@ public class JdDayBeans implements Serializable{
     @TableField("out_bean")
     private Integer outBean;
 
+    /**
+     * 京豆详情
+     */
+    @TableField("details")
+    private String details;
+
 }

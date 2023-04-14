@@ -1,10 +1,10 @@
 package cc.ussu.modules.sheep.task.service;
 
+import cc.ussu.common.redis.util.ConfigUtil;
+import cc.ussu.modules.sheep.task.jd.constants.JdConstants;
 import cc.ussu.support.qinglong.dto.EnvListDTO;
 import cc.ussu.support.qinglong.model.QingLongConfig;
 import cc.ussu.support.qinglong.service.impl.AbstractQingLongService;
-import cc.ussu.modules.sheep.task.jd.constants.JdConstants;
-import cc.ussu.common.redis.util.DictUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,9 @@ public class QingLong5700Service extends AbstractQingLongService {
     @Override
     public QingLongConfig getQingLongConfig() {
         return QingLongConfig.builder()
-                .url(DictUtil.getValue("qinglong", "url"))
-                .clientId(DictUtil.getValue("qinglong", "client-id"))
-                .clientSecret(DictUtil.getValue("qinglong", "client-secret"))
+                .url(ConfigUtil.getValue("qinglong", "url"))
+                .clientId(ConfigUtil.getValue("qinglong", "client-id"))
+                .clientSecret(ConfigUtil.getValue("qinglong", "client-secret"))
                 .build();
     }
 

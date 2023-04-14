@@ -2,6 +2,7 @@ package cc.ussu.support.qinglong.service.impl;
 
 import cc.ussu.common.core.httpclient.MyHttpRequest;
 import cc.ussu.common.core.httpclient.MyHttpResponse;
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.support.qinglong.dto.*;
 import cc.ussu.support.qinglong.exception.*;
@@ -11,7 +12,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
                             getQingLongConfig().getClientId() + "&client_secret=" + getQingLongConfig().getClientSecret();
                     MyHttpResponse execute = MyHttpRequest.createGet(url).disableRedirect().execute();
                     if (execute.isOk()) {
-                        AuthTokenResultDTO authTokenResultVo = JSONUtil.toBean(execute.body(), AuthTokenResultDTO.class);
+                        AuthTokenResultDTO authTokenResultVo = JsonUtils.toBean(execute.body(), AuthTokenResultDTO.class);
                         token = authTokenResultVo.getData().getToken();
                         redisService.setCacheObject(key, token, 60L * 60 * 24 * 29);
                     } else {
@@ -128,7 +128,7 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
         }
         MyHttpResponse execute = httpGet(getQLUrl("envs", p)).execute();
         if (execute.isOk()) {
-            EnvListDTO data = JSONUtil.toBean(execute.body(), EnvListDTO.class);
+            EnvListDTO data = JsonUtils.toBean(execute.body(), EnvListDTO.class);
             if (!data.isSuccess()) {
                 throw new GetEnvException(data.getMessage());
             }
@@ -151,9 +151,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
         p.put("remarks", envDTO.getRemarks());
         List<Map> maps = new LinkedList<>();
         maps.add(p);
-        MyHttpResponse execute = httpPost(getQLUrl("envs")).body(JSONUtil.toJsonStr(maps)).execute();
+        MyHttpResponse execute = httpPost(getQLUrl("envs")).body(JsonUtils.toJsonStr(maps)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new SaveEnvException(baseResultDTO.getMessage());
             }
@@ -173,9 +173,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
     @Override
     public void updateEnv(EnvListDTO.EnvDTO env) {
         Assert.notNull(env.getId(), "id不能为空");
-        MyHttpResponse execute = httpPut(getQLUrl("envs")).body(JSONUtil.toJsonStr(env)).execute();
+        MyHttpResponse execute = httpPut(getQLUrl("envs")).body(JsonUtils.toJsonStr(env)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new UpdateEnvException(baseResultDTO.getMessage());
             }
@@ -193,9 +193,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
      */
     @Override
     public void deleteEnv(List<Integer> ids) {
-        MyHttpResponse execute = httpDelete(getQLUrl("envs")).body(JSONUtil.toJsonStr(ids)).execute();
+        MyHttpResponse execute = httpDelete(getQLUrl("envs")).body(JsonUtils.toJsonStr(ids)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new DeleteEnvException(baseResultDTO.getMessage());
             }
@@ -214,9 +214,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
     @Override
     public void disableEnv(List<Integer> ids) {
         if (CollUtil.isNotEmpty(ids)) {
-            MyHttpResponse execute = httpPut(getQLUrl("envs/disable")).body(JSONUtil.toJsonStr(ids)).execute();
+            MyHttpResponse execute = httpPut(getQLUrl("envs/disable")).body(JsonUtils.toJsonStr(ids)).execute();
             if (execute.isOk()) {
-                BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+                BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
                 if (!baseResultDTO.isSuccess()) {
                     throw new DisableEnvException(baseResultDTO.getMessage());
                 }
@@ -236,9 +236,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
     @Override
     public void enableEnv(List<Integer> ids) {
         if (CollUtil.isNotEmpty(ids)) {
-            MyHttpResponse execute = httpPut(getQLUrl("envs/enable")).body(JSONUtil.toJsonStr(ids)).execute();
+            MyHttpResponse execute = httpPut(getQLUrl("envs/enable")).body(JsonUtils.toJsonStr(ids)).execute();
             if (execute.isOk()) {
-                BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+                BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
                 if (!baseResultDTO.isSuccess()) {
                     throw new EnableEnvException(baseResultDTO.getMessage());
                 }
@@ -263,7 +263,7 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
         }
         MyHttpResponse execute = httpGet(getQLUrl("crons", p)).execute();
         if (execute.isOk()) {
-            TaskListDTO taskListVo = JSONUtil.toBean(execute.body(), TaskListDTO.class);
+            TaskListDTO taskListVo = JsonUtils.toBean(execute.body(), TaskListDTO.class);
             if (!taskListVo.isSuccess()) {
                 throw new GetTaskException(taskListVo.getMessage());
             }
@@ -283,7 +283,7 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
     public TaskDetailDTO getTaskDetail(Integer id) {
         MyHttpResponse execute = httpGet(getQLUrl("crons/" + id)).execute();
         if (execute.isOk()) {
-            TaskDetailDTO taskDetailDTO = JSONUtil.toBean(execute.body(), TaskDetailDTO.class);
+            TaskDetailDTO taskDetailDTO = JsonUtils.toBean(execute.body(), TaskDetailDTO.class);
             if (!taskDetailDTO.isSuccess()) {
                 throw new GetTaskException(taskDetailDTO.getMessage());
             }
@@ -302,7 +302,7 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
     public TaskLogDTO getTaskLog(Integer taskId) {
         MyHttpResponse execute = httpGet(getQLUrl("crons/" + taskId + "/log")).execute();
         if (execute.isOk()) {
-            TaskLogDTO taskLogDTO = JSONUtil.toBean(execute.body(), TaskLogDTO.class);
+            TaskLogDTO taskLogDTO = JsonUtils.toBean(execute.body(), TaskLogDTO.class);
             if (!taskLogDTO.isSuccess()) {
                 throw new GetTaskLogException(taskLogDTO.getMessage());
             }
@@ -325,9 +325,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
         p.put("name", task.getName());
         p.put("command", task.getCommand());
         p.put("schedule", task.getSchedule());
-        MyHttpResponse execute = httpPost(getQLUrl("crons")).body(JSONUtil.toJsonStr(p)).execute();
+        MyHttpResponse execute = httpPost(getQLUrl("crons")).body(JsonUtils.toJsonStr(p)).execute();
         if (execute.isOk()) {
-            BaseResultDTO resultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO resultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!resultDTO.isSuccess()) {
                 throw new SaveTaskException(resultDTO.getMessage());
             }
@@ -351,9 +351,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
         p.put("name", task.getName());
         p.put("command", task.getCommand());
         p.put("schedule", task.getSchedule());
-        MyHttpResponse execute = httpPut(getQLUrl("crons")).body(JSONUtil.toJsonStr(p)).execute();
+        MyHttpResponse execute = httpPut(getQLUrl("crons")).body(JsonUtils.toJsonStr(p)).execute();
         if (execute.isOk()) {
-            BaseResultDTO resultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO resultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!resultDTO.isSuccess()) {
                 throw new UpdateTaskException(resultDTO.getMessage());
             }
@@ -371,9 +371,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
      */
     @Override
     public void deleteTask(List<Integer> ids) {
-        MyHttpResponse execute = httpDelete(getQLUrl("crons")).body(JSONUtil.toJsonStr(ids)).execute();
+        MyHttpResponse execute = httpDelete(getQLUrl("crons")).body(JsonUtils.toJsonStr(ids)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new DeleteTaskException(baseResultDTO.getMessage());
             }
@@ -391,9 +391,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
      */
     @Override
     public void disableTask(List<Integer> ids) {
-        MyHttpResponse execute = httpPut(getQLUrl("crons/disable")).body(JSONUtil.toJsonStr(ids)).execute();
+        MyHttpResponse execute = httpPut(getQLUrl("crons/disable")).body(JsonUtils.toJsonStr(ids)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new DisableTaskException(baseResultDTO.getMessage());
             }
@@ -411,9 +411,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
      */
     @Override
     public void enableTask(List<Integer> ids) {
-        MyHttpResponse execute = httpPut(getQLUrl("crons/enable")).body(JSONUtil.toJsonStr(ids)).execute();
+        MyHttpResponse execute = httpPut(getQLUrl("crons/enable")).body(JsonUtils.toJsonStr(ids)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new EnableTaskException(baseResultDTO.getMessage());
             }
@@ -431,9 +431,9 @@ public abstract class AbstractQingLongService implements EnvService, TaskService
      */
     @Override
     public void runTask(List<Integer> ids) {
-        MyHttpResponse execute = httpPut(getQLUrl("crons/run")).body(JSONUtil.toJsonStr(ids)).execute();
+        MyHttpResponse execute = httpPut(getQLUrl("crons/run")).body(JsonUtils.toJsonStr(ids)).execute();
         if (execute.isOk()) {
-            BaseResultDTO baseResultDTO = JSONUtil.toBean(execute.body(), BaseResultDTO.class);
+            BaseResultDTO baseResultDTO = JsonUtils.toBean(execute.body(), BaseResultDTO.class);
             if (!baseResultDTO.isSuccess()) {
                 throw new RunTaskException(baseResultDTO.getMessage());
             }

@@ -5,13 +5,13 @@ import cc.ussu.auth.model.vo.GiteeUserInfoVO;
 import cc.ussu.auth.properties.ThirdLoginGiteeProperties;
 import cc.ussu.auth.service.SysLoginService;
 import cc.ussu.auth.service.ThirdLoginService;
+import cc.ussu.common.core.util.JsonUtils;
 import cc.ussu.common.core.vo.JsonResult;
 import cc.ussu.system.api.RemoteSystemUserService;
 import cc.ussu.system.api.model.LoginUser;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +64,7 @@ public class ThirdLoginServiceGiteeImpl implements ThirdLoginService<String> {
     private GiteeAccessTokenResultVO getAccessToken(String code, String redirectUrl) {
         Map<String, Object> param = BeanUtil.beanToMap(thirdLoginGiteeProperties, true, false);
         String post = HttpUtil.post("https://gitee.com/oauth/token?client_id=" + thirdLoginGiteeProperties.getClientId() + "&code=" + code + "&grant_type=authorization_code&redirect_uri=" + URLUtil.encodeQuery(redirectUrl), param);
-        return JSON.parseObject(post, GiteeAccessTokenResultVO.class);
+        return JsonUtils.parseObject(post, GiteeAccessTokenResultVO.class);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ThirdLoginServiceGiteeImpl implements ThirdLoginService<String> {
      */
     private GiteeUserInfoVO getUserInfo(String accessToken) {
         String s = HttpUtil.get("https://gitee.com/api/v5/user?access_token=" + accessToken);
-        return JSON.parseObject(s, GiteeUserInfoVO.class);
+        return JsonUtils.parseObject(s, GiteeUserInfoVO.class);
     }
 
 }

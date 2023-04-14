@@ -38,7 +38,7 @@ public class DcTaskVideoController extends BaseController {
      */
     @PermCheck("dczx:dc-task-video:select")
     @GetMapping("/page")
-    public Object page(DcTaskVideoQueryVO p) {
+    public JsonResult page(DcTaskVideoQueryVO p) {
         PageHelperUtil.startPage();
         List<DcTaskVideoVO> page = taskVideoMapper.findPage(p);
         return PageHelperUtil.getResult(page);

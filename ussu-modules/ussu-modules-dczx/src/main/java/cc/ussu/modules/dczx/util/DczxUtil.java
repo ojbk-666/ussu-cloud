@@ -3,6 +3,7 @@ package cc.ussu.modules.dczx.util;
 import cc.ussu.common.core.httpclient.MyHttpRequest;
 import cc.ussu.common.redis.service.RedisService;
 import cc.ussu.modules.dczx.entity.*;
+import cc.ussu.modules.dczx.exception.LoginFailedException;
 import cc.ussu.modules.dczx.model.vo.*;
 import cc.ussu.modules.dczx.properties.DczxProperties;
 import cc.ussu.modules.dczx.service.*;
@@ -388,7 +389,7 @@ public class DczxUtil {
      * @param password
      * @return
      */
-    public static DczxLoginResultVo login(String loginName, String password) {
+    public static DczxLoginResultVo login(String loginName, String password) throws LoginFailedException {
         return SpringUtil.getBean(DczxService.class).login(loginName, password);
     }
 
