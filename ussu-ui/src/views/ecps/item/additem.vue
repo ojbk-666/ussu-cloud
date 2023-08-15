@@ -213,8 +213,8 @@ export default {
   data() {
     return {
       stepsIndex: 0,
-      itemImgsRelativePath: 'item/' + this.getDateStr(),
-      skuImgsRelativePath: 'sku/' + this.getDateStr(),
+      itemImgsRelativePath: 'ecpsitem/' + this.getDateStr(),
+      skuImgsRelativePath: 'ecpssku/' + this.getDateStr(),
       form: {
         itemName: undefined,
         catId: undefined,

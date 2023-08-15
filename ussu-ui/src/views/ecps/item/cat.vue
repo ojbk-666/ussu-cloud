@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-form-item label="类别名称" prop="name">
+      <el-form-item label="类别名称" prop="catName">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.catName"
           placeholder="请输入类别名称"
           clearable
           size="small"
@@ -38,15 +38,17 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
+      <el-table-column type="index" align="center" width="60"></el-table-column>
       <el-table-column prop="catName" label="类目名称"></el-table-column>
-      <el-table-column prop="catLevel" label="类目层级"></el-table-column>
+      <el-table-column prop="catId" label="ID" width="100"></el-table-column>
+      <el-table-column prop="catLevel" label="类目层级" width="80" align="center"></el-table-column>
       <el-table-column prop="catSort" label="排序" width="80" align="center"></el-table-column>
+      <el-table-column prop="catDesc" label="描述"></el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            plain
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-perm="['system:dept:edit']"
@@ -75,34 +77,24 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="24" v-if="form.parentId !== '0'">
+          <el-col :span="24" v-if="form.parentId !== 0">
             <el-form-item label="上级类别" prop="parentId">
-              <treeselect v-model="form.parentId" :options="deptOptions" :normalizer="normalizer" placeholder="选择上级类别" />
+              <treeselect v-model="form.parentId" :options="catTreeOptions" :normalizer="normalizer" placeholder="选择上级类别" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="类别名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入类别名称" />
+          <el-col :span="24">
+            <el-form-item label="类别名称" prop="catName" :required="true">
+              <el-input v-model="form.catName" placeholder="请输入类别名称" maxLength="80"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="类别全称" prop="fullName">
-              <el-input v-model="form.fullName" placeholder="请输入类别全称" />
+          <el-col :span="24">
+            <el-form-item label="排序" prop="catSort">
+              <el-input-number v-model="form.catSort" controls-position="right" :min="0" style="width: 100%;"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="显示排序" prop="sort">
-              <el-input-number v-model="form.sort" controls-position="right" :min="0" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="备注" prop="remarks">
-              <el-input v-model="form.remarks" placeholder="请输入邮箱" maxlength="50" />
+          <el-col :span="24">
+            <el-form-item label="备注" prop="catDesc">
+              <el-input v-model="form.catDesc" placeholder="请输入备注" maxlength="80" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -133,7 +125,7 @@ export default {
       // 表格树数据
       catList: [],
       // 类别树选项
-      deptOptions: [],
+      catTreeOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -142,34 +134,24 @@ export default {
       statusOptions: [],
       // 查询参数
       queryParams: {
-        name: undefined
+        catName: undefined
       },
       // 表单参数
-      form: {},
+      form: {
+        catId: undefined,
+        parentId: undefined,
+        catName: undefined,
+        catSort: undefined,
+        keywords: undefined,
+        catDesc: undefined
+      },
       // 表单校验
       rules: {
         parentId: [
           { required: true, message: "上级类别不能为空", trigger: "blur" }
         ],
-        deptName: [
+        catName: [
           { required: true, message: "类别名称不能为空", trigger: "blur" }
-        ],
-        orderNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
-        ],
-        email: [
-          {
-            type: "email",
-            message: "'请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
-          }
-        ],
-        phone: [
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
         ]
       }
     };
@@ -207,15 +189,7 @@ export default {
     },
     // 表单重置
     reset() {
-      this.form = {
-        catId: undefined,
-        parentId: undefined,
-        catName: undefined,
-        catSort: undefined,
-        catLevel: undefined,
-        keywords: undefined,
-        catDesc: undefined
-      };
+      this.resetObj(this.form);
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -236,7 +210,7 @@ export default {
       this.open = true;
       this.title = "添加类别";
       listCatAll().then(response => {
-        this.deptOptions = this.handleTree(response.data, "catId", "parentId","children", 0);
+        this.catTreeOptions = this.handleTree(response.data, "catId", "parentId","children", 0);
       });
     },
     /** 修改按钮操作 */
@@ -248,10 +222,10 @@ export default {
       this.title = "修改类别";
       // });
       // listAllDeptExcludeChild(row.id).then(response => {
-      //   this.deptOptions = this.handleTree(response.data, "id", "parentId", "children", "0");
+      //   this.catTreeOptions = this.handleTree(response.data, "id", "parentId", "children", "0");
       // });
       listCatAll().then(response => {
-        this.deptOptions = this.handleTree(response.data, "catId", "parentId","children", 0);
+        this.catTreeOptions = this.handleTree(response.data, "catId", "parentId","children", 0);
       });
     },
     /** 提交按钮 */

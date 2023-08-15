@@ -76,8 +76,7 @@
           ></el-image>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" prop="brandId" :show-overflow-tooltip="true"/>
-      <el-table-column label="销量" prop="sales" width="80"/>
+      <el-table-column label="品牌" prop="brandName" :show-overflow-tooltip="true"/>
       <el-table-column label="商品状态" prop="sales" width="100">
         <template slot-scope="scope">
           {{itemStatusFoarmt(scope.row.auditStatus, scope.row.showStatus)}}
@@ -93,7 +92,7 @@
             v-perm="['system:param:edit']"
           >修改
           </el-button>
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             style="color: red"
@@ -101,7 +100,26 @@
             @click="handleDelete(scope.row)"
             v-perm="['system:param:delete']"
           >删除
-          </el-button>
+          </el-button>-->
+          <el-dropdown
+            trigger="hover"
+            hide-on-click
+            @command="((value) => handleRowMore(value, scope.row))"
+          >
+            <el-button
+              type="text"
+            >更多<i class="el-icon-arrow-down"></i></el-button>
+            <!--<span class="el-dropdown-link">
+              更多<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
+            </span>-->
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-tickets" command="a">商品详情</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check" command="b">上架</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-close" command="c">下架</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check" command="d">哈哈哈</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -334,6 +352,9 @@ export default {
         this.getList();
         this.msgSuccess("删除成功");
       })
+    },
+    handleRowMore(command, item) {
+      console.log(command, item);
     },
     /** 导出按钮操作 */
     handleExport() {

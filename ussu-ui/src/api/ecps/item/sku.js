@@ -38,3 +38,10 @@ export function del(ids) {
   })
 }
 
+export function up(ids) {
+  return request({
+    url: '/item/sku/up/' + ids,
+    method: 'post'
+  })
+}
+

@@ -57,6 +57,30 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          plain
+          icon="el-icon-check"
+          size="mini"
+          :disabled="multiple"
+          @click="handleShangJia"
+          v-perm="['system:param:add']"
+        >上架
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-close"
+          size="mini"
+          :disabled="multiple"
+          @click="handleAdd"
+          v-perm="['system:param:add']"
+        >下架
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -77,22 +101,21 @@
       <el-table-column label="SKU" prop="sku"/>
       <el-table-column label="排序号" prop="skuSort" width="60"/>
       <el-table-column label="价格" prop="skuPrice" width="60"/>
-      <el-table-column label="图片" prop="imgs">
-        <!--<template slot-scope="scope">
+      <el-table-column label="图片" prop="skuImg">
+        <template slot-scope="scope">
           <el-image
-            :src="showImg(getFirstImgPath(scope.row.imgs))"
-            :title="scope.row.imgs"
+            :src="showImg(scope.row.skuImg)"
             fit="contain"
             style="width: 100%;height: 60px;"
           ></el-image>
-        </template>-->
+        </template>
       </el-table-column>
       <el-table-column label="品牌" prop="brandId" :show-overflow-tooltip="true"/>
       <el-table-column label="库存" prop="stockInventory" width="80"/>
       <el-table-column label="销量" prop="sales" width="80"/>
       <el-table-column label="商品状态" prop="sales" width="100">
         <template slot-scope="scope">
-          {{itemStatusFoarmt(scope.row.auditStatus, scope.row.showStatus)}}
+          {{itemStatusFoarmt(scope.row.showStatus)}}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -105,15 +128,26 @@
             v-perm="['system:param:edit']"
           >修改
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            style="color: red"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-perm="['system:param:delete']"
-          >删除
-          </el-button>
+          <el-dropdown
+            trigger="click"
+            hide-on-click
+            @command="((value) => handleRowMore(value, scope.row))"
+          >
+            <el-button
+              type="text"
+            >更多<i class="el-icon-arrow-down"></i></el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-tickets" command="a">商品详情</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check" command="sj" v-if="scope.row.showStatus === 0">上架</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-close" command="xj" v-if="scope.row.showStatus === 1">下架</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check" command="d">参与秒杀</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">满减设置</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">折扣设置</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">会员价格</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">库存管理</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check" command="e">优惠券</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -159,7 +193,7 @@
 
 <script>
 // import Vue from 'vue';
-import {add, del, detail, edit, getList} from "@/api/ecps/item/sku";
+import {add, del, detail, edit, getList, up} from "@/api/ecps/item/sku";
 import CategoryCascader from "@/components/Item/CategoryCascader";
 
 export default {
@@ -244,17 +278,11 @@ export default {
         this.loading = false;
       });
     },
-    itemStatusFoarmt(auditStatus, showStatus) {
-      if (auditStatus === 0) {
-        return '待审核';
-      } else if (auditStatus === 1) {
-        if (showStatus === 1) {
-          return '上架';
-        } else {
-          return '下架';
-        }
-      } else if (auditStatus === 2) {
-        return '审核不通过';
+    itemStatusFoarmt(showStatus) {
+      if (showStatus === 1) {
+        return '上架';
+      } else {
+        return '下架';
       }
     },
     getFirstImgPath(imgs) {
@@ -300,7 +328,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.brandId)
+      this.ids = selection.map(item => item.skuId)
       this.single = selection.length != 1
       this.multiple = !selection.length
     },
@@ -335,8 +363,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.itemId || this.ids;
-      this.$confirm('是否确认删除品牌?', "警告", {
+      const ids = row.skuId || this.ids;
+      this.$confirm('是否确认删除?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -346,6 +374,39 @@ export default {
         this.getList();
         this.msgSuccess("删除成功");
       })
+    },
+    // 上架
+    handleShangJia(row) {
+      const ids = row.skuId || this.ids.join(',');
+      up(ids).then(res => {
+        this.msgSuccess('上架成功');
+        this.getList();
+      }).catch(res => {
+        this.msgError(res.msg);
+      })
+    },
+    // 下架
+    handleXiaJia(row) {
+      const ids = row.skuId || this.ids.join(',');
+      /*up(ids).then(res => {
+        this.msgSuccess('上架成功');
+      }).catch(res => {
+        this.msgError(res.msg);
+      })*/
+    },
+    handleRowMore(command, item) {
+      console.log(command, item)
+      if (command == 'sj') {
+        // 上架
+        up(item.skuId).then(res => {
+          this.msgSuccess('上架成功');
+          this.getList();
+        }).catch(res => {
+          this.msgError(res.msg);
+        })
+      } else if (command == 'xj') {
+        // 下架
+      }
     },
     /** 导出按钮操作 */
     handleExport() {
