@@ -9,5 +9,6 @@ public interface ServiceNameConstants {
     String SERVICE_GATEWAY = "ussu-gateway";
     String SERVICE_SYSETM = "ussu-system";
     String SERVICE_FILES = "ussu-files";
+    String SERVICE_LOG = "ussu-log";
 
 }

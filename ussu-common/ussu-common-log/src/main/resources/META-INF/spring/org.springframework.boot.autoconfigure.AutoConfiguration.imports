@@ -1,2 +1,3 @@
-cc.ussu.common.log.service.impl.ESRecordLogServiceImpl
-cc.ussu.common.log.aspect.SystemLogAspect
+#cc.ussu.common.log.service.impl.ESRecordLogServiceImpl
+#cc.ussu.common.log.aspect.SystemLogAspect
+cc.ussu.common.log.service.impl.EsLogServiceImpl

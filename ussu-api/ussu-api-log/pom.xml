@@ -3,18 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ussu-cloud</artifactId>
+        <artifactId>ussu-api</artifactId>
         <groupId>cc.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ussu-api</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>ussu-api-system</module>
-        <module>ussu-api-log</module>
-    </modules>
+    <artifactId>ussu-api-log</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -25,7 +20,11 @@
         <dependency>
             <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-core</artifactId>
-            <version>1.0</version>
+        </dependency>
+        <!-- SpringCloud Openfeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 

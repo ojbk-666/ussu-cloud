@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ussu-common</artifactId>
+        <artifactId>ussu-modules</artifactId>
         <groupId>cc.ussu</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ussu-common-log</artifactId>
+    <artifactId>ussu-modules-log</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,12 +18,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>cc.ussu</groupId>
-            <artifactId>ussu-common-security</artifactId>
+            <artifactId>ussu-common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-log</artifactId>
         </dependency>
         <dependency>
             <groupId>cc.ussu</groupId>
             <artifactId>ussu-api-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.easy-es</groupId>
+            <artifactId>easy-es-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,5 +1,6 @@
 package cc.ussu.common.log.constants;
 
+@Deprecated
 public interface SystemLogConstants {
 
     String INSERT = "新增";

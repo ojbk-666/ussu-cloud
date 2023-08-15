@@ -28,6 +28,7 @@ import java.util.Date;
 /**
  * 系统操作日志
  */
+@Deprecated
 @Slf4j
 @Aspect
 @Component

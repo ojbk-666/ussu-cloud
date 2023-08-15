@@ -5,6 +5,7 @@ import java.lang.annotation.*;
 /**
  * 操作日志
  */
+@Deprecated
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
