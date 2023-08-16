@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class BhxcyUtil {
 
     private static final GlobalData getGlobalData() {
-        return JSONUtil.toBean(ConfigUtil.getValue("sheep", BhxcyConstants.PARAM_KEY_GLOBAL_DATA, "{}"), GlobalData.class);
+        return JSONUtil.toBean(ConfigUtil.getValue("sheep","sheep", BhxcyConstants.PARAM_KEY_GLOBAL_DATA, "{}"), GlobalData.class);
     }
 
     public static BhxcyBaseParam formatToParam(String urlstr) {

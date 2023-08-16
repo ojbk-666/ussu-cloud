@@ -37,7 +37,7 @@ public interface ISheepTask<P> {
 
     default boolean debugEnable() {
         return ArrayUtil.contains(SpringUtil.getBean(Environment.class).getActiveProfiles(), DevEnvCondition.ENV_NAME)
-                || ConfigUtil.getValueBoolean("sheep", "task:debugLog");
+                || ConfigUtil.getValueBoolean("sheep","task","debugLog", false);
     }
 
     /**

@@ -31,11 +31,11 @@ public class ScritableJdApiController extends BaseController {
      */
     @GetMapping("/recent-jd-bean")
     public JsonResult getRecentJdBean(String pin, String sign) {
-        Assert.isTrue(StrUtil.equals(ConfigUtil.getValue("dczx", "scriptable:secret"), sign), "error");
+        Assert.isTrue(StrUtil.equals(ConfigUtil.getValue("dczx", "dczx", "scriptable:secret"), sign), "error");
         Assert.notBlank(pin, "error");
         pin = pin.replaceAll("pin=", StrUtil.EMPTY).replaceAll(";", StrUtil.EMPTY);
         // 获取几天的记录
-        String limit = ConfigUtil.getValue("sheep", "jd:scriptable:limit", "7");
+        String limit = ConfigUtil.getValue("sheep","sheep","jd:scriptable:limit", "7");
         List<JdDayBeans> list = jdDayBeansService.list(Wrappers.lambdaQuery(JdDayBeans.class)
                 .orderByDesc(JdDayBeans::getCreateDate).eq(JdDayBeans::getJdUserId, pin).last(" limit " + limit));
         List<String> dateList = new ArrayList<>();
@@ -43,7 +43,7 @@ public class ScritableJdApiController extends BaseController {
         List<Integer> outList = new ArrayList<>();
         List<JSONObject> voList = new ArrayList<>();
         // x轴日期格式化格式
-        String pattern = ConfigUtil.getValue("sheep","scriptable:xAxis-date-format","MM/dd");
+        String pattern = ConfigUtil.getValue("sheep","sheep","scriptable:xAxis-date-format","MM/dd");
         for (JdDayBeans item : CollUtil.reverse(list)) {
             String dateStr = DateUtil.format(item.getCreateDate(), pattern);
             dateList.add(dateStr);

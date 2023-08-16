@@ -1,5 +1,7 @@
 package cc.ussu.common.core.httpclient;
 
+import cc.ussu.common.core.http.IMyHttpResponse;
+import cc.ussu.common.core.http.httpclient.HttpClientHttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -131,6 +133,35 @@ public class HttpClientUtil {
 
     public static boolean isOk(CloseableHttpResponse response) {
         return HttpStatus.SC_OK == response.getStatusLine().getStatusCode();
+    }
+
+    public static IMyHttpResponse doHttpIMyHttpResponse(HttpRequestBase httpRequestBase) {
+        CloseableHttpResponse response = null;
+        try {
+            response = httpClient.execute(httpRequestBase);
+            Header[] allHeaders = response.getAllHeaders();
+            Map<String, List<String>> headersMap = new HashMap<>();
+            for (Header header : allHeaders) {
+                String headerName = header.getName();
+                String headerValue = header.getValue();
+                List<String> tempList = headersMap.get(headerName);
+                if (tempList == null) {
+                    tempList = new ArrayList<>();
+                }
+                tempList.add(headerValue);
+                headersMap.put(headerName, tempList);
+            }
+            // 封装自定义返回
+            return new HttpClientHttpResponse()
+                    .setByteArray(response.getEntity() == null ? null : EntityUtils.toByteArray(response.getEntity()))
+                    .setStatus(response.getStatusLine().getStatusCode())
+                    .setHeaders(headersMap);
+        } catch (Exception e) {
+            log.error("CloseableHttpClient-请求异常", e);
+        } finally {
+            tryClose(response, httpRequestBase);
+        }
+        return null;
     }
 
     /**

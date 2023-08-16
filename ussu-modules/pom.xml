@@ -15,7 +15,6 @@
     <modules>
         <module>ussu-system</module>
         <module>ussu-code-generator</module>
-        <module>ussu-modules-dczx</module>
         <module>ussu-modules-job</module>
         <module>ecps-item</module>
         <module>ecps-portal</module>

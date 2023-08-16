@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>cc.ussu</groupId>
+            <artifactId>ussu-common-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.ussu</groupId>
             <artifactId>ussu-common-log</artifactId>
         </dependency>
         <dependency>

@@ -21,9 +21,9 @@ public class QingLong5700Service extends AbstractQingLongService {
     @Override
     public QingLongConfig getQingLongConfig() {
         return QingLongConfig.builder()
-                .url(ConfigUtil.getValue("qinglong", "url"))
-                .clientId(ConfigUtil.getValue("qinglong", "client-id"))
-                .clientSecret(ConfigUtil.getValue("qinglong", "client-secret"))
+                .url(ConfigUtil.getValue("sheep","qinglong", "url"))
+                .clientId(ConfigUtil.getValue("sheep","qinglong", "client-id"))
+                .clientSecret(ConfigUtil.getValue("sheep","qinglong", "client-secret"))
                 .build();
     }
 

@@ -18,8 +18,13 @@ public final class ConfigUtil {
     public ConfigUtil() {
     }
 
+    @Deprecated
     private static final String getKey(String key) {
         return KEY_PREFIX + key;
+    }
+
+    private static final String getKey(String module, String key) {
+        return KEY_PREFIX + module + ":" + key;
     }
 
     private static RedisService getRedisService() {
@@ -34,8 +39,8 @@ public final class ConfigUtil {
      * @param defaultValue 默认值
      * @return
      */
-    public static String getValue(String group, String item, String defaultValue) {
-        Map<String, Object> cacheMap = getRedisService().getCacheMap(getKey(group));
+    public static String getValue(String module, String group, String item, String defaultValue) {
+        Map<String, Object> cacheMap = getRedisService().getCacheMap(getKey(module, group));
         String v = MapUtil.getStr(cacheMap, item);
         if (StrUtil.isBlank(v)) {
             return defaultValue;
@@ -50,8 +55,8 @@ public final class ConfigUtil {
      * @param item  编码
      * @return
      */
-    public static String getValue(String group, String item) {
-        return getValue(group, item, null);
+    public static String getValue(String module, String group, String item) {
+        return getValue(module, group, item, null);
     }
 
     /**
@@ -60,8 +65,8 @@ public final class ConfigUtil {
      * @param group 类型
      * @return
      */
-    public static Map<String, String> getValue(String group) {
-        return getRedisService().getCacheMap(getKey(group));
+    public static Map<String, String> getValue(String module, String group) {
+        return getRedisService().getCacheMap(getKey(module, group));
     }
 
     /**
@@ -81,22 +86,21 @@ public final class ConfigUtil {
         return BooleanUtil.toBoolean(v);
     }
 
-    public static Integer getValueInteger(String group, String key, Integer defaultValue) {
-        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(group));
+    /**
+     * 获取boolean类型值
+     *
+     * @param group
+     * @param key
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static boolean getValueBoolean(String module, String group, String key, boolean defaultValue) {
+        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(module, group));
         String v = MapUtil.getStr(cacheMap, key);
         if (StrUtil.isBlank(v)) {
             return defaultValue;
         }
-        return Integer.valueOf(v);
-    }
-
-    public static Long getValueLong(String group, String key, Long defaultValue) {
-        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(group));
-        String v = MapUtil.getStr(cacheMap, key);
-        if (StrUtil.isBlank(v)) {
-            return defaultValue;
-        }
-        return Long.valueOf(v);
+        return BooleanUtil.toBoolean(v);
     }
 
     /**
@@ -106,8 +110,26 @@ public final class ConfigUtil {
      * @param key
      * @return
      */
-    public static boolean getValueBoolean(String group, String key) {
-        return getValueBoolean(group, key, false);
+    public static boolean getValueBoolean(String module, String group, String key) {
+        return getValueBoolean(module, group, key, false);
+    }
+
+    public static Integer getValueInteger(String module, String group, String key, Integer defaultValue) {
+        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(module, group));
+        String v = MapUtil.getStr(cacheMap, key);
+        if (StrUtil.isBlank(v)) {
+            return defaultValue;
+        }
+        return Integer.valueOf(v);
+    }
+
+    public static Long getValueLong(String module, String group, String key, Long defaultValue) {
+        Map<String, String> cacheMap = getRedisService().getCacheMap(getKey(module, group));
+        String v = MapUtil.getStr(cacheMap, key);
+        if (StrUtil.isBlank(v)) {
+            return defaultValue;
+        }
+        return Long.valueOf(v);
     }
 
     /**
@@ -116,9 +138,9 @@ public final class ConfigUtil {
      * @param group
      * @return
      */
-    public static List<SelectVO> getSelectVOList(String group) {
+    public static List<SelectVO> getSelectVOList(String module, String group) {
         List<SelectVO> list = new ArrayList<>();
-        Map<String, String> map = getValue(group);
+        Map<String, String> map = getValue(module, group);
         if (map != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 list.add(new SelectVO().setLabel(entry.getKey()).setValue(entry.getValue()));
