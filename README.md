@@ -31,8 +31,7 @@ cc.ussu
 ├── ussu-modules         // 业务模块
 │       └── ussu-modules-system                              // 系统模块
 │       └── ussu-modules-file                                // 文件服务
-├── ruoyi-visual          // 图形化管理模块
-│       └── ussu-monitor                      // 监控
+├── ussu-monitor          // 监控
 ├──pom.xml                // 公共依赖
 ~~~
 
