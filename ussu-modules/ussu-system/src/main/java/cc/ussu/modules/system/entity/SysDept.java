@@ -55,12 +55,6 @@ public class SysDept implements Serializable {
     private String fullName;
 
     /**
-     * 部门电话
-     */
-    @TableField("phone")
-    private String phone;
-
-    /**
      * 部门排序
      */
     @TableField("dept_sort")
