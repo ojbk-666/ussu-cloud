@@ -80,7 +80,7 @@ public class SysRole implements Serializable {
     private Integer version;
 
     /**
-     * 数据范围类型：10全部数据权限 20本部门及以下数据权限 30本部门数据权限 40自定数据权限 
+     * 数据范围类型：10全部数据权限 20本部门及以下数据权限 30本部门数据权限 40仅本人数据 50自定数据权限
      */
     @TableField("data_scope_type")
     private Integer dataScopeType;
