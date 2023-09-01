@@ -1,13 +1,13 @@
 package cc.ussu.common.core.util;
 
-import cc.ussu.common.core.function.FieldFunction;
 import cc.ussu.common.core.vo.SelectVO;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class SelectVOUtil {
 
@@ -26,13 +26,17 @@ public final class SelectVOUtil {
         return selectVOS;
     }
 
-    public static <T> List<SelectVO> render(Collection<?> collection, FieldFunction<T, ?> label, FieldFunction<T, ?> value) {
+    /*public static <T> List<SelectVO> render(Collection<?> collection, FieldFunction<T, ?> label, FieldFunction<T, ?> value) {
         String l = FieldFunctionUtil.getFieldName(label);
         String v = FieldFunctionUtil.getFieldName(value);
         if (StrUtil.isAllNotBlank(l, v)) {
             return render(collection, l, v);
         }
         return null;
+    }*/
+
+    public static <T> List<SelectVO> render(Collection<T> collection, Function<T, String> label, Function<T, ?> value) {
+        return collection.stream().map(r -> new SelectVO().setLabel((label.apply(r))).setValue(value.apply(r))).collect(Collectors.toList());
     }
 
 }
