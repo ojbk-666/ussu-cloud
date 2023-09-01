@@ -4,6 +4,7 @@ import cc.ussu.common.core.http.IMyHttpResponse;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 
+import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,11 @@ public class HuToolHttpResponse implements IMyHttpResponse<HttpResponse> {
     @Override
     public String getCookieStr() {
         return httpResponse.getCookieStr();
+    }
+
+    @Override
+    public List<HttpCookie> getSetCookies() {
+        return httpResponse.getCookies();
     }
 
     @Override

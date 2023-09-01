@@ -7,7 +7,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.HttpCookie;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +71,16 @@ public class HttpClientHttpResponse implements IMyHttpResponse {
     @Override
     public String getCookieStr() {
         return MapUtil.joinIgnoreNull(cookies, ";", "=");
+    }
+
+    @Override
+    public List<HttpCookie> getSetCookies() {
+        List<String> setCookies = headersMap.get("Set-Cookie");
+        List<HttpCookie> httpCookieList = new ArrayList<>();
+        if (CollUtil.isNotEmpty(setCookies)) {
+            setCookies.forEach(r -> httpCookieList.addAll(HttpCookie.parse(r)));
+        }
+        return httpCookieList;
     }
 
     @Override

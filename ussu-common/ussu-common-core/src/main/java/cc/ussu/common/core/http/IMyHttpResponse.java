@@ -4,6 +4,7 @@ import cc.ussu.common.core.http.hutool.HuToolHttpResponse;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.Header;
 
+import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public interface IMyHttpResponse<T> {
     String getContentType();
 
     String getCookieStr();
+
+    List<HttpCookie> getSetCookies();
 
     default String getRedirectLocation() {
         if (is3xx()) {
