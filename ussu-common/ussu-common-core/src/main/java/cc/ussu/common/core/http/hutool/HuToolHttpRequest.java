@@ -4,12 +4,26 @@ import cc.ussu.common.core.http.IMyHttpRequest;
 import cc.ussu.common.core.http.IMyHttpResponse;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.*;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.net.CookieManager;
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class HuToolHttpRequest implements IMyHttpRequest {
 
     private static final ThreadLocal<HttpRequest> threadLocal = new ThreadLocal<>();
+
+    private CookieManager cookieManager;
+
+    public HuToolHttpRequest() {
+    }
+    public HuToolHttpRequest(CookieManager cookieManager) {
+        this.cookieManager = cookieManager;
+    }
 
     @Override
     public IMyHttpRequest create(String url, String method) {
@@ -36,6 +50,19 @@ public class HuToolHttpRequest implements IMyHttpRequest {
     @Override
     public IMyHttpRequest createPost(String url) {
         return create(url, "post");
+    }
+
+    @Override
+    public String getUrl() {
+        return threadLocal.get().getUrl();
+    }
+
+    /**
+     * 获取所有请求头
+     */
+    @Override
+    public Map<String, List<String>> headers() {
+        return threadLocal.get().headers();
     }
 
     @Override
@@ -122,7 +149,18 @@ public class HuToolHttpRequest implements IMyHttpRequest {
     @Override
     public IMyHttpResponse execute() {
         try {
+            HttpRequest httpRequest = threadLocal.get();
+            if (cookieManager != null) {
+                httpRequest.cookie(cookieManager.getCookieStore().get(URI.create(httpRequest.getUrl())));
+            }
             HttpResponse execute = threadLocal.get().execute();
+            if (cookieManager != null) {
+                try {
+                    cookieManager.put(URI.create(httpRequest.getUrl()), execute.headers());
+                } catch (IOException e) {
+                    log.error("cookie存储失败:{}", e.getMessage(), e);
+                }
+            }
             HuToolHttpResponse response = new HuToolHttpResponse().create(execute);
             return response;
         } finally {

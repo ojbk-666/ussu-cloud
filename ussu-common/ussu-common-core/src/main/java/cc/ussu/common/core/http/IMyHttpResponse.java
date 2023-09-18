@@ -24,6 +24,7 @@ public interface IMyHttpResponse<T> {
         return getStatus() / 300 == 1;
     }
 
+    Map<String, List<String>> headers();
     List<String> headers(String name);
 
     default String header(String name) {

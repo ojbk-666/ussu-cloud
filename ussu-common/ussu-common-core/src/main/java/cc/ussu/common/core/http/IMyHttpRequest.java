@@ -1,5 +1,6 @@
 package cc.ussu.common.core.http;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IMyHttpRequest {
@@ -9,6 +10,13 @@ public interface IMyHttpRequest {
     IMyHttpRequest createGet(String url);
 
     IMyHttpRequest createPost(String url);
+
+    String getUrl();
+
+    /**
+     * 获取所有请求头
+     */
+    Map<String, List<String>> headers();
 
     IMyHttpRequest header(String name, String value, boolean isOverride);
 

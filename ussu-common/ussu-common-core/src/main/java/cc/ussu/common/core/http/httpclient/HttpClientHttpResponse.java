@@ -58,6 +58,11 @@ public class HttpClientHttpResponse implements IMyHttpResponse {
     }
 
     @Override
+    public Map<String, List<String>> headers() {
+        return headersMap;
+    }
+
+    @Override
     public List<String> headers(String name) {
         return headersMap.get(name);
     }

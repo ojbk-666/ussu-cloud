@@ -8,6 +8,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -22,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -63,6 +63,24 @@ public class HttpClientHttpRequest implements IMyHttpRequest {
         HttpPost httpGet = new HttpPost(url);
         threadLocal.set(httpGet);
         return this;
+    }
+
+    @Override
+    public String getUrl() {
+        return threadLocal.get().getURI().toString();
+    }
+
+    /**
+     * 获取所有请求头
+     */
+    @Override
+    public Map<String, List<String>> headers() {
+        Header[] allHeaders = threadLocal.get().getAllHeaders();
+        Map<String, List<String>> map = new HashMap<>();
+        for (Header header : allHeaders) {
+            map.put(header.getName(), Arrays.stream(header.getElements()).map(HeaderElement::getValue).collect(Collectors.toList()));
+        }
+        return map;
     }
 
     @Override

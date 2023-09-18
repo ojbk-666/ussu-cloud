@@ -12,6 +12,10 @@ public class HuToolHttpResponse implements IMyHttpResponse<HttpResponse> {
 
     private HttpResponse httpResponse;
 
+    public HttpResponse getHttpResponse() {
+        return httpResponse;
+    }
+
     @Override
     public HuToolHttpResponse create(HttpResponse httpResponse) {
         this.httpResponse = httpResponse;
@@ -38,6 +42,11 @@ public class HuToolHttpResponse implements IMyHttpResponse<HttpResponse> {
     @Override
     public boolean isOk() {
         return httpResponse.isOk();
+    }
+
+    @Override
+    public Map<String, List<String>> headers() {
+        return httpResponse.headers();
     }
 
     @Override
