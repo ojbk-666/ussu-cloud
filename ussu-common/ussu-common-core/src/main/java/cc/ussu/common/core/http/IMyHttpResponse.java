@@ -4,6 +4,7 @@ import cc.ussu.common.core.http.hutool.HuToolHttpResponse;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.Header;
 
+import java.io.InputStream;
 import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
@@ -49,5 +50,7 @@ public interface IMyHttpResponse<T> {
     }
 
     String body();
+
+    InputStream bodyStream();
 
 }

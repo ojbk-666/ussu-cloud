@@ -4,6 +4,7 @@ import cc.ussu.common.core.http.IMyHttpResponse;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 
+import java.io.InputStream;
 import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +78,10 @@ public class HuToolHttpResponse implements IMyHttpResponse<HttpResponse> {
     @Override
     public String body() {
         return httpResponse.body();
+    }
+
+    @Override
+    public InputStream bodyStream() {
+        return httpResponse.bodyStream();
     }
 }

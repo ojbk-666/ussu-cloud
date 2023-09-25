@@ -3,10 +3,12 @@ package cc.ussu.common.core.http.httpclient;
 import cc.ussu.common.core.http.IMyHttpResponse;
 import cc.ussu.common.core.http.hutool.HuToolHttpResponse;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.InputStream;
 import java.net.HttpCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -96,5 +98,10 @@ public class HttpClientHttpResponse implements IMyHttpResponse {
         String str = StrUtil.str(this.byteArray, StandardCharsets.UTF_8);
         // this.byteArray = null;
         return str;
+    }
+
+    @Override
+    public InputStream bodyStream() {
+        return IoUtil.toStream(this.byteArray);
     }
 }
