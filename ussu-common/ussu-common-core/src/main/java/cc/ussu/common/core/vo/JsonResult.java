@@ -2,6 +2,7 @@ package cc.ussu.common.core.vo;
 
 import cc.ussu.common.core.constants.SecurityConstants;
 import cc.ussu.common.core.constants.StrConstants;
+import cn.hutool.core.text.StrFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -35,10 +36,10 @@ public class JsonResult<T> implements Serializable {
     public JsonResult() {
     }
 
-    private static <T> JsonResult<T> restResult(T data, int code, String msg) {
+    private static <T> JsonResult<T> restResult(T data, int code, String template, Object... args) {
         JsonResult<T> result = new JsonResult<>();
         result.code = code;
-        result.msg = msg;
+        result.msg = StrFormatter.format(template, args);
         result.data = data;
         return result;
     }
@@ -65,12 +66,9 @@ public class JsonResult<T> implements Serializable {
 
     /**
      * 成功
-     *
-     * @param data data
-     * @param msg  msg
      */
-    public static <T> JsonResult<T> ok(T data, String msg) {
-        return restResult(data, SUCCESS_CODE, msg);
+    public static <T> JsonResult<T> ok(T data, String template, Object ... args) {
+        return restResult(data, SUCCESS_CODE, template, args);
     }
 
     /*-----error-----*/
@@ -117,8 +115,8 @@ public class JsonResult<T> implements Serializable {
     /**
      * 失败
      */
-    public static <T> JsonResult<T> error(T data, String msg) {
-        return restResult(data, ERROR_CODE, msg);
+    public static <T> JsonResult<T> error(T data, String template, Object... args) {
+        return restResult(data, ERROR_CODE, template, args);
     }
 
     public boolean isOk() {
